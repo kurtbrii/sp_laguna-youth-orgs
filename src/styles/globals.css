@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* --font-changa:  */
+  --primary: #006bbd;
+  --secondary: #00bd6e;
+  --red: #ec4b42;
+  --black100: #021422;
+}
+
+@layer components {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary  to-secondary bg-clip-text  text-transparent;
+  }
+
+  /* Always add: 
+    px-14 py-3
+  
+  
+  */
+  .btn-active,
+  .btn-outline {
+    @apply transform rounded-lg text-center font-custom-changa-one text-sm font-semibold transition-all duration-300;
+
+    background-size: 100% 100%;
+    background-position: top right;
+  }
+
+  .btn-active {
+    @apply bg-gradient-to-l from-green-500 to-blue-500 text-white;
+  }
+
+  .btn-outline {
+    @apply border border-secondary bg-transparent text-secondary;
+  }
+
+  /* .btn-outline::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+    background-color: white;
+    border-radius: 4px;
+  } */
+
+  .btn::after {
+  }
+
+  .btn-active:hover,
+  .btn-outline:hover {
+    transform: scale(1.01);
+    /* transition-duration: 1000ms; */
+  }
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
