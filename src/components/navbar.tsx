@@ -4,7 +4,7 @@ import React from "react";
 const NavBar = () => {
   return (
     // navbar
-    <nav className="flex h-12 items-center  justify-between bg-pink-300 px-10 py-3 font-custom-lexend text-primary">
+    <nav className="flex h-12 items-center justify-between  bg-pink-300 px-10 py-3 font-custom-lexend  text-primary">
       {/* left navbar */}
       <ul className="flex flex-grow cursor-pointer gap-5">
         <li className="flex-grow cursor-pointer font-custom-changa-one font-semibold">
@@ -39,5 +39,5 @@ function handleSignIn() {
 }
 
 function handleSignUp() {
-  window.location.href = "/auth/sign-up";
+  window.location.href = "/auth/signup";
 }
