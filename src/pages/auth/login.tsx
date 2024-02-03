@@ -10,7 +10,8 @@ const login = () => {
       <section className="relative w-3/5 flex-shrink-0 bg-customBlack-100">
         {/* Your image goes here */}
         <Image
-          className="h-full w-full object-cover opacity-55"
+          className="h-full w-full object-cover opacity-35"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           src={vol2}
           alt="Volunteer Image"
         />

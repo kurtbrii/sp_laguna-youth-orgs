@@ -15,6 +15,10 @@
     @apply bg-gradient-to-r from-primary  to-secondary bg-clip-text  text-transparent;
   }
 
+  .bg-gradient {
+    @apply bg-gradient-to-r from-primary  to-secondary;
+  }
+
   /* Always add: 
     px-14 py-3
   
@@ -29,7 +33,7 @@
   }
 
   .btn-active {
-    @apply bg-gradient-to-l from-green-500 to-blue-500 text-white;
+    @apply bg-gradient-to-l from-secondary to-primary text-white;
   }
 
   .btn-outline {

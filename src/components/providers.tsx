@@ -14,7 +14,7 @@ const Providers = () => {
       {providers.map((provider, index) => (
         <button
           type="button"
-          onClick={() => signIn(provider)}
+          onClick={() => signIn(provider, { callbackUrl: "/homepage" })}
           key={index}
           className="btn-outline flex items-center gap-3 rounded-md px-10 py-1"
         >
@@ -50,7 +50,7 @@ const Providers = () => {
         />
         <p className="text-md font-semibold">Continue as Guest</p>
       </button>
-      <p className="text-center text-sm">
+      <p className="text-center text-sm text-customBlack-100">
         Don&apos;t have an account yet?{" "}
         <span
           onClick={handleSignUp}
@@ -71,7 +71,7 @@ function capitalize(word: string) {
 }
 
 function handleSignUp() {
-  window.location.href = "/auth/sign-up";
+  window.location.href = "/auth/signup";
 }
 
 function handleHomePage() {
