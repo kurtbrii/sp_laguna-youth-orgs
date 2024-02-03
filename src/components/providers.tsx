@@ -14,7 +14,7 @@ const Providers = () => {
       {providers.map((provider, index) => (
         <button
           type="button"
-          onClick={() => signIn(provider)}
+          onClick={() => signIn(provider, { callbackUrl: "/homepage" })}
           key={index}
           className="btn-outline flex items-center gap-3 rounded-md px-10 py-1"
         >

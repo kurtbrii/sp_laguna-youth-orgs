@@ -67,9 +67,8 @@ export default function SignUp() {
     console.log(orgFormData);
   };
 
+  // ! SUBMITTING FORM
   const createOrganization = api.organization.createOrganization.useMutation();
-
-  // ! GENERIC USER
   const handleOrgSubmit = async () => {
     alert("successful");
 
@@ -84,10 +83,26 @@ export default function SignUp() {
     await router.push("/homepage");
   };
 
+  const createVolunteer = api.volunteer.createVolunteer.useMutation();
+  const handleVolunteerSubmit = async () => {
+    createVolunteer.mutate({
+      firstName: volunteerFormData.firstName,
+      lastName: volunteerFormData.lastName,
+      middleInitial: volunteerFormData.middleInitial,
+      suffix: volunteerFormData.suffix,
+      phoneNumber: volunteerFormData.phoneNumber,
+      userId: sessionData?.user.id ?? "",
+    });
+
+    alert(sessionData?.user);
+
+    await router.push("/homepage");
+  };
+
   return (
     <section className="flex h-screen  font-custom-lexend text-customBlack-100">
       {/* <!-- Left part with image --> */}
-      <section className="relative w-1/2 flex-shrink-0 bg-customBlack-100">
+      <section className="w-3/5flex-shrink-0 relative bg-customBlack-100">
         {/* Your image goes here */}
         <Image
           className="h-full w-full object-cover opacity-30"
@@ -108,7 +123,7 @@ export default function SignUp() {
       </section>
 
       {/* <!-- Right part with login page --> */}
-      <section className=" flex w-1/2 flex-shrink-0 flex-col  justify-between gap-7 p-8">
+      <section className=" flex w-2/5 flex-shrink-0 flex-col  justify-between gap-7 p-8">
         <h1 className=" h-30 mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-changa-one text-4xl  font-extrabold text-transparent">
           Register Now
         </h1>
@@ -235,7 +250,7 @@ export default function SignUp() {
               onClick={
                 volOrOrg === "organization"
                   ? () => handleOrgSubmit()
-                  : () => handleOrgSubmit()
+                  : () => handleVolunteerSubmit()
               }
               className="btn-active flex items-center justify-center gap-3 rounded-md px-12 py-2"
             >

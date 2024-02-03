@@ -15,9 +15,9 @@ export default function Home() {
   const current = sessionData?.user.id; // Replace with the actual user ID
   const get = api.user.getUser.useQuery({ userId: current ?? "" });
 
-  const num = async () => {
-    console.log(get.data.organization.orgName);
-  };
+  // const num = async () => {
+  //   console.log(get.data.organization.orgName);
+  // };
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function Home() {
       <main className="block">
         <header className="flex flex-col">
           <NavBar />
-          <button onClick={() => num()}>butn</button>
+          {/* <button onClick={() => num()}>butn</button> */}
         </header>
       </main>
     </>

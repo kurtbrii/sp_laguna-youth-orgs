@@ -76,6 +76,7 @@ model User {
     // Youth Hub Attr
     role         ROLE          @default(GUEST)
     organization Organization?
+    volunteer    Volunteer?
 }
 
 model Organization {
@@ -93,8 +94,11 @@ model Volunteer {
     firstName     String
     lastName      String
     middleInitial String
-    Suffix        String
+    suffix        String
     phoneNumber   String
+
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String? @unique
 }
 
 enum ROLE {

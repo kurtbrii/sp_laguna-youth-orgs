@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { useSession } from "next-auth/react";
 
 import {
   createTRPCRouter,
@@ -6,37 +7,28 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-export const volunteerRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
+// eslint-disable-next-line react-hooks/rules-of-hooks
 
-  create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
+
+
+export const volunteerRouter = createTRPCRouter({
+
+  createVolunteer: publicProcedure
+    .input(z.object({ firstName: z.string(), lastName: z.string(), middleInitial: z.string(), suffix: z.string(), phoneNumber: z.string(), userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      return ctx.db.post.create({
+      return ctx.db.volunteer.create({
         data: {
-          name: input.name,
-          createdBy: { connect: { id: ctx.session.user.id } },
+          firstName: input.firstName,
+          lastName: input.lastName,
+          middleInitial: input.middleInitial,
+          suffix: input.suffix,
+          phoneNumber: input.phoneNumber,
+          userId: input.userId
         },
       });
     }),
 
-  getLatest: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.post.findFirst({
-      orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
-    });
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
 });
