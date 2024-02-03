@@ -5,8 +5,20 @@ import Image from "next/image";
 import NavBar from "~/components/navbar";
 
 // import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
+import { db } from "~/server/db";
 
 export default function Home() {
+  const { data: sessionData } = useSession();
+
+  const current = sessionData?.user.id; // Replace with the actual user ID
+  const get = api.user.getUser.useQuery({ userId: current ?? "" });
+
+  // const num = async () => {
+  //   console.log(get.data.organization.orgName);
+  // };
+
   return (
     <>
       <Head>
@@ -17,6 +29,7 @@ export default function Home() {
       <main className="block">
         <header className="flex flex-col">
           <NavBar />
+          {/* <button onClick={() => num()}>butn</button> */}
         </header>
       </main>
     </>

@@ -11,6 +11,7 @@ const login = () => {
         {/* Your image goes here */}
         <Image
           className="h-full w-full object-cover opacity-35"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           src={vol2}
           alt="Volunteer Image"
         />

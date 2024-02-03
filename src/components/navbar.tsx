@@ -1,32 +1,104 @@
-import React from "react";
-// import { signIn, signOut, useSession } from "next-auth/react";
-//
+import React, { useEffect, useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+
 const NavBar = () => {
+  const router = useRouter();
+
+  const { data: sessionData, status: sessionStatus } = useSession();
+
+  const [activeLink, setActiveLink] = useState<string>("");
+
+  const [toggleButton, setToggleButton] = useState(false);
+
+  useEffect(() => {
+    // Get the current route pathname
+    const currentRoute = router.asPath;
+
+    // Set active link based on the current route
+    if (currentRoute === "/") {
+      setActiveLink("home");
+    } else if (currentRoute === "/homepage/how-it-works") {
+      setActiveLink("howItWorks");
+    } else if (currentRoute === "/homepage/find-organizations") {
+      setActiveLink("findOrganizations");
+    } else if (currentRoute === "/homepage/get-involved") {
+      setActiveLink("getInvolved");
+    } else {
+      setActiveLink("");
+    }
+  }, [router.asPath]);
+
+  const handleLinkClick = (link: string) => {
+    setActiveLink(link);
+  };
+
   return (
     // navbar
-    <nav className="flex h-12 items-center justify-between  bg-pink-300 px-10 py-3 font-custom-lexend  text-primary">
+    <nav className="flex h-12 justify-between px-10 py-3 font-custom-lexend  text-primary ">
       {/* left navbar */}
-      <ul className="flex flex-grow cursor-pointer gap-5">
+      <ul className=" flex flex-grow cursor-pointer ">
         <li className="flex-grow cursor-pointer font-custom-changa-one font-semibold">
-          Laguna Youth Organizations Hub
+          <Link href="/" onClick={() => handleLinkClick("home")}>
+            Laguna Youth Organizations Hub
+          </Link>
         </li>
       </ul>
 
       {/* middle */}
-      <ul className="flex flex-grow gap-5">
-        <li className=" cursor-pointer">How it Works</li>
-        <li className=" cursor-pointer">Find Organizations</li>
+      <ul className="flex flex-grow gap-5 ">
+        <li
+          className={`cursor-pointer ${activeLink === "howItWorks" ? " text-secondary" : "text-primary"}`}
+          onClick={() => handleLinkClick("howItWorks")}
+        >
+          <Link href="/homepage/how-it-works">How it Works</Link>
+        </li>
+        <li
+          className={`cursor-pointer ${activeLink === "findOrganizations" ? " text-secondary" : ""}`}
+          onClick={() => handleLinkClick("findOrganizations")}
+        >
+          <Link href="/homepage/find-organizations">Find Organizations</Link>
+        </li>
         <li className=" cursor-pointer">Get Involved</li>
       </ul>
 
       {/* right navbar */}
-      <div className="flex gap-3">
-        <button className="btn-active px-10 py-2" onClick={handleSignIn}>
-          Login
-        </button>
-        <button className="btn-outline px-10 py-2" onClick={handleSignUp}>
-          Sign Up
-        </button>
+      <div className="flex items-center gap-3">
+        {sessionData ? (
+          <div className="  flex items-center gap-3">
+            <Link href="/">
+              <p>{sessionData.user.name}</p>
+            </Link>
+
+            <button onClick={() => setToggleButton(!toggleButton)}>
+              <Image
+                className={`cursor-pointer rounded-lg `}
+                src={sessionData.user.image ?? ""}
+                alt="user profile image"
+                height={40}
+                width={40}
+              />
+            </button>
+            {toggleButton && (
+              <div className=" absolute right-10 top-12 flex w-32 flex-col items-center justify-center rounded-md bg-customBlack-10 p-4 text-sm text-customBlack-100">
+                <p className="cursor-pointer" onClick={() => signOut()}>
+                  Logout
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <button className="btn-active px-10 py-2" onClick={handleSignIn}>
+              Login
+            </button>
+            <button className="btn-outline px-10 py-2" onClick={handleSignUp}>
+              Sign Up
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );
