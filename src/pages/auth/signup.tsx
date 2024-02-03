@@ -8,18 +8,28 @@ import Image from "next/image";
 // import { vol2} from "../../../assets/vol2.png";
 
 import vol2 from "../../../assets/vol2.png";
+import { api } from "~/utils/api";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
-const SignUp = () => {
-  const [currentState, setCurrentState] = useState<string>("volunteer");
+interface VolunteerProps {
+  firstName: string;
+  lastName: string;
+  middleInitial: string;
+  suffix: string;
+  phoneNumber: string;
+}
+interface OrgProps {
+  orgName: string;
+  phoneNumber: string;
+}
 
+export default function SignUp() {
+  const { data: sessionData } = useSession();
+
+  const [volOrOrg, setCurrentState] = useState<string>("organization");
+  const router = useRouter();
   //! VOLUNTEER SET STATE
-  interface VolunteerProps {
-    firstName: string;
-    lastName: string;
-    middleInitial: string;
-    suffix: string;
-    phoneNumber: string;
-  }
 
   const [volunteerFormData, setVolunteerFormData] = useState<VolunteerProps>({
     firstName: "",
@@ -42,11 +52,6 @@ const SignUp = () => {
   };
 
   //! ORGANIZATION SET STATE
-  interface OrgProps {
-    orgName: string;
-    phoneNumber: string;
-  }
-
   const [orgFormData, setOrgFormData] = useState<OrgProps>({
     orgName: "",
     phoneNumber: "",
@@ -62,6 +67,23 @@ const SignUp = () => {
     console.log(orgFormData);
   };
 
+  const createOrganization = api.organization.createOrganization.useMutation();
+
+  // ! GENERIC USER
+  const handleOrgSubmit = async () => {
+    alert("successful");
+
+    createOrganization.mutate({
+      orgName: orgFormData.orgName,
+      phoneNumber: orgFormData.phoneNumber,
+      userId: sessionData?.user.id ?? "",
+    });
+
+    alert(sessionData?.user);
+
+    await router.push("/homepage");
+  };
+
   return (
     <section className="flex h-screen  font-custom-lexend text-customBlack-100">
       {/* <!-- Left part with image --> */}
@@ -69,7 +91,6 @@ const SignUp = () => {
         {/* Your image goes here */}
         <Image
           className="h-full w-full object-cover opacity-30"
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           src={vol2}
           alt="Volunteer Image"
         />
@@ -92,7 +113,7 @@ const SignUp = () => {
           Register Now
         </h1>
 
-        {currentState === "volunteer" ? (
+        {volOrOrg === "volunteer" ? (
           // ! Volunteer Form
           <form className="mb-2 flex flex-col gap-6">
             {/* full name */}
@@ -180,9 +201,10 @@ const SignUp = () => {
         <section className="flex flex-col gap-6">
           <div className="mx-20 flex justify-center">
             <button
+              type="submit"
               id="organizationBtn"
               className={`w-1/2 transition ease-in-out focus:outline-none ${
-                currentState === "organization"
+                volOrOrg === "organization"
                   ? "bg-gradient rounded-l-md text-white"
                   : "rounded-l-md border border-secondary bg-transparent text-secondary"
               }`}
@@ -195,7 +217,7 @@ const SignUp = () => {
             <button
               id="volunteerBtn"
               className={`w-1/2 px-4 py-2 transition ease-in-out focus:outline-none ${
-                currentState === "volunteer"
+                volOrOrg === "volunteer"
                   ? "rounded-r-md bg-gradient-to-r  from-secondary to-primary text-white"
                   : "rounded-r-md border border-secondary bg-transparent text-secondary"
               }`}
@@ -208,7 +230,15 @@ const SignUp = () => {
           </div>
 
           <div className="mx-16 flex flex-col items-stretch gap-2">
-            <button className="btn-active flex items-center justify-center gap-3 rounded-md px-12 py-2">
+            <button
+              type="submit"
+              onClick={
+                volOrOrg === "organization"
+                  ? () => handleOrgSubmit()
+                  : () => handleOrgSubmit()
+              }
+              className="btn-active flex items-center justify-center gap-3 rounded-md px-12 py-2"
+            >
               <p>Sign Up</p>
             </button>
             <button className="btn-outline flex items-center justify-center gap-3 rounded-md px-12 py-2">
@@ -233,7 +263,7 @@ const SignUp = () => {
     const volunteerBtn = document.getElementById("volunteerBtn");
     const organizationBtn = document.getElementById("organizationBtn");
 
-    if (currentState === "volunteer") {
+    if (volOrOrg === "volunteer") {
       volunteerBtn?.classList.add(
         "bg-gradient-to-r",
         "from-purple-500",
@@ -261,6 +291,4 @@ const SignUp = () => {
       );
     }
   }
-};
-
-export default SignUp;
+}
