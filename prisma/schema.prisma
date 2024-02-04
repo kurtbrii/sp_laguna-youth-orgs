@@ -84,6 +84,7 @@ model Organization {
 
     orgName     String?
     phoneNumber String?
+    bio         String?
 
     mission    String?
     vision     String?

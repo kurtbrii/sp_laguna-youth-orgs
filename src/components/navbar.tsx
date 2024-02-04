@@ -18,7 +18,7 @@ const NavBar = () => {
     const currentRoute = router.asPath;
 
     // Set active link based on the current route
-    if (currentRoute === "/") {
+    if (currentRoute === "/homepage") {
       setActiveLink("home");
     } else if (currentRoute === "/homepage/how-it-works") {
       setActiveLink("howItWorks");
@@ -41,8 +41,8 @@ const NavBar = () => {
       <nav className="flex  h-12 items-center justify-between px-10 py-3 font-custom-lexend  text-xs text-primary ">
         {/* left navbar */}
         <ul className=" flex flex-grow cursor-pointer ">
-          <li className="flex-grow cursor-pointer bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-changa-one text-lg font-semibold text-transparent">
-            <Link href="/" onClick={() => handleLinkClick("home")}>
+          <li className="item-center custom-epilogue flex flex-grow cursor-pointer bg-gradient-to-r from-primary to-secondary bg-clip-text text-sm font-black text-transparent">
+            <Link href="/homepage" onClick={() => handleLinkClick("home")}>
               Laguna Youth Organizations Hub
             </Link>
           </li>
@@ -84,7 +84,10 @@ const NavBar = () => {
               </button>
               {toggleButton && (
                 <div className=" absolute right-10 top-16 z-50 flex w-32 flex-col items-center justify-center rounded-md bg-customBlack-100  p-4 text-sm text-white">
-                  <p className="cursor-pointer" onClick={() => signOut()}>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
                     Logout
                   </p>
                 </div>
@@ -93,16 +96,16 @@ const NavBar = () => {
           ) : (
             <div className="flex gap-2">
               <button className="btn-active px-10 py-1" onClick={handleSignIn}>
-                Login
+                Get Started
               </button>
-              <button className="btn-outline px-10 py-1" onClick={handleSignUp}>
+              {/* <button className="btn-outline px-10 py-1" onClick={handleSignUp}>
                 Sign Up
-              </button>
+              </button> */}
             </div>
           )}
         </div>
       </nav>
-      <hr className="flex w-full bg-gradient-to-r from-primary to-secondary" />
+      <hr className="flex  w-full border-t-2 border-customBlack-25" />
     </div>
   );
 };
