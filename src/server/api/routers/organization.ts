@@ -28,4 +28,12 @@ export const orgRouter = createTRPCRouter({
       });
     }),
 
+  getOrganizations: publicProcedure
+    .query(async ({ ctx }) => {
+      return ctx.db.organization.findMany({
+        include: {
+          user: true,
+        }
+      })
+    })
 });
