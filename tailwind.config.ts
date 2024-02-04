@@ -14,6 +14,7 @@ export default {
         // customFontChanga: "var(--changa)",
         primary: "var(--primary)",
         secondary: "var(--secondary)",
+        cutomRed: "var(--red)",
         customBlack: {
           100: '#021422',
           75: 'rgba(2, 20, 34, 0.75)',

@@ -45,7 +45,7 @@
   }
 
   .btn-outline {
-    @apply border border-secondary bg-transparent text-secondary;
+    @apply border-2 border-secondary bg-transparent text-secondary;
   }
 
   /* .btn-outline::before {

@@ -31,6 +31,7 @@ export const orgRouter = createTRPCRouter({
         },
       });
     }),
+
   getOrganizations: publicProcedure
     .input(z.object({ id: z.string().optional() }))
     .query(async ({ ctx, input }) => {
@@ -51,6 +52,7 @@ export const orgRouter = createTRPCRouter({
         where: { id },
         include: {
           user: true,
+          event: true,
         }
       })
       return data;
