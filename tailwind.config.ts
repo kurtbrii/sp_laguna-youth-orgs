@@ -5,10 +5,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'custom-changa-one': ['Changa One', 'sans-serif'],
+        'custom-epilogue': ["Epilogue", "sans-serif"],
         'custom-lexend': ['Lexend', 'sans-serif'],
+
+        // 'changa': ['changa one']
       },
       colors: {
+        // customFontChanga: "var(--changa)",
         primary: "var(--primary)",
         secondary: "var(--secondary)",
         customBlack: {
