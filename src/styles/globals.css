@@ -19,6 +19,14 @@
     @apply bg-gradient-to-r from-primary  to-secondary;
   }
 
+  .custom-epilogue {
+    font-family: "Epilogue", sans-serif;
+  }
+
+  .custom-lexend {
+    font-family: "Lexend", sans-serif;
+  }
+
   /* Always add: 
     px-14 py-3
   
@@ -26,7 +34,7 @@
   */
   .btn-active,
   .btn-outline {
-    @apply transform rounded-lg text-center font-custom-changa-one text-sm font-semibold transition-all duration-300;
+    @apply transform rounded-lg text-center font-custom-lexend text-sm font-semibold transition-all duration-300;
 
     background-size: 100% 100%;
     background-position: top right;

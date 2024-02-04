@@ -69,6 +69,10 @@ export default function SignUp() {
 
   // ! SUBMITTING FORM
   const createOrganization = api.organization.createOrganization.useMutation();
+  const createVolunteer = api.volunteer.createVolunteer.useMutation();
+  const updateRole = api.user.updateUserRole.useMutation();
+
+  //! Organization
   const handleOrgSubmit = async () => {
     alert("successful");
 
@@ -78,12 +82,17 @@ export default function SignUp() {
       userId: sessionData?.user.id ?? "",
     });
 
+    updateRole.mutate({
+      userId: sessionData?.user.id ?? "",
+      role: "ORGANIZATION",
+    });
+
     alert(sessionData?.user);
 
     await router.push("/homepage");
   };
 
-  const createVolunteer = api.volunteer.createVolunteer.useMutation();
+  //! Volunteer
   const handleVolunteerSubmit = async () => {
     createVolunteer.mutate({
       firstName: volunteerFormData.firstName,
@@ -92,6 +101,11 @@ export default function SignUp() {
       suffix: volunteerFormData.suffix,
       phoneNumber: volunteerFormData.phoneNumber,
       userId: sessionData?.user.id ?? "",
+    });
+
+    updateRole.mutate({
+      userId: sessionData?.user.id ?? "",
+      role: "VOLUNTEER",
     });
 
     alert(sessionData?.user);
@@ -187,7 +201,7 @@ export default function SignUp() {
             </div>
           </form>
         ) : (
-          // ! Organization Form
+          //! Organization Form
           <form className="flex flex-col gap-4">
             <div className="mb-2 flex flex-col gap-2">
               <p>Name of Organization</p>
@@ -264,46 +278,4 @@ export default function SignUp() {
       </section>
     </section>
   );
-
-  function toggleState(newState: string, currentState: string) {
-    if (newState !== currentState) {
-      currentState = newState;
-
-      // Update button styles based on the current state
-      updateButtonStyles();
-    }
-  }
-
-  function updateButtonStyles() {
-    const volunteerBtn = document.getElementById("volunteerBtn");
-    const organizationBtn = document.getElementById("organizationBtn");
-
-    if (volOrOrg === "volunteer") {
-      volunteerBtn?.classList.add(
-        "bg-gradient-to-r",
-        "from-purple-500",
-        "to-pink-500",
-        "text-white",
-      );
-      organizationBtn?.classList.remove(
-        "bg-gradient-to-r",
-        "from-purple-500",
-        "to-pink-500",
-        "text-white",
-      );
-    } else {
-      organizationBtn?.classList.add(
-        "bg-gradient-to-r",
-        "from-purple-500",
-        "to-pink-500",
-        "text-white",
-      );
-      volunteerBtn?.classList.remove(
-        "bg-gradient-to-r",
-        "from-purple-500",
-        "to-pink-500",
-        "text-white",
-      );
-    }
-  }
 }

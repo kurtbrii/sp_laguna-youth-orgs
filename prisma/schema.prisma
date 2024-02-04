@@ -84,6 +84,12 @@ model Organization {
 
     orgName     String?
     phoneNumber String?
+    bio         String?
+
+    mission    String?
+    vision     String?
+    objectives String?
+    event      Event[]
 
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
@@ -99,6 +105,18 @@ model Volunteer {
 
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
+}
+
+model Event {
+    id             String        @id @default(cuid())
+    name           String
+    createdAt      DateTime
+    organized_by   String
+    partners       String[]
+    details        String?
+    // images 
+    Organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId String?
 }
 
 enum ROLE {
