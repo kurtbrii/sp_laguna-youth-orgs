@@ -29,7 +29,7 @@ const OrgCard = ({ organization }: OrganizationProps) => {
       {/* <div className="h-2/5 bg-slate-600"> */}
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
       <div className=" ml-4 mt-6 h-3/5">
-        <p className="mb-3 font-custom-changa-one text-sm font-bold">
+        <p className="font-custom-changa-one mb-3 text-sm font-bold">
           {organization.orgName}
         </p>
         <p className="text-sm">{organization.phoneNumber}</p>
@@ -38,8 +38,8 @@ const OrgCard = ({ organization }: OrganizationProps) => {
       <Image
         className="absolute left-4 top-16 rounded-md"
         src={`${organization.user.image}`}
-        height={60}
-        width={60}
+        height={30}
+        width={30}
         alt="user image role"
       />
     </Link>

@@ -12,6 +12,7 @@ interface EventProps {
   details: string;
   location: string;
   organizationId: string;
+  date: string;
 }
 
 const Add = () => {
@@ -33,6 +34,7 @@ const Add = () => {
     details: "",
     location: "",
     organizationId: orgId,
+    date: "",
   });
 
   useEffect(() => {
@@ -67,9 +69,11 @@ const Add = () => {
       details: eventData.details,
       location: eventData.location,
       organizationId: orgId,
+      date: eventData.date,
     });
 
     console.log("hello");
+    window.location.replace("/homepage");
   };
 
   return (
@@ -91,26 +95,37 @@ const Add = () => {
           name="name"
           onChange={handleEventForm}
           className="h-12 w-full rounded border  p-2 shadow"
-          placeholder="First Name"
+          placeholder="Event Name"
         />
 
-        <input
-          className=" w-full rounded border p-2 shadow"
+        <textarea
+          className=" w-full rounded border p-2 shadow "
           name="details"
           value={eventData.details}
           onChange={handleEventForm}
-          // rows={10}
+          rows={10}
           placeholder="Details"
         />
 
-        <input
-          type=""
-          value={eventData.location}
-          name="location"
-          onChange={handleEventForm}
-          className="mb-20 h-12 w-full rounded border p-2 shadow"
-          placeholder="Location"
-        />
+        <div className="flex gap-2">
+          <input
+            type=""
+            value={eventData.location}
+            name="location"
+            onChange={handleEventForm}
+            className="mb-20 h-12 w-1/2 rounded border p-2 shadow"
+            placeholder="Location"
+          />
+
+          <input
+            type="datetime-local"
+            value={eventData.date}
+            name="date"
+            onChange={handleEventForm}
+            className="mb-20 h-12 w-1/2 rounded border p-2 shadow"
+            placeholder="Input Date"
+          />
+        </div>
       </form>
 
       <div className="flex justify-center">
@@ -118,7 +133,9 @@ const Add = () => {
           <button
             type="submit"
             className="btn-active px-20 py-3"
-            onClick={() => submitEvent(eventData)}
+            onClick={() => {
+              submitEvent(eventData);
+            }}
           >
             Create Event
           </button>

@@ -7,8 +7,32 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
 import Router, { useRouter } from "next/router";
+import EventCard from "~/components/eventCard";
+import { useSession } from "next-auth/react";
+import { api } from "~/utils/api";
+import { Organization } from "@prisma/client";
 
 const Index = () => {
+  const { data: sessionData, status: sessionStatus } = useSession();
+
+  const event = api.event.getEvents.useQuery();
+
+  const handleFetchEvents = () => {
+    console.log(event.data);
+  };
+
+  type EventProps = {
+    id: string;
+    name: string;
+    organizedBy: string;
+    createdAt: string;
+    details: string;
+    location: string;
+    organizationId: string;
+    organization: Organization;
+    date: Date;
+  };
+
   const router = useRouter();
 
   const [searchText, setSearchText] = useState("");
@@ -19,38 +43,50 @@ const Index = () => {
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <NavBar />
-      <div className="flex flex-col">
-        <div className="mx-10 my-4 flex h-12 flex-col justify-between font-custom-lexend ">
-          <h1 className="mb-6 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
+      {/* ADD EVENT AND SEARCH BAR */}
+      <div className="mx-10  flex flex-col">
+        <div className=" my-4 flex h-12 flex-col justify-between  ">
+          <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
             Recent Events
           </h1>
-
-          <div className="inine-block">
-            <div className="flex flex-shrink-0  items-center">
-              <input
-                type="text"
-                value={searchText}
-                name="search"
-                onChange={handleSearchChange}
-                className="w-1/3 rounded-l p-2  shadow-lg"
-                placeholder="Search"
-              />
-              <button className="bg-gradient mr-3 flex rounded-r border-gray-300 p-2 shadow-lg ">
-                <SearchIcon />
-              </button>
-              <IconButton>
-                <TuneIcon />
-              </IconButton>
-            </div>
-
-            <button
-              className="btn-active mt-2 px-4 py-2"
-              onClick={() => router.push("/events/add")}
-            >
-              Add Event
-            </button>
-          </div>
         </div>
+
+        <div className=" flex items-center justify-between">
+          {/* SEARCH FUNCTION */}
+          <div className="flex w-3/5 items-center">
+            <input
+              type="text"
+              value={searchText}
+              name="search"
+              onChange={handleSearchChange}
+              className="flex-1 rounded-l p-2  shadow-lg"
+              placeholder="Search"
+            />
+            <button className="bg-gradient mr-7 flex rounded-r border-gray-300 p-2 shadow-lg ">
+              <SearchIcon style={{ color: "white" }} />
+            </button>
+
+            <IconButton className="flex">
+              <TuneIcon />
+            </IconButton>
+          </div>
+
+          {/* ADD EVENT */}
+          <button
+            className="btn-active w-2/6 px-4 py-2"
+            onClick={() => router.push("/homepage/event/add")}
+          >
+            Add Event
+          </button>
+        </div>
+      </div>
+
+      {/* EVENT CARD */}
+      {/* TODO: FIX PREVIOUS: when added */}
+      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
+        {event?.data?.map((event: EventProps) => (
+          <EventCard key={event.id} event={event} />
+        ))}
       </div>
     </div>
   );
