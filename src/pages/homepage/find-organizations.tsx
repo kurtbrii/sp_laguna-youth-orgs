@@ -24,7 +24,6 @@ const FindOrganizations: NextPage = () => {
     mission?: string;
     vision?: string;
     objectives?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     user?: User;
     userId: string;
   };
@@ -33,7 +32,7 @@ const FindOrganizations: NextPage = () => {
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <NavBar />
       <div className="mx-10 my-4 flex h-12 flex-col justify-between font-custom-lexend ">
-        <h1 className="font-custom-epilogue mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
+        <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
           Find Organizations
         </h1>
       </div>

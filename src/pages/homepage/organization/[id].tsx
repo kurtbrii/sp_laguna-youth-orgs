@@ -66,7 +66,7 @@ const OrganizationPage = () => {
           </div>
 
           <div className="flex-start  ml-16 flex flex-col">
-            <h1 className="font-custom-epilogue text-gradient  mb-3 text-4xl font-extrabold">
+            <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
               {organization.orgName}
             </h1>
 
@@ -112,7 +112,7 @@ const OrganizationPage = () => {
           {/* Mission Vision */}
           <div className="mb-6 flex gap-4">
             <div className="flex w-1/2 flex-col">
-              <h1 className="font-custom-epilogue text-gradient mb-2 flex text-2xl font-semibold">
+              <h1 className="text-gradient mb-2 flex font-custom-epilogue text-2xl font-semibold">
                 Mission
               </h1>
               <p>
@@ -125,7 +125,7 @@ const OrganizationPage = () => {
             </div>
 
             <div className="flex w-1/2 flex-col">
-              <h1 className="font-custom-epilogue text-gradient mb-2 flex text-2xl font-semibold">
+              <h1 className="text-gradient mb-2 flex font-custom-epilogue text-2xl font-semibold">
                 Vision
               </h1>
               <p>
@@ -141,7 +141,7 @@ const OrganizationPage = () => {
           {/* Goals */}
           <div className="mb-4 flex gap-4">
             <div className="flex w-1/2 flex-col">
-              <h1 className="font-custom-epilogue text-gradient mb-2 flex text-2xl font-semibold">
+              <h1 className="text-gradient mb-2 flex font-custom-epilogue text-2xl font-semibold">
                 Goals
               </h1>
               <p>
@@ -160,7 +160,7 @@ const OrganizationPage = () => {
 
         {/* EVENTS ORGANIZED */}
         <div className=" mb-24 flex flex-col gap-6">
-          <h1 className="font-custom-epilogue text-gradient  flex text-4xl font-semibold">
+          <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Events Organized
           </h1>
           <div className="flex gap-4 ">
@@ -172,8 +172,8 @@ const OrganizationPage = () => {
         </div>
 
         {/* ALL ACTIVITIES */}
-        <div className="flex flex-col gap-6">
-          <h1 className="font-custom-epilogue text-gradient  flex text-4xl font-semibold">
+        <div className="mb-24 flex flex-col gap-6">
+          <h1 className="text-gradient flex   font-custom-epilogue text-4xl font-semibold">
             All Activities
           </h1>
           <div className="flex gap-4">
@@ -186,7 +186,7 @@ const OrganizationPage = () => {
 
         {/* POOL OF SPEAKERS */}
         <div className="flex flex-col gap-6">
-          <h1 className="font-custom-epilogue text-gradient  flex text-4xl font-semibold">
+          <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Pool of Speakers
           </h1>
           <div className="flex gap-4">

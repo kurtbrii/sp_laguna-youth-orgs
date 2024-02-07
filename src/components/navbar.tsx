@@ -37,7 +37,7 @@ const NavBar = () => {
 
   return (
     // navbar
-    <div className="my-2 flex flex-col gap-2">
+    <div className="mt-2 flex flex-col gap-2">
       <nav className="flex  h-12 items-center justify-between px-10 py-3 font-custom-lexend  text-xs text-primary ">
         {/* left navbar */}
         <ul className=" flex flex-grow cursor-pointer ">
@@ -86,7 +86,7 @@ const NavBar = () => {
                 <div className=" absolute right-10 top-16 z-50 flex w-32 flex-col items-center justify-center rounded-md bg-customBlack-100  p-4 text-sm text-white">
                   <p
                     className="cursor-pointer"
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={() => signOut({ callbackUrl: "/homepage" })}
                   >
                     Logout
                   </p>

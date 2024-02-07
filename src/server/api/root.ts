@@ -3,6 +3,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { orgRouter } from "./routers/organization";
 import { volunteerRouter } from "./routers/volunteer";
 import { userRouter } from "./routers/user";
+import { eventRouter } from "./routers/event";
 
 /**
  * This is the primary router for your server.
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   user: userRouter,
   organization: orgRouter,
+  event: eventRouter,
   volunteer: volunteerRouter,
 });
 
