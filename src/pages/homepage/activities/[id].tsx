@@ -24,21 +24,21 @@ const EventPage = () => {
     userId: sessionData?.user.id ?? "",
   });
 
-  const eventQuery = api.event.getOne.useQuery({
+  const activityQuery = api.activity.getOne.useQuery({
     id: id as string,
   });
 
-  const event = eventQuery.data;
+  const activity = activityQuery.data;
 
   if (!id) {
     return <div>No organization ID provided</div>;
   }
 
-  if (eventQuery.isLoading) {
+  if (activityQuery.isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (eventQuery.error ?? !eventQuery.data) {
+  if (activityQuery.error ?? !activityQuery.data) {
     return <div>Error loading organization data</div>;
   }
 
@@ -50,7 +50,7 @@ const EventPage = () => {
         <div className="mr-24 flex w-2/5 flex-col gap-1">
           <Image
             className="flex w-full rounded-md"
-            src={event.organization.user.image}
+            src={activity.organization.user.image}
             alt="Organization Image"
             height={300}
             width={300}
@@ -59,21 +59,21 @@ const EventPage = () => {
           <div className="flex gap-1">
             <Image
               className="rounded-md"
-              src={event.organization.user.image}
+              src={activity.organization.user.image}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event.organization.user.image}
+              src={activity.organization.user.image}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event.organization.user.image}
+              src={activity.organization.user.image}
               alt="Organization Image"
               height={300}
               width={300}
@@ -81,51 +81,58 @@ const EventPage = () => {
           </div>
         </div>
 
-        <div className="flex w-4/5 flex-col">
-          {/* EVENT NAME */}
-          <section className="flex items-center justify-between">
-            <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
-              {event.name}
-            </h1>
-            <div className="flex gap-4">
-              <IconButton>
-                <EditTwoToneIcon />
-              </IconButton>
-              <IconButton>
-                <DeleteIcon />
-              </IconButton>
+        <div className="flex w-4/5 flex-col justify-between ">
+          <div>
+            {/* EVENT NAME */}
+            <section className="flex items-center justify-between">
+              <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
+                {activity.name}
+              </h1>
+              <div className="flex gap-4">
+                <IconButton>
+                  <EditTwoToneIcon />
+                </IconButton>
+                <IconButton>
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            </section>
+
+            <p className="text-md mb-6 italic text-customBlack-50">
+              {activity.date.toLocaleString()}
+            </p>
+
+            <p
+              className="text-md text-customBlack-50"
+              style={{ fontSize: "12px" }}
+            >
+              Organized By:
+            </p>
+            <p className="text-gradient text-sm">
+              {activity.organization.orgName}
+            </p>
+
+            <p className="mt-12">{activity.details}</p>
+          </div>
+
+          {sessionStatus !== "authenticated" && activity.hasParticipants && (
+            <div className="btn-active w-1/2 self-center px-2 py-2">
+              Join Activity
             </div>
-          </section>
-
-          <p className="text-md mb-6 italic text-customBlack-50">
-            {event.date.toLocaleString()}
-          </p>
-
-          <p
-            className="text-md text-customBlack-50"
-            style={{ fontSize: "12px" }}
-          >
-            Organized By:
-          </p>
-          <p className="text-gradient text-sm">{event.organizedBy}</p>
-
-          {event?.partners.length > 0 && (
-            <>
-              <p
-                className="text-md mt-4 text-customBlack-50"
-                style={{ fontSize: "12px" }}
-              >
-                In partnership with:
-              </p>
-              {event?.partners?.map((partner: string, index: number) => (
-                <p key={index} className="text-sm">
-                  {partner}
-                </p>
-              ))}
-            </>
           )}
 
-          <p className="mt-12">{event.details}</p>
+          {sessionData?.user.role === "VOLUNTEER" && activity.hasVolunteers && (
+            <div className="btn-active w-1/2 self-center px-2 py-2">
+              Volunteer Now
+            </div>
+          )}
+
+          {sessionData?.user.role === "ORGANIZATION" &&
+            activity.hasOrganizations && (
+              <div className="btn-active w-1/2 self-center px-2 py-2">
+                Partner with Us!
+              </div>
+            )}
         </div>
       </div>
     </>

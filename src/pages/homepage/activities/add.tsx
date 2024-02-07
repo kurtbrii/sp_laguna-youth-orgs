@@ -231,7 +231,7 @@ const Add = () => {
             Create Activity
           </button>
           <button
-            onClick={() => window.location.replace("/homepage")}
+            onClick={() => window.location.replace("/homepage/activities")}
             type="reset"
             className="btn-outline   px-20 py-3"
             style={{ color: "#ec4b42", borderColor: "#ec4b42" }}

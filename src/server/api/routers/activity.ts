@@ -55,20 +55,18 @@ export const activityRouter = createTRPCRouter({
             }
           }
         }
-        // include: {
-        //   organization: true,
-        // }
       });
     }),
 
   getOne: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
-      const data = await ctx.db.event.findUnique({
+      const data = await ctx.db.activity.findUnique({
         where: { id },
         select: {
           organization: {
             select: {
+              orgName: true,
               user: {
                 select: {
                   id: true,
@@ -77,13 +75,17 @@ export const activityRouter = createTRPCRouter({
               },
             },
           },
-          name: true,
           id: true,
-          organizedBy: true,
+          name: true,
           details: true,
-          location: true,
           date: true,
-          partners: true,
+          createdAt: true,
+          location: true,
+
+          hasOrganizations: true,
+          hasVolunteers: true,
+          hasParticipants: true,
+          organizationId: true,
         }
       });
       return data;

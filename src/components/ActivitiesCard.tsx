@@ -28,7 +28,7 @@ const ActivitiesCard = ({ activity }: ActivityProps) => {
   return (
     <Link
       href={`/homepage/activities/${activity.id}`}
-      className=" relative h-72 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
+      className=" relative h-96 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
     >
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
@@ -42,13 +42,40 @@ const ActivitiesCard = ({ activity }: ActivityProps) => {
           {activity.date.toLocaleString()}
         </p>
         <hr className="my-1 flex  w-full border-t-2 border-customBlack-75" />
-        <p className=" overflow-hidden  overflow-ellipsis   text-sm ">
+        <p className=" mb-8  overflow-hidden   overflow-ellipsis  whitespace-nowrap text-sm">
           {activity.details}
         </p>
-      </div>
+        <section className=" flex flex-wrap gap-2">
+          {activity.hasOrganizations && (
+            <div
+              className="btn-outline border px-2 py-1"
+              style={{ fontSize: "8px" }}
+            >
+              Partnership
+            </div>
+          )}
 
+          {activity.hasParticipants && (
+            <div
+              className="btn-outline border px-2 py-1"
+              style={{ fontSize: "8px" }}
+            >
+              Call for Participants
+            </div>
+          )}
+
+          {activity.hasVolunteers && (
+            <div
+              className="btn-outline border px-2 py-1"
+              style={{ fontSize: "8px" }}
+            >
+              Call for Volunteers
+            </div>
+          )}
+        </section>
+      </div>
       <Image
-        className="absolute left-4 top-20 rounded-md"
+        className="absolute left-4 top-32 rounded-md"
         src={`${activity.organization.user.image}`}
         height={60}
         width={60}
