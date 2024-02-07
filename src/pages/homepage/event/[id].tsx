@@ -7,9 +7,9 @@ import {
   RadialTextGradient,
   ConicTextGradient,
 } from "react-text-gradients-and-animations";
-import NavBar from "~/components/navbar";
+import NavBar from "~/components/NavBar";
 import { useSession } from "next-auth/react";
-import OrgCard from "~/components/orgcard";
+import OrgCard from "~/components/OrgCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";

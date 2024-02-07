@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "~/components/navbar";
+import NavBar from "~/components/NavBar";
 import { useSession } from "next-auth/react";
 import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
@@ -65,7 +65,11 @@ const Add = () => {
     console.log(partner);
   };
 
-  const handleEventForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEventForm = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setEventData({
       ...eventData,
@@ -136,12 +140,12 @@ const Add = () => {
           placeholder="Event Name"
         />
 
-        <input
+        <textarea
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={eventData.details}
           onChange={handleEventForm}
-          // rows={10}
+          rows={10}
           placeholder="Details"
         />
 

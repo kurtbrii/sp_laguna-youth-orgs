@@ -13,26 +13,30 @@ import { api } from "~/utils/api";
 import { Organization } from "@prisma/client";
 
 import { Profile } from "next-auth";
+import ActivitiesCard from "~/components/ActivitiesCard";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  const event = api.event.getEvents.useQuery();
+  const activity = api.activity.getActivities.useQuery();
 
   const handleFetchEvents = () => {
-    console.log(event.data);
+    console.log(activity.data);
   };
 
-  type EventProps = {
+  type ActivityProps = {
     id: string;
     name: string;
-    organizedBy: string;
-    createdAt: string;
     details: string;
+    date: string;
+    createdAt: string;
     location: string;
-    organizationId: string;
+
     organization: Organization;
-    date: Date;
+    hasOrganizations: boolean;
+    hasVolunteers: boolean;
+    hasParticipants: boolean;
+    organizationId: string;
   };
 
   const router = useRouter();
@@ -49,7 +53,7 @@ const Index = () => {
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
           <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
-            Recent Events
+            Get Involved
           </h1>
         </div>
 
@@ -76,22 +80,19 @@ const Index = () => {
           {/* ADD EVENT */}
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
-              className="btn-active w-2/6 px-4 py-2"
-              onClick={() => router.push("/homepage/event/add")}
+              className="btn-active w-1/4 px-2 py-2"
+              onClick={() => router.push("/homepage/activities/add")}
             >
-              Add Event
+              Promote an Activity
             </button>
           )}
         </div>
-
-        {/* <button onClick={() }>button</button> */}
       </div>
 
-      {/* EVENT CARD */}
-      {/* TODO: FIX PREVIOUS: when added */}
+      {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {event?.data?.map((event: EventProps) => (
-          <EventCard key={event.id} event={event} />
+        {activity?.data?.map((activity: ActivityProps) => (
+          <ActivitiesCard key={activity.id} activity={activity} />
         ))}
       </div>
     </div>

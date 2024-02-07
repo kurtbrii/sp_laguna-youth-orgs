@@ -9,9 +9,9 @@ import {
   RadialTextGradient,
   ConicTextGradient,
 } from "react-text-gradients-and-animations";
-import NavBar from "~/components/navbar";
+import NavBar from "~/components/NavBar";
 import { useSession } from "next-auth/react";
-import OrgCard from "~/components/orgcard";
+import OrgCard from "~/components/OrgCard";
 
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();

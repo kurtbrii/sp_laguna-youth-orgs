@@ -11,7 +11,6 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
-import { DefaultUser } from "next-auth";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,23 +19,22 @@ import { DefaultUser } from "next-auth";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface AdapterUser {
+  interface User {
+    id: string;
     role: string;
+    organization: Organization;
   }
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
       // ...other properties
       role: string | undefined | null
+      organization: Organization
       // profile: User;
     };
 
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -48,12 +46,12 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     session: ({ session, user }) => ({
-      // session?.user.role = user.role,
       ...session,
       user: {
         ...session.user,
         id: user.id,
-        // role: user.role,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        role: user.role,
 
       },
 

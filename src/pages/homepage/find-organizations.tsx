@@ -1,8 +1,8 @@
-import NavBar from "~/components/navbar";
+import NavBar from "~/components/NavBar";
 import vol2 from "../../../assets/vol2.png";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
-import OrgCard from "~/components/orgcard";
+import OrgCard from "~/components/OrgCard";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { NextPage } from "next";
