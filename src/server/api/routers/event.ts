@@ -11,7 +11,7 @@ import { triggerAsyncId } from "async_hooks";
 
 export const eventRouter = createTRPCRouter({
   createEvent: protectedProcedure
-    .input(z.object({ name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string() }))
+    .input(z.object({ name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string(), partners: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -25,6 +25,7 @@ export const eventRouter = createTRPCRouter({
           location: input.location,
           organizationId: input.organizationId,
           date: new Date(input.date),
+          partners: input.partners
         },
       });
     }),
@@ -46,6 +47,7 @@ export const eventRouter = createTRPCRouter({
           createdAt: true,
           organizationId: true,
           date: true,
+          partners: true,
           organization: {
             select: {
               user: true
@@ -80,6 +82,7 @@ export const eventRouter = createTRPCRouter({
           details: true,
           location: true,
           date: true,
+          partners: true,
         }
       });
       return data;

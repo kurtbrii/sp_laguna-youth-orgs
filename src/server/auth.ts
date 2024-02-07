@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { Organization, ROLE } from "@prisma/client";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -10,6 +11,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
+import { DefaultUser } from "next-auth";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -18,12 +20,17 @@ import { db } from "~/server/db";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
+  interface AdapterUser {
+    role: string;
+  }
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
       // ...other properties
-      // role: UserRole;
+      role: string | undefined | null
+      // profile: User;
     };
+
   }
 
   // interface User {
@@ -41,12 +48,17 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     session: ({ session, user }) => ({
+      // session?.user.role = user.role,
       ...session,
       user: {
         ...session.user,
         id: user.id,
+        role: user.role,
+
       },
+
     }),
+
   },
   adapter: PrismaAdapter(db),
   providers: [
@@ -72,7 +84,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     newUser: '/auth/signup',
     // signIn: 'auth/login',
-    signOut: '/'
+    signOut: '/homepage'
   },
 };
 

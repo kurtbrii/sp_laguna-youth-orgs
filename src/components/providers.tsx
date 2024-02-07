@@ -16,7 +16,7 @@ const Providers = () => {
           type="button"
           onClick={() => signIn(provider, { callbackUrl: "/homepage" })}
           key={index}
-          className="btn-outline flex items-center gap-3 rounded-md px-10 py-1"
+          className="btn-outline border-1 flex items-center gap-3 rounded-md border px-10 py-1"
         >
           <Image
             className="h-10 w-10 object-cover"
@@ -39,7 +39,7 @@ const Providers = () => {
       <button
         type="button"
         onClick={handleHomePage}
-        className="btn-outline mb-3 flex items-center gap-3 rounded-md px-10 py-1"
+        className="btn-outline border-1 mb-3 flex items-center gap-3 rounded-md border px-10 py-1"
       >
         <Image
           className="h-10 w-10 object-cover"

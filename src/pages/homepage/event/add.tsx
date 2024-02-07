@@ -4,6 +4,9 @@ import { useSession } from "next-auth/react";
 import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import { IconButton } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 
 interface EventProps {
   name: "";
@@ -13,6 +16,7 @@ interface EventProps {
   location: string;
   organizationId: string;
   date: string;
+  partners: string[];
 }
 
 const Add = () => {
@@ -27,6 +31,8 @@ const Add = () => {
 
   const orgId = user.data?.organization?.id || ""; // Ensure to handle potential undefined
 
+  const [partner, setPartner] = useState("");
+
   const [eventData, setEventData] = useState<EventProps>({
     name: "",
     organized_by: "",
@@ -35,6 +41,7 @@ const Add = () => {
     location: "",
     organizationId: orgId,
     date: "",
+    partners: [],
   });
 
   useEffect(() => {
@@ -51,6 +58,12 @@ const Add = () => {
   if (user.error ?? !user.data?.organization) {
     return <div>Error loading user data</div>;
   }
+
+  const handlePartner = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPartner(e.target.value);
+
+    console.log(partner);
+  };
 
   const handleEventForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -70,10 +83,35 @@ const Add = () => {
       location: eventData.location,
       organizationId: orgId,
       date: eventData.date,
+      partners: eventData.partners,
     });
 
     console.log("hello");
     window.location.replace("/homepage");
+  };
+
+  const handleAddPartner = () => {
+    // Get the partner input value
+
+    // Add the partner to the partners array
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      partners: [...prevEventData.partners, partner],
+    }));
+
+    // Clear the partner input field
+    setPartner("");
+  };
+
+  const handleRemovePartner = (index: number) => {
+    setEventData((prevEventData) => {
+      const newPartners = [...prevEventData.partners];
+      newPartners.splice(index, 1);
+      return {
+        ...prevEventData,
+        partners: newPartners,
+      };
+    });
   };
 
   return (
@@ -87,7 +125,7 @@ const Add = () => {
       <form
         // onSubmit={() => submitEvent(eventData)}
         id="myForm"
-        className="mx-40 my-12 flex flex-col gap-4 text-sm"
+        className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
       >
         <input
           type="text"
@@ -98,12 +136,12 @@ const Add = () => {
           placeholder="Event Name"
         />
 
-        <textarea
+        <input
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={eventData.details}
           onChange={handleEventForm}
-          rows={10}
+          // rows={10}
           placeholder="Details"
         />
 
@@ -113,22 +151,45 @@ const Add = () => {
             value={eventData.location}
             name="location"
             onChange={handleEventForm}
-            className="mb-20 h-12 w-1/2 rounded border p-2 shadow"
+            className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Location"
           />
-
           <input
             type="datetime-local"
             value={eventData.date}
             name="date"
             onChange={handleEventForm}
-            className="mb-20 h-12 w-1/2 rounded border p-2 shadow"
+            className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"
           />
         </div>
+
+        <div>
+          <input
+            type="text"
+            name="partner"
+            value={partner}
+            className=" h-12 w-1/2 rounded border p-2 shadow"
+            placeholder="Input Partner"
+            onChange={handlePartner}
+          />
+          <IconButton className="h-12 w-12" onClick={handleAddPartner}>
+            <AddBoxIcon />
+          </IconButton>
+          <div className="mt-2 flex flex-col">
+            {eventData?.partners?.map((partner: string, index: number) => (
+              <div key={index} className="flex">
+                <p className="w-1/2 text-sm">{partner}</p>
+                <IconButton onClick={() => handleRemovePartner(index)}>
+                  <ClearIcon />
+                </IconButton>
+              </div>
+            ))}
+          </div>
+        </div>
       </form>
 
-      <div className="flex justify-center">
+      <div className="my-20 flex justify-center">
         <div className="flex gap-4">
           <button
             type="submit"

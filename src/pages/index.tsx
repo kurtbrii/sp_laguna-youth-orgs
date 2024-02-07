@@ -8,16 +8,13 @@ import NavBar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { db } from "~/server/db";
+import vol2 from "../../assets/vol2.png";
 
 export default function Home() {
   const { data: sessionData } = useSession();
 
   const current = sessionData?.user.id; // Replace with the actual user ID
   const get = api.user.getUser.useQuery({ userId: current ?? "" });
-
-  const num = async () => {
-    alert(get.data.role);
-  };
 
   return (
     <>
@@ -33,9 +30,18 @@ export default function Home() {
         />
       </Head>
       <main className="block">
-        <header className=" flex flex-col text-customBlack-100">
+        <header className=" flex flex-col font-custom-lexend text-customBlack-100">
           {/* NavBar */}
           <NavBar />
+
+          {/* Hero Section */}
+          <section className="flex bg-customBlack-100">
+            <Image
+              className="absolute h-full w-full object-cover opacity-30"
+              src={vol2}
+              alt="Volunteer Image"
+            />
+          </section>
 
           {/* Recent Events */}
           <div className="custom-epilogue mx-10 my-4 flex h-12 flex-col justify-between ">

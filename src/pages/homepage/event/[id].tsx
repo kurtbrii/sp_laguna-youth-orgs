@@ -107,17 +107,25 @@ const EventPage = () => {
           >
             Organized By:
           </p>
-          <p className="text-gradient mb-4 text-sm">{event.organizedBy}</p>
+          <p className="text-gradient text-sm">{event.organizedBy}</p>
 
-          <p
-            className="text-md text-customBlack-50"
-            style={{ fontSize: "12px" }}
-          >
-            In partnership with:
-          </p>
-          <p className="text-gradient mb-10 text-sm">{event.organizedBy}</p>
+          {event?.partners.length > 0 && (
+            <>
+              <p
+                className="text-md mt-4 text-customBlack-50"
+                style={{ fontSize: "12px" }}
+              >
+                In partnership with:
+              </p>
+              {event?.partners?.map((partner: string, index: number) => (
+                <p key={index} className="text-sm">
+                  {partner}
+                </p>
+              ))}
+            </>
+          )}
 
-          <p className="">{event.details}</p>
+          <p className="mt-12">{event.details}</p>
         </div>
       </div>
     </>

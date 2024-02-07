@@ -116,7 +116,7 @@ export default function SignUp() {
   return (
     <section className="flex h-screen  font-custom-lexend text-customBlack-100">
       {/* <!-- Left part with image --> */}
-      <section className="w-3/5flex-shrink-0 relative bg-customBlack-100">
+      <section className="relative w-3/5 flex-shrink-0 bg-customBlack-100">
         {/* Your image goes here */}
         <Image
           className="h-full w-full object-cover opacity-30"
@@ -125,7 +125,7 @@ export default function SignUp() {
         />
         {/* Centered div */}
         <div className=" absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center text-white">
-          <h1 className="mb-3 font-custom-changa-one text-4xl">
+          <h1 className="mb-3 font-custom-epilogue text-4xl">
             Laguna Youth Organizations Hub
           </h1>
           <p>
@@ -138,7 +138,7 @@ export default function SignUp() {
 
       {/* <!-- Right part with login page --> */}
       <section className=" flex w-2/5 flex-shrink-0 flex-col  justify-between gap-7 p-8">
-        <h1 className=" h-30 mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-changa-one text-4xl  font-extrabold text-transparent">
+        <h1 className=" h-30 font-custom-changa-one mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-4xl  font-extrabold text-transparent">
           Register Now
         </h1>
 
@@ -270,7 +270,7 @@ export default function SignUp() {
             >
               <p>Sign Up</p>
             </button>
-            <button className="btn-outline flex items-center justify-center gap-3 rounded-md px-12 py-2">
+            <button className="btn-outline  border-1 flex items-center justify-center gap-3 rounded-md border px-12 py-2">
               <p>Continue as Guest</p>
             </button>
           </div>

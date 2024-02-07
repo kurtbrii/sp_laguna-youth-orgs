@@ -12,6 +12,8 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { Organization } from "@prisma/client";
 
+import { Profile } from "next-auth";
+
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
@@ -72,13 +74,17 @@ const Index = () => {
           </div>
 
           {/* ADD EVENT */}
-          <button
-            className="btn-active w-2/6 px-4 py-2"
-            onClick={() => router.push("/homepage/event/add")}
-          >
-            Add Event
-          </button>
+          {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
+            <button
+              className="btn-active w-2/6 px-4 py-2"
+              onClick={() => router.push("/homepage/event/add")}
+            >
+              Add Event
+            </button>
+          )}
         </div>
+
+        {/* <button onClick={() }>button</button> */}
       </div>
 
       {/* EVENT CARD */}
