@@ -77,7 +77,7 @@ const Index = () => {
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
               className="btn-active w-1/4 px-2 py-2"
-              onClick={() => router.push("/homepage/event/add")}
+              onClick={() => router.push("/homepage/activities/add")}
             >
               Promote an Activity
             </button>

@@ -90,7 +90,7 @@ const NavBar = () => {
                 />
               </button>
               {toggleProfileButton && (
-                <div className=" absolute right-10 top-14 z-50 flex w-48 flex-col items-center justify-center rounded-md bg-customBlack-100  p-4 text-sm text-white">
+                <div className=" absolute right-10 top-14 z-50 flex w-48 flex-col items-center justify-center gap-2 rounded-md bg-customBlack-100  p-4 text-sm text-white">
                   <p
                     className="cursor-pointer"
                     onClick={() => signOut({ callbackUrl: "/homepage" })}
@@ -139,7 +139,7 @@ const NavBar = () => {
               </p>
               <p
                 className="cursor-pointer"
-                onClick={() => signOut({ callbackUrl: "/homepage" })}
+                onClick={() => router.push("/homepage/activities")}
               >
                 Centers of Participation
               </p>
