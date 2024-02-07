@@ -11,8 +11,6 @@ import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { Organization } from "@prisma/client";
-
-import { Profile } from "next-auth";
 import ActivitiesCard from "~/components/activitiesCard";
 
 const Index = () => {
