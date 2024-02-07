@@ -11,7 +11,7 @@ import { triggerAsyncId } from "async_hooks";
 
 export const activityRouter = createTRPCRouter({
   createActivity: protectedProcedure
-    .input(z.object({ name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string() }))
+    .input(z.object({ name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activity.create({
         data: {
@@ -24,14 +24,16 @@ export const activityRouter = createTRPCRouter({
           hasOrganizations: input.hasOrganizations,
           hasVolunteers: input.hasVolunteers,
           hasParticipants: input.hasParticipants,
+          organizationId: input.organizationId
         }
       });
     }),
 
-  getEvents: publicProcedure
+  getActivities: publicProcedure
     .query(async ({ ctx, input }) => {
+
       // const whereCondition = input.id ? { id: input.id } : {};
-      return ctx.db.event.findMany({
+      return ctx.db.activity.findMany({
         orderBy: {
           createdAt: "desc",
         },
@@ -39,13 +41,14 @@ export const activityRouter = createTRPCRouter({
         select: {
           id: true,
           name: true,
-          location: true,
-          organizedBy: true,
           details: true,
-          createdAt: true,
-          organizationId: true,
           date: true,
-          partners: true,
+          createdAt: true,
+          location: true,
+          hasOrganizations: true,
+          hasVolunteers: true,
+          hasParticipants: true,
+          organizationId: true,
           organization: {
             select: {
               user: true

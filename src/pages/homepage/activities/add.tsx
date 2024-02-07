@@ -18,6 +18,7 @@ interface ActivityProps {
   hasOrganizations: boolean;
   hasVolunteers: boolean;
   hasParticipants: boolean;
+  organizationId: string;
 }
 
 const Add = () => {
@@ -32,7 +33,7 @@ const Add = () => {
 
   const orgId = user.data?.organization?.id || ""; // Ensure to handle potential undefined
 
-  const [partner, setPartner] = useState("");
+  const [textArea, setTextArea] = useState("");
 
   const [activitiesData, setActivitiesData] = useState<ActivityProps>({
     name: "",
@@ -44,6 +45,7 @@ const Add = () => {
     hasOrganizations: false,
     hasVolunteers: false,
     hasParticipants: false,
+    organizationId: orgId,
   });
 
   useEffect(() => {
@@ -61,7 +63,11 @@ const Add = () => {
     return <div>Error loading user data</div>;
   }
 
-  const handleEventForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEventForm = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setActivitiesData({
       ...activitiesData,
@@ -71,7 +77,7 @@ const Add = () => {
     console.log(activitiesData);
   };
 
-  const submitActivity = (activityData: ActivityProps) => {
+  const submitActivity = () => {
     createActivity.mutate({
       name: activitiesData.name,
       details: activitiesData.details,
@@ -80,9 +86,10 @@ const Add = () => {
       hasOrganizations: activitiesData.hasOrganizations,
       hasVolunteers: activitiesData.hasVolunteers,
       hasParticipants: activitiesData.hasParticipants,
+      organizationId: orgId,
     });
 
-    // window.location.replace("/homepage");
+    window.location.replace("/homepage");
   };
 
   return (
@@ -113,12 +120,21 @@ const Add = () => {
           placeholder="Event Name"
         />
 
-        <input
+        {/* <input
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={activitiesData.details}
           onChange={handleEventForm}
           // rows={10}
+          placeholder="Details"
+        /> */}
+
+        <textarea
+          className=" w-full rounded border p-2 shadow "
+          name="details"
+          value={activitiesData.details}
+          onChange={handleEventForm}
+          rows={10}
           placeholder="Details"
         />
 
@@ -209,7 +225,7 @@ const Add = () => {
             type="submit"
             className="btn-active px-20 py-3"
             onClick={() => {
-              submitActivity(activitiesData);
+              submitActivity();
             }}
           >
             Create Activity

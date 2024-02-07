@@ -13,26 +13,30 @@ import { api } from "~/utils/api";
 import { Organization } from "@prisma/client";
 
 import { Profile } from "next-auth";
+import ActivitiesCard from "~/components/ActivitiesCard";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  const event = api.event.getEvents.useQuery();
+  const activity = api.activity.getActivities.useQuery();
 
   const handleFetchEvents = () => {
-    console.log(event.data);
+    console.log(activity.data);
   };
 
-  type EventProps = {
+  type ActivityProps = {
     id: string;
     name: string;
-    organizedBy: string;
-    createdAt: string;
     details: string;
+    date: string;
+    createdAt: string;
     location: string;
-    organizationId: string;
+
     organization: Organization;
-    date: Date;
+    hasOrganizations: boolean;
+    hasVolunteers: boolean;
+    hasParticipants: boolean;
+    organizationId: string;
   };
 
   const router = useRouter();
@@ -83,17 +87,14 @@ const Index = () => {
             </button>
           )}
         </div>
-
-        {/* <button onClick={() }>button</button> */}
       </div>
 
-      {/* EVENT CARD */}
-      {/* TODO: FIX PREVIOUS: when added */}
-      {/* <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {event?.data?.map((event: EventProps) => (
-          <EventCard key={event.id} event={event} />
+      {/* ACTIVITIES CARD */}
+      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
+        {activity?.data?.map((activity: ActivityProps) => (
+          <ActivitiesCard key={activity.id} activity={activity} />
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };

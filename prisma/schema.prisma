@@ -94,7 +94,9 @@ model Organization {
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
 
-    activities OrganizationActivity[]
+    activities Activity[]
+
+    partneredOrganizations OrganizationActivity[] // list of organizations who applied for partnership
 }
 
 model Volunteer {
@@ -134,6 +136,9 @@ model Activity {
     hasOrganizations Boolean
     hasVolunteers    Boolean
     hasParticipants  Boolean
+
+    organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId String?
 
     organizations OrganizationActivity[]
 }
