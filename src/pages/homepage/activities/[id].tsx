@@ -9,7 +9,6 @@ import {
 } from "react-text-gradients-and-animations";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import OrgCard from "~/components/orgCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
