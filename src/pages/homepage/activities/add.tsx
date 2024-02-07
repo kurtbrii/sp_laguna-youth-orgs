@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/NavBar";
 import { useSession } from "next-auth/react";
 import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
@@ -94,7 +94,7 @@ const Add = () => {
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <NavBar />
+      <Navbar />
       <section className=" mt-6 flex flex-row items-center justify-center bg-primary p-4 ">
         <p className="font-custom-epilogue text-xl font-extrabold text-white">
           ADD AN ACTIVITY

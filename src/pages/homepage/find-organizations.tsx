@@ -1,4 +1,4 @@
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/NavBar";
 import vol2 from "../../../assets/vol2.png";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -30,7 +30,7 @@ const FindOrganizations: NextPage = () => {
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <NavBar />
+      <Navbar />
       <div className="mx-10 my-4 flex h-12 flex-col justify-between font-custom-lexend ">
         <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
           Find Organizations

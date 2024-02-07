@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/NavBar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -44,7 +44,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <NavBar />
+      <Navbar />
       {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">

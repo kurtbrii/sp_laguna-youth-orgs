@@ -9,7 +9,7 @@ import {
   RadialTextGradient,
   ConicTextGradient,
 } from "react-text-gradients-and-animations";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/NavBar";
 import { useSession } from "next-auth/react";
 import OrgCard from "~/components/OrgCard";
 
@@ -43,7 +43,7 @@ const OrganizationPage = () => {
 
   return (
     <>
-      <NavBar />
+      <Navbar />
       <div className="mx-16  my-10 flex  flex-col justify-evenly font-custom-lexend  text-customBlack-100">
         {/* CONTACT INFO AND DETAILS */}
         <div className="mb-16 grid grid-flow-col">

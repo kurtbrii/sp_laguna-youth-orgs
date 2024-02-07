@@ -7,7 +7,7 @@ import {
   RadialTextGradient,
   ConicTextGradient,
 } from "react-text-gradients-and-animations";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/NavBar";
 import { useSession } from "next-auth/react";
 import OrgCard from "~/components/OrgCard";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -44,7 +44,7 @@ const EventPage = () => {
 
   return (
     <>
-      <NavBar />
+      <Navbar />
       <div className="mx-16 my-10  flex  justify-center gap-2 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
         <div className="mr-24 flex w-2/5 flex-col gap-1">
