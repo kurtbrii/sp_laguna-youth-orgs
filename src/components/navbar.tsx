@@ -11,7 +11,9 @@ const NavBar = () => {
 
   const [activeLink, setActiveLink] = useState<string>("");
 
-  const [toggleButton, setToggleButton] = useState(false);
+  const [toggleProfileButton, setToggleButton] = useState(false);
+
+  const [toggleGetInvolved, setToggleGetInvolved] = useState(false);
 
   useEffect(() => {
     // Get the current route pathname
@@ -24,7 +26,7 @@ const NavBar = () => {
       setActiveLink("howItWorks");
     } else if (currentRoute === "/homepage/find-organizations") {
       setActiveLink("findOrganizations");
-    } else if (currentRoute === "/homepage/get-involved") {
+    } else if (currentRoute === "/homepage/activities") {
       setActiveLink("getInvolved");
     } else {
       setActiveLink("");
@@ -62,7 +64,12 @@ const NavBar = () => {
           >
             <Link href="/homepage/find-organizations">Find Organizations</Link>
           </li>
-          <li className=" cursor-pointer">Get Involved</li>
+          <li
+            className={`cursor-pointer ${activeLink === "getInvolved" ? " text-secondary" : ""}`}
+            onClick={() => setToggleGetInvolved(!toggleGetInvolved)}
+          >
+            Get Involved
+          </li>
         </ul>
 
         {/* right navbar */}
@@ -73,7 +80,7 @@ const NavBar = () => {
                 <p>{sessionData.user.name}</p>
               </Link>
 
-              <button onClick={() => setToggleButton(!toggleButton)}>
+              <button onClick={() => setToggleButton(!toggleProfileButton)}>
                 <Image
                   className={`cursor-pointer rounded-lg `}
                   src={sessionData.user.image ?? ""}
@@ -82,8 +89,20 @@ const NavBar = () => {
                   width={40}
                 />
               </button>
-              {toggleButton && (
-                <div className=" absolute right-10 top-16 z-50 flex w-32 flex-col items-center justify-center rounded-md bg-customBlack-100  p-4 text-sm text-white">
+              {toggleProfileButton && (
+                <div className=" absolute right-10 top-14 z-50 flex w-48 flex-col items-center justify-center rounded-md bg-customBlack-100  p-4 text-sm text-white">
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => signOut({ callbackUrl: "/homepage" })}
+                  >
+                    Profile
+                  </p>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => signOut({ callbackUrl: "/homepage" })}
+                  >
+                    Manage Activities
+                  </p>
                   <p
                     className="cursor-pointer"
                     onClick={() => signOut({ callbackUrl: "/homepage" })}
@@ -101,6 +120,29 @@ const NavBar = () => {
               {/* <button className="btn-outline px-10 py-1" onClick={handleSignUp}>
                 Sign Up
               </button> */}
+            </div>
+          )}
+
+          {toggleGetInvolved && (
+            <div className=" absolute right-1/3 top-14 z-50 flex w-52 flex-col items-center justify-center gap-2 rounded-md bg-customBlack-100  p-4 text-sm text-white">
+              <p
+                className="cursor-pointer"
+                onClick={() => router.push("/homepage/activities")}
+              >
+                Activities Section
+              </p>
+              <p
+                className="cursor-pointer"
+                onClick={() => router.push("/homepage/activities")}
+              >
+                Pool of Speakers
+              </p>
+              <p
+                className="cursor-pointer"
+                onClick={() => signOut({ callbackUrl: "/homepage" })}
+              >
+                Centers of Participation
+              </p>
             </div>
           )}
         </div>

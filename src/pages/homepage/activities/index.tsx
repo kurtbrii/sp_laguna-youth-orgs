@@ -49,7 +49,7 @@ const Index = () => {
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
           <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
-            Recent Events
+            Get Involved
           </h1>
         </div>
 
@@ -76,10 +76,10 @@ const Index = () => {
           {/* ADD EVENT */}
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
-              className="btn-active w-2/6 px-4 py-2"
+              className="btn-active w-1/4 px-2 py-2"
               onClick={() => router.push("/homepage/event/add")}
             >
-              Add Event
+              Promote an Activity
             </button>
           )}
         </div>
@@ -89,11 +89,11 @@ const Index = () => {
 
       {/* EVENT CARD */}
       {/* TODO: FIX PREVIOUS: when added */}
-      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
+      {/* <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
         {event?.data?.map((event: EventProps) => (
           <EventCard key={event.id} event={event} />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

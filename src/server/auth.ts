@@ -20,7 +20,8 @@ import { DefaultUser } from "next-auth";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface AdapterUser {
+  interface User {
+    id: string;
     role: string;
   }
   interface Session extends DefaultSession {
@@ -33,10 +34,6 @@ declare module "next-auth" {
 
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -48,12 +45,12 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     session: ({ session, user }) => ({
-      // session?.user.role = user.role,
       ...session,
       user: {
         ...session.user,
         id: user.id,
-        // role: user.role,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        role: user.role,
 
       },
 
