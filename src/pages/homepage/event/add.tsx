@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";

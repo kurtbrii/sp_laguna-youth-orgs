@@ -2,7 +2,7 @@
 import Head from "next/head";
 // import Link from "next/link";
 import Image from "next/image";
-import Navbar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 
 // import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";

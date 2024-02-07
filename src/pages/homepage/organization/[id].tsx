@@ -9,9 +9,9 @@ import {
   RadialTextGradient,
   ConicTextGradient,
 } from "react-text-gradients-and-animations";
-import Navbar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import OrgCard from "~/components/OrgCard";
+import OrgCard from "~/components/orgCard";
 
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -159,6 +159,7 @@ const OrganizationPage = () => {
         </div>
 
         {/* EVENTS ORGANIZED */}
+
         <div className=" mb-24 flex flex-col gap-6">
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Events Organized

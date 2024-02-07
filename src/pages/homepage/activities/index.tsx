@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -7,13 +7,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
 import Router, { useRouter } from "next/router";
-import EventCard from "~/components/EventCard";
+import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { Organization } from "@prisma/client";
 
 import { Profile } from "next-auth";
-import ActivitiesCard from "~/components/ActivitiesCard";
+import ActivitiesCard from "~/components/activitiesCard";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
