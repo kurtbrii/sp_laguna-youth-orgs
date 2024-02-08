@@ -10,7 +10,7 @@ import Router, { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { Organization, User } from "@prisma/client";
-import ActivitiesCard from "~/components/activitiesCard";
+import ActivitiesCard from "~/components/ActivitiesCard";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
