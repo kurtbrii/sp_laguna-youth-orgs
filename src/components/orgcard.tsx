@@ -53,8 +53,8 @@ const OrgCard = ({ organization }: OrgProps) => {
       <Image
         className="absolute left-4 top-16 rounded-md"
         src={`${organization?.user?.image}`}
-        height={30}
-        width={30}
+        height={60}
+        width={60}
         alt="user image role"
       />
     </Link>

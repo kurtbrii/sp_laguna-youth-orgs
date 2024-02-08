@@ -31,9 +31,13 @@ export const eventRouter = createTRPCRouter({
     }),
 
   getEvents: publicProcedure
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.event.findMany({
+        where: {
+          organizationId: input.orgId
+        },
         orderBy: {
           createdAt: "desc",
         },
@@ -53,7 +57,8 @@ export const eventRouter = createTRPCRouter({
               user: true
             }
           }
-        }
+        },
+        take: input.take
         // include: {
         //   organization: true,
         // }

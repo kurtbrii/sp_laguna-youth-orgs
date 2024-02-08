@@ -35,7 +35,10 @@ export const orgRouter = createTRPCRouter({
   getOrganizations: publicProcedure
     .input(z.object({ id: z.string().optional() }))
     .query(async ({ ctx, input }) => {
-      const whereCondition = input.id ? { id: input.id } : {};
+      const whereCondition = {
+        id: input.id,
+
+      }
 
       return ctx.db.organization.findMany({
         where: whereCondition,
@@ -76,10 +79,16 @@ export const orgRouter = createTRPCRouter({
 
 
   getOne: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ input: { id }, ctx }) => {
+    .input(z.object({ id: z.string().optional(), userId: z.string().optional() }))
+    .query(async ({ input: { id, userId }, ctx }) => {
+
+
+
       const data = await ctx.db.organization.findUnique({
-        where: { id },
+        where: {
+          userId,
+          id,
+        },
         select: {
           id: true,
           orgName: true,

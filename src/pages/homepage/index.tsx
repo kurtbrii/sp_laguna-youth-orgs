@@ -17,7 +17,7 @@ import { Profile } from "next-auth";
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  const event = api.event.getEvents.useQuery();
+  const event = api.event.getEvents.useQuery({});
 
   const handleFetchEvents = () => {
     console.log(event.data);
@@ -94,7 +94,7 @@ const Index = () => {
       {/* EVENT CARD */}
       {/* TODO: FIX PREVIOUS: when added */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {event?.data?.map((eventQuery: EventProps) => (
+        {event?.data?.map((eventQuery) => (
           <EventCard key={eventQuery.id} event={eventQuery} />
         ))}
       </div>

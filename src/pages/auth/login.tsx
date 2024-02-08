@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import vol2 from "../../../assets/vol2.png";
 import Image from "next/image";
 import Providers from "~/components/providers";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
-const login = () => {
+const Login = () => {
+  const { data: sessionData, status: sessionStatus } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check authentication status when the component mounts
+    if (sessionStatus === "authenticated") {
+      // Redirect to /homepage if not authenticated
+      void router.push("/homepage");
+    }
+  }, [router, sessionStatus]);
+
   return (
     <section className="flex h-screen font-custom-lexend ">
       {/* <!-- Left part with image --> */}
@@ -45,4 +58,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;
