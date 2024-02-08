@@ -11,7 +11,7 @@ import {
 } from "react-text-gradients-and-animations";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import OrgCard from "~/components/orgCard";
+import OrgCard from "~/components/orgcard";
 
 type OrganizationProps = {
   id: string;
