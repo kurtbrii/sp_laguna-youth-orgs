@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import OrgCard from "~/components/orgcard";
 import { useEffect } from "react";
 import EventCard from "~/components/eventCard";
+import ActivitiesCard from "~/components/ActivitiesCard";
 
 type OrganizationProps = {
   id: string;
@@ -46,18 +47,28 @@ const OrganizationPage = () => {
     }
   }, [router, sessionStatus]);
 
+  // ! Organization Query
   const organizationsQuery = api.organization.getOne.useQuery({
     userId: sessionData?.user.id,
   });
 
   const organization = organizationsQuery.data;
 
+  // ! Events Query
   const eventsQuery = api.event.getEvents.useQuery({
     take: 4,
     orgId: organization?.id,
   });
 
   const events = eventsQuery.data;
+
+  // ! Activities Query
+  const activitiesQuery = api.activity.getActivities.useQuery({
+    take: 4,
+    orgId: organization?.id,
+  });
+
+  const activities = activitiesQuery.data;
 
   // if (!id) {
   //   return <div>No organization ID provided</div>;
@@ -196,10 +207,9 @@ const OrganizationPage = () => {
             All Activities
           </h1>
           <div className="flex gap-4">
-            {/* <OrgCard key={organization?.id} organization={organization} />
-            <OrgCard key={organization?.id} organization={organization} />
-            <OrgCard key={organization?.id} organization={organization} />
-            <OrgCard key={organization?.id} organization={organization} /> */}
+            {activities?.map((activityQuery) => (
+              <ActivitiesCard key={activityQuery.id} activity={activityQuery} />
+            ))}
           </div>
         </div>
 

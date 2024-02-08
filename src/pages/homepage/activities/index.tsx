@@ -15,30 +15,30 @@ import ActivitiesCard from "~/components/ActivitiesCard";
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  const activity = api.activity.getActivities.useQuery();
+  const activity = api.activity.getActivities.useQuery({});
 
   const handleFetchEvents = () => {
     console.log(activity.data);
   };
 
-  type QueryActivity = {
-    id: string;
-    name: string;
-    details: string;
-    date: Date;
-    createdAt: Date;
-    location: string;
-    organization: {
-      user: {
-        id: string;
-        image: string | null;
-      };
-    };
-    hasOrganizations: boolean;
-    hasVolunteers: boolean;
-    hasParticipants: boolean;
-    organizationId: string;
-  };
+  // type QueryActivity = {
+  //   id: string;
+  //   name: string;
+  //   details: string;
+  //   date: Date;
+  //   createdAt: Date;
+  //   location: string;
+  //   organization: {
+  //     user: {
+  //       id: string;
+  //       image: string | null;
+  //     };
+  //   };
+  //   hasOrganizations: boolean;
+  //   hasVolunteers: boolean;
+  //   hasParticipants: boolean;
+  //   organizationId: string;
+  // };
 
   const router = useRouter();
 
@@ -92,7 +92,7 @@ const Index = () => {
 
       {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {activity?.data?.map((queryActivity: QueryActivity) => (
+        {activity?.data?.map((queryActivity) => (
           <ActivitiesCard key={queryActivity.id} activity={queryActivity} />
         ))}
       </div>
