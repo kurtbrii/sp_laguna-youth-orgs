@@ -10,11 +10,15 @@ type ActivityProps = {
     id: string;
     name: string;
     details: string;
-    date: string;
-    createdAt: string;
+    date: Date;
+    createdAt: Date;
     location: string;
-    organization: Organization;
-
+    organization: {
+      user: {
+        id: string;
+        image: string | null;
+      };
+    };
     hasOrganizations: boolean;
     hasVolunteers: boolean;
     hasParticipants: boolean;
@@ -22,7 +26,7 @@ type ActivityProps = {
   };
 };
 
-const ActivitiesCard = ({ activity }: ActivityProps) => {
+const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   return (
@@ -76,7 +80,7 @@ const ActivitiesCard = ({ activity }: ActivityProps) => {
       </div>
       <Image
         className="absolute left-4 top-32 rounded-md"
-        src={`${activity.organization.user.image}`}
+        src={`${activity.organization?.user?.image}`}
         height={60}
         width={60}
         alt="user image role"

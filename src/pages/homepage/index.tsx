@@ -27,11 +27,15 @@ const Index = () => {
     id: string;
     name: string;
     organizedBy: string;
-    createdAt: string;
+    createdAt: Date;
     details: string;
     location: string;
     organizationId: string;
-    organization: Organization;
+    organization: {
+      user: {
+        image: string | null;
+      };
+    };
     date: Date;
   };
 
@@ -90,8 +94,8 @@ const Index = () => {
       {/* EVENT CARD */}
       {/* TODO: FIX PREVIOUS: when added */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {event?.data?.map((event: EventProps) => (
-          <EventCard key={event.id} event={event} />
+        {event?.data?.map((eventQuery: EventProps) => (
+          <EventCard key={eventQuery.id} event={eventQuery} />
         ))}
       </div>
     </div>

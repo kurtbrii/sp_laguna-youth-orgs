@@ -13,6 +13,23 @@ import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import OrgCard from "~/components/orgCard";
 
+type OrganizationProps = {
+  id: string;
+  orgName: string;
+  phoneNumber: string;
+  mission: string;
+  bio: string;
+  vision: string;
+  objectives: string;
+  user: {
+    id: string;
+    role: string;
+    image: string | null;
+    email: string | null;
+  };
+  userId: string;
+};
+
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
@@ -49,25 +66,25 @@ const OrganizationPage = () => {
         <div className="mb-16 grid grid-flow-col">
           <div className="flex-flex-col">
             <Image
-              src={organization.user.image}
+              src={organization?.user.image ?? ""}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <p className="text-xs">
               <span className="font-bold">Email Address:</span>{" "}
-              {organization.user.email}
+              {organization?.user?.email}
             </p>
 
             <p className=" text-xs">
               <span className="font-bold">Contact Number:</span>{" "}
-              {organization.phoneNumber}
+              {organization?.phoneNumber}
             </p>
           </div>
 
           <div className="flex-start  ml-16 flex flex-col">
             <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
-              {organization.orgName}
+              {organization?.orgName}
             </h1>
 
             <p className="mb-6 mr-32 text-sm">
@@ -84,7 +101,7 @@ const OrganizationPage = () => {
             {sessionStatus === "authenticated" && user.data && (
               <div className="flex gap-5">
                 {sessionData &&
-                  sessionData.user.id !== organization.user.id &&
+                  sessionData.user.id !== organization?.user.id &&
                   user.data.role === "ORGANIZATION" && (
                     <>
                       <button className="btn-active px-8 py-3">
@@ -164,12 +181,7 @@ const OrganizationPage = () => {
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Events Organized
           </h1>
-          <div className="flex gap-4 ">
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-          </div>
+          <div className="flex gap-4 "></div>
         </div>
 
         {/* ALL ACTIVITIES */}
@@ -178,10 +190,10 @@ const OrganizationPage = () => {
             All Activities
           </h1>
           <div className="flex gap-4">
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
+            {/* <OrgCard key={organization?.id} organization={organization} />
+            <OrgCard key={organization?.id} organization={organization} />
+            <OrgCard key={organization?.id} organization={organization} />
+            <OrgCard key={organization?.id} organization={organization} /> */}
           </div>
         </div>
 
@@ -190,12 +202,7 @@ const OrganizationPage = () => {
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Pool of Speakers
           </h1>
-          <div className="flex gap-4">
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-            <OrgCard key={organization.id} organization={organization} />
-          </div>
+          <div className="flex gap-4"></div>
         </div>
       </div>
     </>

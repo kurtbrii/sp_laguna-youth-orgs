@@ -51,7 +51,12 @@ export const activityRouter = createTRPCRouter({
           organizationId: true,
           organization: {
             select: {
-              user: true
+              user: {
+                select: {
+                  image: true,
+                  id: true,
+                }
+              }
             }
           }
         }

@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Image from "next/image";
+import vol2 from "../../../../assets/vol2.png";
 
 import {
   LinearTextGradient,
@@ -23,7 +24,7 @@ const EventPage = () => {
     userId: sessionData?.user.id ?? "",
   });
 
-  const activityQuery = api.activity.getOne.useQuery({
+  const activityQuery = api.activity?.getOne.useQuery({
     id: id as string,
   });
 
@@ -49,7 +50,7 @@ const EventPage = () => {
         <div className="mr-24 flex w-2/5 flex-col gap-1">
           <Image
             className="flex w-full rounded-md"
-            src={activity.organization.user.image}
+            src={activity?.organization?.user?.image ?? vol2}
             alt="Organization Image"
             height={300}
             width={300}
@@ -58,21 +59,21 @@ const EventPage = () => {
           <div className="flex gap-1">
             <Image
               className="rounded-md"
-              src={activity.organization.user.image}
+              src={activity?.organization?.user?.image ?? vol2}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={activity.organization.user.image}
+              src={activity?.organization?.user?.image ?? vol2}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={activity.organization.user.image}
+              src={activity?.organization?.user?.image ?? vol2}
               alt="Organization Image"
               height={300}
               width={300}
@@ -85,7 +86,7 @@ const EventPage = () => {
             {/* EVENT NAME */}
             <section className="flex items-center justify-between">
               <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
-                {activity.name}
+                {activity?.name}
               </h1>
               <div className="flex gap-4">
                 <IconButton>
@@ -98,7 +99,7 @@ const EventPage = () => {
             </section>
 
             <p className="text-md mb-6 italic text-customBlack-50">
-              {activity.date.toLocaleString()}
+              {activity?.date.toLocaleString()}
             </p>
 
             <p
@@ -108,26 +109,27 @@ const EventPage = () => {
               Organized By:
             </p>
             <p className="text-gradient text-sm">
-              {activity.organization.orgName}
+              {activity?.organization?.orgName}
             </p>
 
-            <p className="mt-12">{activity.details}</p>
+            <p className="mt-12">{activity?.details}</p>
           </div>
 
-          {sessionStatus !== "authenticated" && activity.hasParticipants && (
+          {sessionStatus !== "authenticated" && activity?.hasParticipants && (
             <div className="btn-active w-1/2 self-center px-2 py-2">
-              Join Activity
+              Join Activity?
             </div>
           )}
 
-          {sessionData?.user.role === "VOLUNTEER" && activity.hasVolunteers && (
-            <div className="btn-active w-1/2 self-center px-2 py-2">
-              Volunteer Now
-            </div>
-          )}
+          {sessionData?.user.role === "VOLUNTEER" &&
+            activity?.hasVolunteers && (
+              <div className="btn-active w-1/2 self-center px-2 py-2">
+                Volunteer Now
+              </div>
+            )}
 
           {sessionData?.user.role === "ORGANIZATION" &&
-            activity.hasOrganizations && (
+            activity?.hasOrganizations && (
               <div className="btn-active w-1/2 self-center px-2 py-2">
                 Partner with Us!
               </div>

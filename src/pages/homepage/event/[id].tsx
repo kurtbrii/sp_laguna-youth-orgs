@@ -13,6 +13,7 @@ import OrgCard from "~/components/orgCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import vol2 from "../../../../assets/vol2.png";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -50,7 +51,7 @@ const EventPage = () => {
         <div className="mr-24 flex w-2/5 flex-col gap-1">
           <Image
             className="flex w-full rounded-md"
-            src={event.organization.user.image}
+            src={event?.organization?.user.image ?? vol2}
             alt="Organization Image"
             height={300}
             width={300}
@@ -59,21 +60,21 @@ const EventPage = () => {
           <div className="flex gap-1">
             <Image
               className="rounded-md"
-              src={event.organization.user.image}
+              src={event?.organization?.user.image ?? vol2}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event.organization.user.image}
+              src={event?.organization?.user.image ?? vol2}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event.organization.user.image}
+              src={event?.organization?.user.image ?? vol2}
               alt="Organization Image"
               height={300}
               width={300}
@@ -85,7 +86,7 @@ const EventPage = () => {
           {/* EVENT NAME */}
           <section className="flex items-center justify-between">
             <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
-              {event.name}
+              {event?.name}
             </h1>
             <div className="flex gap-4">
               <IconButton>
@@ -98,7 +99,7 @@ const EventPage = () => {
           </section>
 
           <p className="text-md mb-6 italic text-customBlack-50">
-            {event.date.toLocaleString()}
+            {event?.date.toLocaleString()}
           </p>
 
           <p
@@ -107,9 +108,9 @@ const EventPage = () => {
           >
             Organized By:
           </p>
-          <p className="text-gradient text-sm">{event.organizedBy}</p>
+          <p className="text-gradient text-sm">{event?.organizedBy}</p>
 
-          {event?.partners.length > 0 && (
+          {event && event?.partners?.length > 0 && (
             <>
               <p
                 className="text-md mt-4 text-customBlack-50"
@@ -125,7 +126,7 @@ const EventPage = () => {
             </>
           )}
 
-          <p className="mt-12">{event.details}</p>
+          <p className="mt-12">{event?.details}</p>
         </div>
       </div>
     </>

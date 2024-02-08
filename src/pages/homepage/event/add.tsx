@@ -29,7 +29,7 @@ const Add = () => {
     userId: sessionData?.user.id ?? "",
   });
 
-  const orgId = user.data?.organization?.id || ""; // Ensure to handle potential undefined
+  const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
   const [partner, setPartner] = useState("");
 
@@ -82,7 +82,7 @@ const Add = () => {
   const submitEvent = (eventData: EventProps) => {
     createEvent.mutate({
       name: eventData.name,
-      organizedBy: user.data.organization.orgName,
+      organizedBy: user?.data?.organization?.orgName ?? "",
       details: eventData.details,
       location: eventData.location,
       organizationId: orgId,
