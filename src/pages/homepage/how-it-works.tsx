@@ -1,10 +1,10 @@
 import React from "react";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 
 const howItWorks = () => {
   return (
     <>
-      <NavBar />
+      <Navbar />
     </>
   );
 };

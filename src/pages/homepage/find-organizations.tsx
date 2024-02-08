@@ -1,8 +1,8 @@
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 import vol2 from "../../../assets/vol2.png";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
-import OrgCard from "~/components/OrgCard";
+import OrgCard from "~/components/orgCard";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { NextPage } from "next";
@@ -17,27 +17,42 @@ const FindOrganizations: NextPage = () => {
     console.log(organizations.data);
   };
 
-  type OrganizationProps = {
+  interface OrgProps {
     id: string;
-    orgName?: string;
-    phoneNumber?: string;
-    mission?: string;
-    vision?: string;
-    objectives?: string;
-    user?: User;
+    orgName: string;
+    phoneNumber: string;
+    bio: string;
     userId: string;
-  };
+    mission: string;
+    vision: string;
+    objectives: string;
+    user: {
+      id: string;
+      image: string | null;
+      role: string;
+      email: string | null; // Update this line to handle null
+    };
+    event: {
+      id: string;
+      name: string;
+      organizedBy: string;
+      details: string;
+      location: string;
+      date: Date; // Update this line to Date
+      partners: string[];
+    }[];
+  }
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <NavBar />
+      <Navbar />
       <div className="mx-10 my-4 flex h-12 flex-col justify-between font-custom-lexend ">
         <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
           Find Organizations
         </h1>
       </div>
       <div className=" mx-4 mb-5 flex flex-wrap justify-center gap-5">
-        {organizations?.data?.map((organization: OrganizationProps) => (
+        {organizations?.data?.map((organization: OrgProps) => (
           <OrgCard key={organization.id} organization={organization} />
         ))}
       </div>

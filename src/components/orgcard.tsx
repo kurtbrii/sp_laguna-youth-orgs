@@ -5,20 +5,35 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { type User } from "@prisma/client";
 
-type OrganizationProps = {
+interface OrgProps {
   organization: {
     id: string;
-    orgName?: string;
-    phoneNumber?: string;
-    mission?: string;
-    vision?: string;
-    objectives?: string;
-    user?: User;
+    orgName: string;
+    phoneNumber: string;
+    bio: string;
     userId: string;
+    mission: string;
+    vision: string;
+    objectives: string;
+    user: {
+      id: string;
+      image: string | null;
+      role: string;
+      email: string | null; // Update this line to handle null
+    };
+    event: {
+      id: string;
+      name: string;
+      organizedBy: string;
+      details: string;
+      location: string;
+      date: Date; // Update this line to Date
+      partners: string[];
+    }[];
   };
-};
+}
 
-const OrgCard = ({ organization }: OrganizationProps) => {
+const OrgCard = ({ organization }: OrgProps) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   return (
@@ -33,11 +48,11 @@ const OrgCard = ({ organization }: OrganizationProps) => {
           {organization.orgName}
         </p>
         <p className="text-sm">{organization.phoneNumber}</p>
-        <p className="text-sm">Role: {organization.user.role}</p>
+        <p className="text-sm">Role: {organization?.user?.role}</p>
       </div>
       <Image
         className="absolute left-4 top-16 rounded-md"
-        src={`${organization.user.image}`}
+        src={`${organization?.user?.image}`}
         height={30}
         width={30}
         alt="user image role"

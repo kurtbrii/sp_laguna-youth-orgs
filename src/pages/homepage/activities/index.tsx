@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "~/components/NavBar";
+import Navbar from "../../../components/navbar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -7,13 +7,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
 import Router, { useRouter } from "next/router";
-import EventCard from "~/components/EventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { Organization } from "@prisma/client";
-
-import { Profile } from "next-auth";
-import ActivitiesCard from "~/components/ActivitiesCard";
+import { Organization, User } from "@prisma/client";
+import ActivitiesCard from "~/components/activitiesCard";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -24,15 +21,19 @@ const Index = () => {
     console.log(activity.data);
   };
 
-  type ActivityProps = {
+  type QueryActivity = {
     id: string;
     name: string;
     details: string;
-    date: string;
-    createdAt: string;
+    date: Date;
+    createdAt: Date;
     location: string;
-
-    organization: Organization;
+    organization: {
+      user: {
+        id: string;
+        image: string | null;
+      };
+    };
     hasOrganizations: boolean;
     hasVolunteers: boolean;
     hasParticipants: boolean;
@@ -48,7 +49,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <NavBar />
+      <Navbar />
       {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
@@ -91,8 +92,8 @@ const Index = () => {
 
       {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {activity?.data?.map((activity: ActivityProps) => (
-          <ActivitiesCard key={activity.id} activity={activity} />
+        {activity?.data?.map((queryActivity: QueryActivity) => (
+          <ActivitiesCard key={queryActivity.id} activity={queryActivity} />
         ))}
       </div>
     </div>

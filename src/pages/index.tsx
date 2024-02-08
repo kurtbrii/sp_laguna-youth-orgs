@@ -2,7 +2,7 @@
 import Head from "next/head";
 // import Link from "next/link";
 import Image from "next/image";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 
 // import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
@@ -32,7 +32,7 @@ export default function Home() {
       <main className="block">
         <header className=" flex flex-col font-custom-lexend text-customBlack-100">
           {/* NavBar */}
-          <NavBar />
+          <Navbar />
 
           {/* Hero Section */}
           <section className="flex bg-customBlack-100">

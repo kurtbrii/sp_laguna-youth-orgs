@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -7,7 +7,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
 import Router, { useRouter } from "next/router";
-import EventCard from "~/components/EventCard";
+import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { Organization } from "@prisma/client";
@@ -27,11 +27,15 @@ const Index = () => {
     id: string;
     name: string;
     organizedBy: string;
-    createdAt: string;
+    createdAt: Date;
     details: string;
     location: string;
     organizationId: string;
-    organization: Organization;
+    organization: {
+      user: {
+        image: string | null;
+      };
+    };
     date: Date;
   };
 
@@ -44,7 +48,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <NavBar />
+      <Navbar />
       {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
@@ -90,8 +94,8 @@ const Index = () => {
       {/* EVENT CARD */}
       {/* TODO: FIX PREVIOUS: when added */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {event?.data?.map((event: EventProps) => (
-          <EventCard key={event.id} event={event} />
+        {event?.data?.map((eventQuery: EventProps) => (
+          <EventCard key={eventQuery.id} event={eventQuery} />
         ))}
       </div>
     </div>

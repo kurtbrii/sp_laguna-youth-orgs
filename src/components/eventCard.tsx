@@ -5,16 +5,35 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Organization, type User } from "@prisma/client";
 
+// type Organization = {
+//   id: string;
+//   orgName: string | null;
+//   phoneNumber: string | null;
+//   bio: string | null;
+//   mission: string | null;
+//   vision: string | null;
+//   objectives: string | null;
+//   userId: string;
+//   user: {
+//     image: string;
+
+//   };
+// };
+
 type EventProps = {
   event: {
     id: string;
     name: string;
     organizedBy: string;
-    createdAt: string;
+    createdAt: Date;
     details: string;
     location: string;
     organizationId: string;
-    organization: Organization;
+    organization: {
+      user: {
+        image: string | null;
+      };
+    };
     date: Date;
   };
 };

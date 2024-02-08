@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const NavBar = () => {
+const Navbar = () => {
   const router = useRouter();
 
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -152,7 +152,7 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default Navbar;
 
 function handleSignIn() {
   window.location.href = "/auth/login";
