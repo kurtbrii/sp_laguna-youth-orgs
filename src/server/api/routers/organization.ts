@@ -27,7 +27,7 @@ export const orgRouter = createTRPCRouter({
           mission: loremText,
           vision: loremText,
           objectives: loremText,
-
+          bio: loremText,
         },
       });
     }),
@@ -39,21 +39,79 @@ export const orgRouter = createTRPCRouter({
 
       return ctx.db.organization.findMany({
         where: whereCondition,
-        include: {
-          user: true,
+        select: {
+          id: true,
+          orgName: true,
+          phoneNumber: true,
+          bio: true,
+          userId: true,
+          mission: true,
+          vision: true,
+          objectives: true,
+          user: {
+            select: {
+              id: true,
+              image: true,
+              role: true,
+              email: true
+            }
+          },
+          event: {
+            select: {
+              name: true,
+              id: true,
+              organizedBy: true,
+              details: true,
+              location: true,
+              date: true,
+              partners: true,
+            },
+          }
+
         }
-      });
+      })
+
+
     }),
+
 
   getOne: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
       const data = await ctx.db.organization.findUnique({
         where: { id },
-        include: {
-          user: true,
-          event: true,
+        select: {
+          id: true,
+          orgName: true,
+          phoneNumber: true,
+          bio: true,
+          userId: true,
+          mission: true,
+          vision: true,
+          objectives: true,
+          user: {
+            select: {
+              id: true,
+              image: true,
+              role: true,
+              email: true
+            }
+          },
+          event: {
+            select: {
+              name: true,
+              id: true,
+              organizedBy: true,
+              details: true,
+              location: true,
+              date: true,
+              partners: true,
+            },
+          }
+
         }
+        // include: {
+        // }
       })
       return data;
     })

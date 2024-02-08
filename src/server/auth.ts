@@ -22,14 +22,12 @@ declare module "next-auth" {
   interface User {
     id: string;
     role: string;
-    organization: Organization;
   }
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
       // ...other properties
       role: string | undefined | null
-      organization: Organization
       // profile: User;
     };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NavBar from "~/components/NavBar";
+import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
@@ -29,7 +29,7 @@ const Add = () => {
     userId: sessionData?.user.id ?? "",
   });
 
-  const orgId = user.data?.organization?.id || ""; // Ensure to handle potential undefined
+  const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
   const [partner, setPartner] = useState("");
 
@@ -82,7 +82,7 @@ const Add = () => {
   const submitEvent = (eventData: EventProps) => {
     createEvent.mutate({
       name: eventData.name,
-      organizedBy: user.data.organization.orgName,
+      organizedBy: user?.data?.organization?.orgName ?? "",
       details: eventData.details,
       location: eventData.location,
       organizationId: orgId,
@@ -120,7 +120,7 @@ const Add = () => {
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <NavBar />
+      <Navbar />
       <section className=" mt-6 flex flex-row items-center justify-center bg-primary p-4 ">
         <p className="font-custom-epilogue text-xl font-extrabold text-white">
           ADD AN EVENT

@@ -1,7 +1,7 @@
 import React from "react";
 import vol2 from "../../../assets/vol2.png";
 import Image from "next/image";
-import Providers from "~/components/Providers";
+import Providers from "~/components/providers";
 
 const login = () => {
   return (
@@ -11,6 +11,7 @@ const login = () => {
         {/* Your image goes here */}
         <Image
           className="h-full w-full object-cover opacity-35"
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           src={vol2}
           alt="Volunteer Image"
         />
