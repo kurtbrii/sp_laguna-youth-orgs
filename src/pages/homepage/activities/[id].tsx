@@ -118,24 +118,24 @@ const EventPage = () => {
           </div>
 
           {sessionStatus !== "authenticated" && activity?.hasParticipants && (
-            <div className="btn-active w-1/2 self-center px-2 py-2">
+            <button className="btn-active w-1/2 self-center px-2 py-2">
               Join Activity?
-            </div>
+            </button>
           )}
 
           {sessionData?.user.role === "VOLUNTEER" &&
             activity?.hasVolunteers && (
-              <div className="btn-active w-1/2 self-center px-2 py-2">
+              <button className="btn-active w-1/2 self-center px-2 py-2">
                 Volunteer Now
-              </div>
+              </button>
             )}
 
           {sessionData?.user.id !== activity?.organization.user.id &&
             sessionData?.user.role === "ORGANIZATION" &&
             activity?.hasOrganizations && (
-              <div className="btn-active w-1/2 self-center px-2 py-2">
+              <button className="btn-active w-1/2 self-center px-2 py-2">
                 Partner with Us!
-              </div>
+              </button>
             )}
         </div>
       </div>

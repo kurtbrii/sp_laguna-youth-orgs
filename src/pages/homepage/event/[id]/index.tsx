@@ -13,7 +13,7 @@ import OrgCard from "~/components/orgcard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import vol2 from "../../../../assets/vol2.png";
+import vol2 from "../../../../../assets/vol2.png";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -38,6 +38,15 @@ const EventPage = () => {
   if (eventQuery.error ?? !eventQuery.data) {
     return <div>Error loading organization data</div>;
   }
+
+  const handleEditButton = () => {
+    void router.push({
+      pathname: `/homepage/event/[id]/edit`,
+      query: {
+        id: event?.id,
+      },
+    });
+  };
 
   return (
     <>
@@ -86,7 +95,7 @@ const EventPage = () => {
             </h1>
             {sessionData?.user.id === event?.organization.user.id && (
               <div className="flex gap-4">
-                <IconButton>
+                <IconButton onClick={handleEditButton}>
                   <EditTwoToneIcon />
                 </IconButton>
                 <IconButton>
