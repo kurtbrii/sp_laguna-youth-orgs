@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Image from "next/image";
-import vol2 from "../../../../assets/vol2.png";
+import vol2 from "../../../../../assets/vol2.png";
 
 import {
   LinearTextGradient,
@@ -41,6 +41,15 @@ const EventPage = () => {
   if (activityQuery.error ?? !activityQuery.data) {
     return <div>Error loading organization data</div>;
   }
+
+  const handleEditButton = () => {
+    void router.push({
+      pathname: `/homepage/activities/[id]/edit`,
+      query: {
+        id: activity?.id,
+      },
+    });
+  };
 
   return (
     <>
@@ -90,7 +99,7 @@ const EventPage = () => {
               </h1>
               {sessionData?.user.id === activity?.organization.user.id && (
                 <div className="flex gap-4">
-                  <IconButton>
+                  <IconButton onClick={handleEditButton}>
                     <EditTwoToneIcon />
                   </IconButton>
                   <IconButton>

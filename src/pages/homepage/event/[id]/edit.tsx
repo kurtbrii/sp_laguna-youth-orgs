@@ -31,13 +31,13 @@ const EditEvent = () => {
 
   const { id } = router.query;
 
+  const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
+
   const eventQuery = api.event.getOne.useQuery({
     id: id as string,
   });
 
   const eventQueryData = eventQuery.data;
-
-  const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
   const eventQueryDataForm = {
     name: eventQueryData?.name ?? "",
@@ -228,7 +228,7 @@ const EditEvent = () => {
               submitEvent(eventData);
             }}
           >
-            Create Event
+            Edit Event
           </button>
           <button
             onClick={() => window.location.replace("/homepage")}

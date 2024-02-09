@@ -73,7 +73,6 @@ export const activityRouter = createTRPCRouter({
     .query(async ({ input: { id }, ctx }) => {
       const data = await ctx.db.activity.findUnique({
         where: { id },
-
         select: {
           organization: {
             select: {
@@ -101,7 +100,28 @@ export const activityRouter = createTRPCRouter({
 
       });
       return data;
-    })
+    }),
+
+  updateActivity: protectedProcedure
+    .input(z.object({ id: z.string(), name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.activity.update({
+        where: { id: input.id },
+        data: {
+          name: input.name,
+          createdAt: new Date(),
+          date: new Date(input.date),
+          details: input.details,
+          location: input.location,
+
+          hasOrganizations: input.hasOrganizations,
+          hasVolunteers: input.hasVolunteers,
+          hasParticipants: input.hasParticipants,
+          organizationId: input.organizationId
+        }
+      });
+    }),
+
 
 
 });

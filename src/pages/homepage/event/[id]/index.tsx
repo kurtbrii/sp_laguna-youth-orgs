@@ -13,7 +13,7 @@ import OrgCard from "~/components/orgcard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import vol2 from "../../../../../assets/vol2.png";
+import vol1 from "../../../../../assets/vol1.png";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -56,7 +56,7 @@ const EventPage = () => {
         <div className="mr-24 flex w-2/5 flex-col gap-1">
           <Image
             className="flex w-full rounded-md"
-            src={event?.organization?.user.image ?? vol2}
+            src={event?.organization?.user.image ?? vol1}
             alt="Organization Image"
             height={300}
             width={300}
@@ -65,21 +65,21 @@ const EventPage = () => {
           <div className="flex gap-1">
             <Image
               className="rounded-md"
-              src={event?.organization?.user.image ?? vol2}
+              src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event?.organization?.user.image ?? vol2}
+              src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event?.organization?.user.image ?? vol2}
+              src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}

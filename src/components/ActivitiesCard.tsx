@@ -4,6 +4,8 @@ import vol2 from "../../assets/vol2.png";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Organization, type User } from "@prisma/client";
+import EventIcon from "@mui/icons-material/Event";
+import PlaceIcon from "@mui/icons-material/Place";
 
 type ActivityProps = {
   activity: {
@@ -39,14 +41,23 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
         <p className="text-gradient mb-3 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
           {/* {activity.organizedBy.toLocaleUpperCase()} */}
         </p>
-        <p className="overflow-hidden text-ellipsis  whitespace-nowrap  text-sm font-bold">
+        <p className="mb-2 overflow-hidden text-ellipsis  whitespace-nowrap  text-sm font-bold">
           {activity.name}
         </p>
-        <p className=" italic" style={{ fontSize: "10px" }}>
-          {activity.date.toLocaleString()}
-        </p>
+        <div className=" flex items-center gap-1">
+          <EventIcon className="h-4 w-4" />
+          <p className=" italic" style={{ fontSize: "10px" }}>
+            {activity.date.toLocaleString()}
+          </p>
+        </div>
+        <div className=" flex items-center gap-1">
+          <PlaceIcon className="h-4 w-4" />
+          <p className=" italic" style={{ fontSize: "10px" }}>
+            {activity.location.toLocaleString()}
+          </p>
+        </div>
         <hr className="my-1 flex  w-full border-t-2 border-customBlack-75" />
-        <p className=" mb-8  overflow-hidden  overflow-ellipsis  whitespace-nowrap text-sm">
+        <p className=" mb-6  overflow-hidden  overflow-ellipsis  whitespace-nowrap text-sm">
           {activity.details}
         </p>
         <section className=" flex flex-wrap gap-2">
