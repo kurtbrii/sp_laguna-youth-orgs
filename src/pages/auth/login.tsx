@@ -10,8 +10,9 @@ const Login = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const roles = ["VOLUNTEER", "ORGANIZATION"];
     // Check authentication status when the component mounts
-    if (sessionStatus === "authenticated") {
+    if (sessionData?.user.role && roles.includes(sessionData?.user.role)) {
       // Redirect to /homepage if not authenticated
       void router.push("/homepage");
     }

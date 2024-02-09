@@ -80,9 +80,6 @@ export const orgRouter = createTRPCRouter({
   getOne: publicProcedure
     .input(z.object({ id: z.string().optional(), userId: z.string().optional() }))
     .query(async ({ input: { id, userId }, ctx }) => {
-
-
-
       const data = await ctx.db.organization.findUnique({
         where: {
           userId,
@@ -122,5 +119,23 @@ export const orgRouter = createTRPCRouter({
         // }
       })
       return data;
-    })
+    }),
+
+  updaeOrganization: protectedProcedure
+    .input(z.object({ id: z.string(), phoneNumber: z.string(), bio: z.string(), mission: z.string(), vision: z.string(), objectives: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      // simulate a slow db call
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      return ctx.db.organization.update({
+        where: { id: input.id },
+        data: {
+          phoneNumber: input.phoneNumber,
+          bio: input.bio,
+          mission: input.mission,
+          vision: input.vision,
+          objectives: input.objectives,
+        },
+      });
+    }),
 });

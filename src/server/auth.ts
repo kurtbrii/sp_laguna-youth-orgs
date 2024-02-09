@@ -55,19 +55,15 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
 
   callbacks: {
-    session: ({ session, user }) => ({
+    session: async ({ session, user }) => ({
       ...session,
       user: {
         ...session.user,
         id: user.id,
         role: user.role,
         organization: user.organization,
-
       },
-
-
     }),
-
   },
   adapter: PrismaAdapter(db),
   providers: [

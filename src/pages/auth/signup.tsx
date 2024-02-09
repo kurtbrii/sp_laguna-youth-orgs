@@ -29,8 +29,12 @@ const SignUp = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const roles = ["VOLUNTEER", "ORGANIZATION"];
     // Check authentication status when the component mounts
-    if (sessionStatus === "authenticated") {
+    if (
+      (sessionData?.user.role && roles.includes(sessionData?.user.role)) ??
+      sessionStatus == "unauthenticated"
+    ) {
       // Redirect to /homepage if not authenticated
       void router.push("/homepage");
     }
@@ -83,8 +87,6 @@ const SignUp = () => {
 
   //! Organization
   const handleOrgSubmit = async () => {
-    alert("successful");
-
     createOrganization.mutate({
       orgName: orgFormData.orgName,
       phoneNumber: orgFormData.phoneNumber,
@@ -96,9 +98,11 @@ const SignUp = () => {
       role: "ORGANIZATION",
     });
 
-    alert(sessionData?.user);
+    setTimeout(() => {
+      //C - 1 second later
+    }, 500);
 
-    await router.push("/homepage");
+    void router.push("/homepage");
   };
 
   //! Volunteer
@@ -117,9 +121,11 @@ const SignUp = () => {
       role: "VOLUNTEER",
     });
 
-    alert(sessionData?.user);
+    setTimeout(() => {
+      //C - 1 second later
+    }, 500);
 
-    await router.push("/homepage");
+    void router.push("/homepage");
   };
 
   return (

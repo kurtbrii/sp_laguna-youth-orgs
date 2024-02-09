@@ -97,6 +97,8 @@ model Organization {
     activities Activity[]
 
     partneredOrganizations OrganizationActivity[] // list of organizations who applied for partnership
+
+    CentersOfParticipation CentersOfParticipation?
 }
 
 model Volunteer {
@@ -153,6 +155,23 @@ model OrganizationActivity {
     activityId String
 
     status String // pending or not
+}
+
+model CentersOfParticipation {
+    id                  String @id @default(cuid())
+    health              String
+    education           String
+    economicEmpowerment String
+    socialInclusion     String
+    peaceBuilding       String
+    governance          String
+    activeCitizenship   String
+    environment         String
+    globalMobility      String
+    agriculture         String
+
+    organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId String?       @unique
 }
 
 enum ROLE {
