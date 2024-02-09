@@ -21,17 +21,39 @@ interface ActivityProps {
   organizationId: string;
 }
 
-const Add = () => {
-  const createActivity = api.activity.createActivity.useMutation();
+const EditActivity = () => {
+  const editActivity = api.activity.updateActivity.useMutation();
 
   const router = useRouter();
+
+  const { id } = router.query;
+
   const { data: sessionData } = useSession();
 
   const user = api.user.getUser.useQuery({
     userId: sessionData?.user.id ?? "",
   });
 
+  const activityQuery = api.activity.getOne.useQuery({
+    id: id as string,
+  });
+
+  const activityQueryData = activityQuery.data;
+
   const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
+
+  const activityQueryDataForm = {
+    name: activityQueryData?.name ?? "",
+    details: activityQueryData?.details ?? "",
+    date: activityQueryData?.date?.toLocaleDateString() ?? "",
+    createdAt: activityQueryData?.createdAt?.toLocaleString() ?? "",
+    location: activityQueryData?.location ?? "",
+    organizationId: orgId,
+
+    hasOrganizations: activityQueryData?.hasOrganizations ?? false,
+    hasVolunteers: activityQueryData?.hasVolunteers ?? false,
+    hasParticipants: activityQueryData?.hasParticipants ?? false,
+  };
 
   const [activitiesData, setActivitiesData] = useState<ActivityProps>({
     name: "",
@@ -45,6 +67,12 @@ const Add = () => {
     hasParticipants: false,
     organizationId: orgId,
   });
+
+  useEffect(() => {
+    if (activityQueryData) {
+      setActivitiesData(activityQueryDataForm);
+    }
+  }, [activityQueryData]);
 
   useEffect(() => {
     setActivitiesData((prevActivityData) => ({
@@ -76,7 +104,8 @@ const Add = () => {
   };
 
   const submitActivity = () => {
-    createActivity.mutate({
+    editActivity.mutate({
+      id: id as string,
       name: activitiesData.name,
       details: activitiesData.details,
       date: activitiesData.date,
@@ -95,7 +124,7 @@ const Add = () => {
       <Navbar />
       <section className=" mt-6 flex flex-row items-center justify-center bg-primary p-4 ">
         <p className="font-custom-epilogue text-xl font-extrabold text-white">
-          ADD AN ACTIVITY
+          EDIT AN ACTIVITY
         </p>
       </section>
       <form
@@ -167,6 +196,7 @@ const Add = () => {
               type="checkbox"
               name="participants"
               id="participants"
+              checked={activitiesData.hasParticipants}
               onClick={() => {
                 setActivitiesData((prevState) => ({
                   ...prevState,
@@ -187,6 +217,7 @@ const Add = () => {
               type="checkbox"
               name="volunteers"
               id="volunteers"
+              checked={activitiesData.hasVolunteers}
               onClick={() => {
                 setActivitiesData((prevState) => ({
                   ...prevState,
@@ -204,6 +235,7 @@ const Add = () => {
               type="checkbox"
               name="partnership"
               id="partnership"
+              checked={activitiesData.hasOrganizations}
               onClick={() => {
                 setActivitiesData((prevState) => ({
                   ...prevState,
@@ -226,7 +258,7 @@ const Add = () => {
               submitActivity();
             }}
           >
-            Create Activity
+            Edit Activity
           </button>
           <button
             onClick={() => window.location.replace("/homepage/activities")}
@@ -244,4 +276,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default EditActivity;

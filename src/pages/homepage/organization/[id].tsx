@@ -132,43 +132,24 @@ const OrganizationPage = () => {
               <h1 className="text-gradient mb-2 flex font-custom-epilogue text-2xl font-semibold">
                 Mission
               </h1>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in
-                tortor urna. Fusce in ante at purus rhoncus auctor. In tincidunt
-                ipsum vel tortor malesuada, et tincidunt tellus tempus. Vivamus
-                a posuere ipsum. Sed convallis odio non sagittis lacinia. Nullam
-                mattis tincidunt felis ac vehicula.
-              </p>
+              <p>{organization?.mission}</p>
             </div>
 
             <div className="flex w-1/2 flex-col">
               <h1 className="text-gradient mb-2 flex font-custom-epilogue text-2xl font-semibold">
                 Vision
               </h1>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in
-                tortor urna. Fusce in ante at purus rhoncus auctor. In tincidunt
-                ipsum vel tortor malesuada, et tincidunt tellus tempus. Vivamus
-                a posuere ipsum. Sed convallis odio non sagittis lacinia. Nullam
-                mattis tincidunt felis ac vehicula.
-              </p>
+              <p>{organization?.vision}</p>
             </div>
           </div>
 
-          {/* Goals */}
+          {/* Objectives */}
           <div className="mb-4 flex gap-4">
             <div className="flex w-1/2 flex-col">
               <h1 className="text-gradient mb-2 flex font-custom-epilogue text-2xl font-semibold">
-                Goals
+                Objectives
               </h1>
-              <p>
-                {/* {organization.objectives} */}
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in
-                tortor urna. Fusce in ante at purus rhoncus auctor. In tincidunt
-                ipsum vel tortor malesuada, et tincidunt tellus tempus. Vivamus
-                a posuere ipsum. Sed convallis odio non sagittis lacinia. Nullam
-                mattis tincidunt felis ac vehicula.
-              </p>
+              <p>{organization?.objectives}</p>
             </div>
 
             <div className="flex w-1/2 flex-col"></div>

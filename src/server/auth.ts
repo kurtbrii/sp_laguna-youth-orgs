@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { Organization } from "@prisma/client";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -18,28 +19,28 @@ import { db } from "~/server/db";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface Org {
-    id: string,
-    orgName: string,
-    phoneNumber: string,
-    bio: string,
-    userId: string,
-    mission: string,
-    vision: string,
-    objectives: string,
-  }
+  // interface Org {
+  //   id: string,
+  //   orgName: string,
+  //   phoneNumber: string,
+  //   bio: string,
+  //   userId: string,
+  //   mission: string,
+  //   vision: string,
+  //   objectives: string,
+  // }
 
   interface User {
     id: string;
     role: string;
-    organization: Org;
+    organization: Organization;
   }
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
       // ...other properties
       role: string | undefined | null;
-      organization: Org;
+      organization: Organization;
     };
 
   }

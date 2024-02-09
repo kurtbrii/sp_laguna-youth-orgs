@@ -13,7 +13,7 @@ import OrgCard from "~/components/orgcard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import vol2 from "../../../../assets/vol2.png";
+import vol1 from "../../../../../assets/vol1.png";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -39,6 +39,15 @@ const EventPage = () => {
     return <div>Error loading organization data</div>;
   }
 
+  const handleEditButton = () => {
+    void router.push({
+      pathname: `/homepage/event/[id]/edit`,
+      query: {
+        id: event?.id,
+      },
+    });
+  };
+
   return (
     <>
       <Navbar />
@@ -47,7 +56,7 @@ const EventPage = () => {
         <div className="mr-24 flex w-2/5 flex-col gap-1">
           <Image
             className="flex w-full rounded-md"
-            src={event?.organization?.user.image ?? vol2}
+            src={event?.organization?.user.image ?? vol1}
             alt="Organization Image"
             height={300}
             width={300}
@@ -56,21 +65,21 @@ const EventPage = () => {
           <div className="flex gap-1">
             <Image
               className="rounded-md"
-              src={event?.organization?.user.image ?? vol2}
+              src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event?.organization?.user.image ?? vol2}
+              src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
               className="rounded-md"
-              src={event?.organization?.user.image ?? vol2}
+              src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}
@@ -84,14 +93,16 @@ const EventPage = () => {
             <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
               {event?.name}
             </h1>
-            <div className="flex gap-4">
-              <IconButton>
-                <EditTwoToneIcon />
-              </IconButton>
-              <IconButton>
-                <DeleteIcon />
-              </IconButton>
-            </div>
+            {sessionData?.user.id === event?.organization.user.id && (
+              <div className="flex gap-4">
+                <IconButton onClick={handleEditButton}>
+                  <EditTwoToneIcon />
+                </IconButton>
+                <IconButton>
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            )}
           </section>
 
           <p className="text-md mb-6 italic text-customBlack-50">
@@ -115,14 +126,14 @@ const EventPage = () => {
                 In partnership with:
               </p>
               {event?.partners?.map((partner: string, index: number) => (
-                <p key={index} className="text-sm">
+                <p key={index} className="text-gradient text-sm">
                   {partner}
                 </p>
               ))}
             </>
           )}
 
-          <p className="mt-12">{event?.details}</p>
+          <p className="mt-12 whitespace-pre-wrap">{event?.details}</p>
         </div>
       </div>
     </>

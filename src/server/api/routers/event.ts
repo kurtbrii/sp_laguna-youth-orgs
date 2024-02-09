@@ -88,10 +88,31 @@ export const eventRouter = createTRPCRouter({
           location: true,
           date: true,
           partners: true,
+          createdAt: true,
         }
       });
       return data;
-    })
+    }),
 
+  updateEvent: protectedProcedure
+    .input(z.object({ id: z.string(), name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string(), partners: z.array(z.string()) }))
+    .mutation(async ({ ctx, input }) => {
+      // simulate a slow db call
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      return ctx.db.event.update({
+        where: { id: input.id },
+        data: {
+          name: input.name,
+          organizedBy: input.organizedBy,
+          createdAt: new Date(),
+          details: input.details,
+          location: input.location,
+          organizationId: input.organizationId,
+          date: new Date(input.date),
+          partners: input.partners
+        },
+      });
+    }),
 
 });
