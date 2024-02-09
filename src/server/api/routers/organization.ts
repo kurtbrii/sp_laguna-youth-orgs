@@ -37,7 +37,6 @@ export const orgRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const whereCondition = {
         id: input.id,
-
       }
 
       return ctx.db.organization.findMany({
