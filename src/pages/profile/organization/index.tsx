@@ -1,6 +1,6 @@
 // pages/homepage/organization/[id].js
 
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Image from "next/image";
 
@@ -114,7 +114,10 @@ const OrganizationPage = () => {
             <p className="mb-6 mr-20 text-sm">{organization?.bio}</p>
 
             <div className="flex gap-5  text-center">
-              <button className="btn-outline w-1/2 border  px-8 py-2 font-normal">
+              <button
+                onClick={() => handleEditButton()}
+                className="btn-outline w-1/2 border  px-8 py-2 font-normal"
+              >
                 Update Information
               </button>
 
@@ -195,6 +198,10 @@ const OrganizationPage = () => {
       </div>
     </>
   );
+};
+
+const handleEditButton = () => {
+  void router.push("/profile/organization/edit");
 };
 
 export default OrganizationPage;

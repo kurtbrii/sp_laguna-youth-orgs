@@ -39,7 +39,7 @@ const OrgCard = ({ organization }: OrgProps) => {
   return (
     <Link
       href={`/homepage/organization/${organization.id}`}
-      className="relative h-64 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
+      className="relative h-64 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill font-custom-lexend shadow-2xl"
     >
       {/* <div className="h-2/5 bg-slate-600"> */}
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
