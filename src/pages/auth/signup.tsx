@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 // import ViewListIcon from "@mui/icons-material/ViewList";
 // import ViewModuleIcon from "@mui/icons-material/ViewModule";
@@ -24,11 +24,20 @@ interface OrgProps {
   phoneNumber: string;
 }
 
-export default function SignUp() {
-  const { data: sessionData } = useSession();
+const SignUp = () => {
+  const { data: sessionData, status: sessionStatus } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check authentication status when the component mounts
+    if (sessionStatus === "authenticated") {
+      // Redirect to /homepage if not authenticated
+      void router.push("/homepage");
+    }
+  }, [router, sessionStatus]);
 
   const [volOrOrg, setCurrentState] = useState<string>("organization");
-  const router = useRouter();
+
   //! VOLUNTEER SET STATE
 
   const [volunteerFormData, setVolunteerFormData] = useState<VolunteerProps>({
@@ -278,4 +287,6 @@ export default function SignUp() {
       </section>
     </section>
   );
-}
+};
+
+export default SignUp;

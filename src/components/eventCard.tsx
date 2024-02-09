@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import vol2 from "../../assets/vol2.png";
+import vol1 from "../../assets/vol1.png";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Organization, type User } from "@prisma/client";
@@ -48,7 +48,11 @@ const EventCard = ({ event }: EventProps) => {
       href={`/homepage/event/${event.id}`}
       className=" relative h-72 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
     >
-      <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
+      <Image
+        src={vol1}
+        className="left-0 top-0 h-2/5 w-full object-cover"
+        alt="sunset "
+      />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
         <p className="text-gradient mb-3 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
           {event.organizedBy.toLocaleUpperCase()}

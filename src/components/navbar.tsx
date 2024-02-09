@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -28,6 +28,11 @@ const Navbar = () => {
       setActiveLink("findOrganizations");
     } else if (currentRoute === "/homepage/activities") {
       setActiveLink("getInvolved");
+    } else if (
+      currentRoute === "/profile/organization" ||
+      currentRoute === "/profile/volunteer"
+    ) {
+      setActiveLink("profile");
     } else {
       setActiveLink("");
     }
@@ -54,7 +59,9 @@ const Navbar = () => {
         <ul className="flex flex-grow gap-5 ">
           <li
             className={`cursor-pointer ${activeLink === "howItWorks" ? " text-secondary" : "text-primary"}`}
-            onClick={() => handleLinkClick("howItWorks")}
+            onClick={() => {
+              console.log(sessionData?.user.organization); //
+            }}
           >
             <Link href="/homepage/how-it-works">How it Works</Link>
           </li>
@@ -76,8 +83,19 @@ const Navbar = () => {
         <div className="flex items-center">
           {sessionData ? (
             <div className=" flex items-center gap-3">
-              <Link href="/">
-                <p>{sessionData.user.name}</p>
+              <Link
+                href={
+                  sessionData.user.role === "VOLUNTEER"
+                    ? "/profile/volunteer"
+                    : "/profile/organization"
+                }
+              >
+                <button
+                  className={` ${activeLink === "profile" ? " text-secondary" : ""}`}
+                  onClick={() => handleLinkClick("profile")}
+                >
+                  {sessionData.user.name}
+                </button>
               </Link>
 
               <button onClick={() => setToggleButton(!toggleProfileButton)}>
@@ -93,7 +111,11 @@ const Navbar = () => {
                 <div className=" absolute right-10 top-14 z-50 flex w-48 flex-col items-center justify-center gap-2 rounded-md bg-customBlack-100  p-4 text-sm text-white">
                   <p
                     className="cursor-pointer"
-                    onClick={() => signOut({ callbackUrl: "/homepage" })}
+                    onClick={() =>
+                      sessionData.user.role === "VOLUNTEER"
+                        ? router.push("/profile/volunteer")
+                        : router.push("/profile/organization")
+                    }
                   >
                     Profile
                   </p>

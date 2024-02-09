@@ -21,10 +21,6 @@ const EventPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const user = api.user.getUser.useQuery({
-    userId: sessionData?.user.id ?? "",
-  });
-
   const eventQuery = api.event.getOne.useQuery({
     id: id as string,
   });

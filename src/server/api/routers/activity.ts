@@ -30,10 +30,14 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getActivities: publicProcedure
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
 
       // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.activity.findMany({
+        where: {
+          organizationId: input.orgId
+        },
         orderBy: {
           createdAt: "desc",
         },
@@ -59,7 +63,8 @@ export const activityRouter = createTRPCRouter({
               }
             }
           }
-        }
+        },
+        take: input.take
       });
     }),
 
@@ -68,6 +73,7 @@ export const activityRouter = createTRPCRouter({
     .query(async ({ input: { id }, ctx }) => {
       const data = await ctx.db.activity.findUnique({
         where: { id },
+
         select: {
           organization: {
             select: {
@@ -91,7 +97,8 @@ export const activityRouter = createTRPCRouter({
           hasVolunteers: true,
           hasParticipants: true,
           organizationId: true,
-        }
+        },
+
       });
       return data;
     })
