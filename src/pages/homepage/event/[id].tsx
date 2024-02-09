@@ -84,14 +84,16 @@ const EventPage = () => {
             <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
               {event?.name}
             </h1>
-            <div className="flex gap-4">
-              <IconButton>
-                <EditTwoToneIcon />
-              </IconButton>
-              <IconButton>
-                <DeleteIcon />
-              </IconButton>
-            </div>
+            {sessionData?.user.id === event?.organization.user.id && (
+              <div className="flex gap-4">
+                <IconButton>
+                  <EditTwoToneIcon />
+                </IconButton>
+                <IconButton>
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            )}
           </section>
 
           <p className="text-md mb-6 italic text-customBlack-50">
@@ -115,14 +117,14 @@ const EventPage = () => {
                 In partnership with:
               </p>
               {event?.partners?.map((partner: string, index: number) => (
-                <p key={index} className="text-sm">
+                <p key={index} className="text-gradient text-sm">
                   {partner}
                 </p>
               ))}
             </>
           )}
 
-          <p className="mt-12">{event?.details}</p>
+          <p className="mt-12 whitespace-pre-wrap">{event?.details}</p>
         </div>
       </div>
     </>

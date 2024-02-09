@@ -100,12 +100,13 @@ model Organization {
 }
 
 model Volunteer {
-    id            String @id @default(cuid())
+    id            String  @id @default(cuid())
     firstName     String
     lastName      String
     middleInitial String
     suffix        String
     phoneNumber   String
+    bio           String?
 
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique

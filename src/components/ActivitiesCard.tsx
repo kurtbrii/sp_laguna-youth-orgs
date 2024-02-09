@@ -46,7 +46,7 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
           {activity.date.toLocaleString()}
         </p>
         <hr className="my-1 flex  w-full border-t-2 border-customBlack-75" />
-        <p className=" mb-8  overflow-hidden   overflow-ellipsis  whitespace-nowrap text-sm">
+        <p className=" mb-8  overflow-hidden  overflow-ellipsis  whitespace-nowrap text-sm">
           {activity.details}
         </p>
         <section className=" flex flex-wrap gap-2">

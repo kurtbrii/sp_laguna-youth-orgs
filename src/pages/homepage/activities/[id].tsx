@@ -88,14 +88,16 @@ const EventPage = () => {
               <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
                 {activity?.name}
               </h1>
-              <div className="flex gap-4">
-                <IconButton>
-                  <EditTwoToneIcon />
-                </IconButton>
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              </div>
+              {sessionData?.user.id === activity?.organization.user.id && (
+                <div className="flex gap-4">
+                  <IconButton>
+                    <EditTwoToneIcon />
+                  </IconButton>
+                  <IconButton>
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
+              )}
             </section>
 
             <p className="text-md mb-6 italic text-customBlack-50">
@@ -112,7 +114,7 @@ const EventPage = () => {
               {activity?.organization?.orgName}
             </p>
 
-            <p className="mt-12">{activity?.details}</p>
+            <p className="mt-12 whitespace-pre-wrap">{activity?.details}</p>
           </div>
 
           {sessionStatus !== "authenticated" && activity?.hasParticipants && (
@@ -128,7 +130,8 @@ const EventPage = () => {
               </div>
             )}
 
-          {sessionData?.user.role === "ORGANIZATION" &&
+          {sessionData?.user.id !== activity?.organization.user.id &&
+            sessionData?.user.role === "ORGANIZATION" &&
             activity?.hasOrganizations && (
               <div className="btn-active w-1/2 self-center px-2 py-2">
                 Partner with Us!

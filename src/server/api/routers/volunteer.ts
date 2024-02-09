@@ -31,4 +31,46 @@ export const volunteerRouter = createTRPCRouter({
       });
     }),
 
+  // id            String @id @default(cuid())
+  // firstName     String
+  // lastName      String
+  // middleInitial String
+  // suffix        String
+  // phoneNumber   String
+  // bio           String
+
+  // user   User?   @relation(fields: [userId], references: [id])
+  // userId String? @unique
+
+  getOne: publicProcedure
+    .input(z.object({ id: z.string().optional(), userId: z.string().optional() }))
+    .query(async ({ input: { id, userId }, ctx }) => {
+      const data = await ctx.db.volunteer.findUnique({
+        where: {
+          userId,
+          id,
+        },
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          middleInitial: true,
+          suffix: true,
+          phoneNumber: true,
+          bio: true,
+          userId: true,
+          user: {
+            select: {
+              id: true,
+              image: true,
+              role: true,
+              email: true
+            }
+          },
+        }
+        // include: {
+        // }
+      })
+      return data;
+    })
 });
