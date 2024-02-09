@@ -8,13 +8,28 @@ import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { db } from "~/server/db";
-import vol2 from "../../assets/vol2.png";
+import vol2 from "../../assets/vol1.png";
+import OrgCard from "~/components/orgcard";
+import EventCard from "~/components/eventCard";
+import ActivitiesCard from "~/components/ActivitiesCard";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import { IconButton } from "@mui/material";
+import router from "next/router";
 
 export default function Home() {
   const { data: sessionData } = useSession();
 
   const current = sessionData?.user.id; // Replace with the actual user ID
   const get = api.user.getUser.useQuery({ userId: current ?? "" });
+
+  // ! Recent Events
+  const event = api.event.getEvents.useQuery({ take: 3 });
+
+  // ! Get Organizations
+  const organizations = api.organization.getOrganizations.useQuery({ take: 3 });
+
+  // ! Get Activities
+  const activity = api.activity.getActivities.useQuery({ take: 3 });
 
   return (
     <>
@@ -29,47 +44,100 @@ export default function Home() {
           rel="stylesheet"
         />
       </Head>
-      <main className="block">
+      <main className="flex flex-col">
         <header className=" flex flex-col font-custom-lexend text-customBlack-100">
           {/* NavBar */}
           <Navbar />
-
           {/* Hero Section */}
-          <section className="flex bg-customBlack-100">
+          <section className="relative mb-10 flex bg-customBlack-100">
             <Image
-              className="absolute h-full w-full object-cover opacity-30"
               src={vol2}
               alt="Volunteer Image"
+              className="opacity-20"
+              style={{
+                width: "100%",
+                height: "485px",
+                objectFit: "cover",
+                objectPosition: "100% 0%",
+              }}
             />
+            <section className="absolute left-14 top-16 mb-2 h-full w-4/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white">
+              <h1 className="mb-5">
+                The largest network of{" "}
+                <span className="btn-active py-font-extrabold  self-center px-4 text-6xl">
+                  youth volunteers
+                </span>{" "}
+                in Laguna
+              </h1>
+              <p className="custom-lexend text-lg italic">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
+                eget placerat nulla.{" "}
+              </p>
+            </section>
           </section>
 
-          {/* Recent Events */}
-          <div className="custom-epilogue mx-10 my-4 flex h-12 flex-col justify-between ">
-            <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
+          <div className="custom-epilogue mx-10 mb-80 flex h-12 flex-col ">
+            <h1 className="mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
               Find Organizations
             </h1>
-            <p className="custom-lexend">
-              This is a sample text of an organization
-            </p>
+            <div className="mb-5 flex flex-wrap justify-start gap-7">
+              {organizations?.data?.map((organization) => (
+                <div className="flex" key={organization.id}>
+                  <OrgCard organization={organization} />
+                </div>
+              ))}
+              <div className=""></div>
+              <IconButton
+                className=" self-center"
+                onClick={() => router.push("/homepage/find-organizations")}
+              >
+                <ArrowForwardRoundedIcon fontSize="large" />
+              </IconButton>
+            </div>
           </div>
 
-          {/* Find Organizations */}
-          <div className="custom-epilogue mx-10 my-4 flex h-12 flex-col justify-between ">
-            <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
-              Find Organizations
+          <div className="custom-epilogue mx-10 mb-96 flex h-12 flex-col justify-between ">
+            <h1 className="mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
+              Recent Events
             </h1>
-            <p className="custom-lexend">This is a sample text also</p>
+            <div className="flex flex-wrap gap-7">
+              {event?.data?.map((eventQuery) => (
+                <EventCard key={eventQuery.id} event={eventQuery} />
+              ))}
+              <div className=""></div>
+              <IconButton
+                className=" self-center"
+                onClick={() => router.push("/homepage")}
+              >
+                <ArrowForwardRoundedIcon fontSize="large" />
+              </IconButton>
+            </div>
           </div>
 
-          {/* Get Involved */}
-          <div className="custom-epilogue mx-10 my-4 flex h-12 flex-col justify-between ">
-            <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
-              Get Involved
+          <div className="custom-epilogue mx-10 flex flex-col justify-between">
+            <h1 className="mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
+              All Activities
             </h1>
-            <p className="custom-lexend">This is a sample text also</p>
-          </div>
+            <div className="flex flex-wrap gap-7">
+              {activity?.data?.map((queryActivity) => (
+                <ActivitiesCard
+                  key={queryActivity.id}
+                  activity={queryActivity}
+                />
+              ))}
 
+              <div className=""></div>
+              <IconButton
+                className=" self-center"
+                onClick={() => router.push("/homepage/activities")}
+              >
+                <ArrowForwardRoundedIcon fontSize="large" />
+              </IconButton>
+            </div>
+          </div>
           {/* <button onClick={() => num()}>butn</button> */}
+
+          <div className="mb-96"></div>
         </header>
       </main>
     </>

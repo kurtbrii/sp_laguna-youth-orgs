@@ -34,7 +34,8 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
   return (
     <Link
       href={`/homepage/activities/${activity.id}`}
-      className=" relative h-96 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
+      className=" relative w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
+      style={{ height: "26rem" }}
     >
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">

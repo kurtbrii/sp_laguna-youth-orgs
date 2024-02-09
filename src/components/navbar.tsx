@@ -127,7 +127,7 @@ const Navbar = () => {
                   </p>
                   <p
                     className="cursor-pointer"
-                    onClick={() => signOut({ callbackUrl: "/homepage" })}
+                    onClick={() => signOut({ callbackUrl: "/" })}
                   >
                     Logout
                   </p>
