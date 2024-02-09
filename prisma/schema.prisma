@@ -110,6 +110,9 @@ model Volunteer {
     phoneNumber   String
     bio           String?
 
+    sex String?
+    age Int?
+
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
 }

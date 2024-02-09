@@ -20,7 +20,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 // }
 
 const EditOrganization = () => {
-  const updateOrganization = api.organization.updaeOrganization.useMutation();
+  const updateOrganization = api.organization.updateOrganization.useMutation();
 
   const router = useRouter();
   const { data: sessionData, update } = useSession();

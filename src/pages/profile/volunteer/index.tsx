@@ -1,6 +1,6 @@
 // pages/homepage/organization/[id].js
 
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Image from "next/image";
 
@@ -87,7 +87,10 @@ const VolunteerPage = () => {
             <p className="mb-6 mr-20 text-sm">{volunteer?.bio}</p>
 
             <div className="flex gap-5  text-center">
-              <button className="btn-outline w-1/2 border  px-8 py-2 font-normal">
+              <button
+                className="btn-outline w-1/2 border  px-8 py-2 font-normal"
+                onClick={() => handleVolunteerUpdate()}
+              >
                 Update Information
               </button>
 
@@ -127,6 +130,10 @@ const VolunteerPage = () => {
       </div>
     </>
   );
+};
+
+const handleVolunteerUpdate = () => {
+  void router.push("/profile/volunteer/edit");
 };
 
 export default VolunteerPage;

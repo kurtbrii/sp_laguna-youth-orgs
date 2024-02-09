@@ -121,7 +121,7 @@ export const orgRouter = createTRPCRouter({
       return data;
     }),
 
-  updaeOrganization: protectedProcedure
+  updateOrganization: protectedProcedure
     .input(z.object({ id: z.string(), phoneNumber: z.string(), bio: z.string(), mission: z.string(), vision: z.string(), objectives: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call

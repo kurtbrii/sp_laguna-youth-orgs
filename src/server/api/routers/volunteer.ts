@@ -72,5 +72,19 @@ export const volunteerRouter = createTRPCRouter({
         // }
       })
       return data;
-    })
+    }),
+
+  updateVolunteer: protectedProcedure
+    .input(z.object({ id: z.string(), phoneNumber: z.string(), bio: z.string(), sex: z.string(), age: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.volunteer.update({
+        where: { id: input.id },
+        data: {
+          phoneNumber: input.phoneNumber,
+          bio: input.bio,
+          sex: input.sex,
+          age: input.age
+        },
+      });
+    }),
 });
