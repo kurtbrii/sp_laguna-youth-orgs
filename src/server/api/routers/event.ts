@@ -71,25 +71,18 @@ export const eventRouter = createTRPCRouter({
       const data = await ctx.db.event.findUnique({
         where: { id },
         select: {
-          organization: {
-            select: {
-              user: {
-                select: {
-                  id: true,
-                  image: true
-                }
-              },
-            },
-          },
-          name: true,
           id: true,
+          name: true,
           organizedBy: true,
-          details: true,
-          location: true,
           date: true,
           partners: true,
-          createdAt: true,
-        }
+          details: true,
+          organization: {
+            select: {
+              user: true,
+            }
+          },
+        },
       });
       return data;
     }),
