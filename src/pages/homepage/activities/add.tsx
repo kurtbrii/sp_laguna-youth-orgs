@@ -114,15 +114,6 @@ const Add = () => {
           placeholder="Event Name"
         />
 
-        {/* <input
-          className=" w-full rounded border p-2 shadow "
-          name="details"
-          value={activitiesData.details}
-          onChange={handleEventForm}
-          // rows={10}
-          placeholder="Details"
-        /> */}
-
         <textarea
           className=" w-full rounded border p-2 shadow "
           name="details"
@@ -131,25 +122,6 @@ const Add = () => {
           rows={10}
           placeholder="Details"
         />
-
-        <div className="flex gap-2">
-          <input
-            type=""
-            value={activitiesData.location}
-            name="location"
-            onChange={handleEventForm}
-            className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Location"
-          />
-          <input
-            type="datetime-local"
-            value={activitiesData.date}
-            name="date"
-            onChange={handleEventForm}
-            className="h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Input Date"
-          />
-        </div>
 
         <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">

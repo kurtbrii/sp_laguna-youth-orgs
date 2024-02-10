@@ -153,15 +153,19 @@ const Navbar = () => {
               >
                 Activities Section
               </p>
+
               <p
                 className="cursor-pointer"
-                onClick={() => router.push("/homepage/activities")}
+                onClick={() => router.push("/homepage/speakers")}
               >
                 Pool of Speakers
               </p>
+
               <p
                 className="cursor-pointer"
-                onClick={() => router.push("/homepage/activities")}
+                onClick={() =>
+                  router.push("/homepage/centers-of-participation")
+                }
               >
                 Centers of Participation
               </p>

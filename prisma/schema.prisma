@@ -11,8 +11,7 @@ datasource db {
 }
 
 model Post {
-    id String @id @default(cuid())
-
+    id        String   @id @default(cuid())
     name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -96,6 +95,7 @@ model Organization {
     partneredOrganizations OrganizationActivity[] // list of organizations who applied for partnership
 
     CentersOfParticipation CentersOfParticipation?
+    Speakers               Speakers[]
 }
 
 model Volunteer {
@@ -172,6 +172,17 @@ model CentersOfParticipation {
 
     organization   Organization? @relation(fields: [organizationId], references: [id])
     organizationId String?       @unique
+}
+
+model Speakers {
+    id        String   @id @default(cuid())
+    name      String
+    age       Int
+    bio       String
+    createdAt DateTime @default(now())
+
+    organization   Organization @relation(fields: [organizationId], references: [id])
+    organizationId String
 }
 
 enum ROLE {
