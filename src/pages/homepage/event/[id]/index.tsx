@@ -1,17 +1,13 @@
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Image from "next/image";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import OrgCard from "~/components/orgcard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import vol1 from "public/images/vol1.png";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Router from "next/router";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
@@ -23,6 +19,18 @@ const EventPage = () => {
   });
 
   const event = eventQuery.data;
+
+  if (!id) {
+    return <div>No organization ID provided</div>;
+  }
+
+  if (eventQuery.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (eventQuery.error ?? !eventQuery.data) {
+    return <div>Error loading organization data</div>;
+  }
 
   const handleEditButton = () => {
     void router.push({
@@ -126,27 +134,3 @@ const EventPage = () => {
 };
 
 export default EventPage;
-
-// export const getServerSideProps: GetServerSideProps<any> = async () => {
-//   const id = " clsbbplxw000ba3a2h259j7d7";
-
-//   const eventQuery = api.event.getOne.useQuery({
-//     id: id as string,
-//   });
-
-//   if (!id) {
-//     return <div>No organization ID provided</div>;
-//   }
-
-//   if (eventQuery.isLoading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   if (eventQuery.error ?? !eventQuery.data) {
-//     return <div>Error loading organization data</div>;
-//   }
-
-//   const event = eventQuery.data;
-
-//   return { props: { event } };
-// };
