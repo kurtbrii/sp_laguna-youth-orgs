@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import Navbar from "../../../components/navbar";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { Organization, User } from "@prisma/client";
 import ActivitiesCard from "~/components/ActivitiesCard";
 
 const Index = () => {

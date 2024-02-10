@@ -1,7 +1,7 @@
 import { signIn } from "next-auth/react";
-import google from "../../assets/google.png";
-import discord from "../../assets/discord.png";
-import guest from "../../assets/guest.png";
+import google from "public/images/google.png";
+import discord from "public/images/discord.png";
+import guest from "public/images/guest.png";
 
 import React from "react";
 import Image from "next/image";

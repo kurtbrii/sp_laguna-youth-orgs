@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import { IconButton } from "@mui/material";
-import ClearIcon from "@mui/icons-material/Clear";
 
 interface ActivityProps {
   name: string;

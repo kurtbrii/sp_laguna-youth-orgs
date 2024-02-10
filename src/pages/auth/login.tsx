@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import vol2 from "../../../assets/vol2.png";
+import vol2 from "public/images/vol2.png";
 import Image from "next/image";
 import Providers from "~/components/providers";
 import { useRouter } from "next/router";

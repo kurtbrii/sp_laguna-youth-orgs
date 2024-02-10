@@ -7,7 +7,7 @@ import Image from "next/image";
 // import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 // import { vol2} from "../../../assets/vol2.png";
 
-import vol2 from "../../../assets/vol2.png";
+import vol2 from "public/images/vol2.png";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";

@@ -8,7 +8,7 @@ import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import { db } from "~/server/db";
-import vol2 from "../../assets/vol1.png";
+import vol1 from "public/images/vol1.png";
 import OrgCard from "~/components/orgcard";
 import EventCard from "~/components/eventCard";
 import ActivitiesCard from "~/components/ActivitiesCard";
@@ -51,7 +51,7 @@ export default function Home() {
           {/* Hero Section */}
           <section className="relative mb-10 flex bg-customBlack-100">
             <Image
-              src={vol2}
+              src={vol1}
               alt="Volunteer Image"
               className="opacity-20"
               style={{
