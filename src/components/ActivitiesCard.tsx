@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import vol2 from "../../assets/vol2.png";
+import vol2 from "public/images/vol2.png";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Organization, type User } from "@prisma/client";

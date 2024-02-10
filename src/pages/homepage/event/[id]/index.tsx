@@ -13,7 +13,7 @@ import OrgCard from "~/components/orgcard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import vol1 from "../../../../../assets/vol1.png";
+import vol1 from "public/images/vol1.png";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();

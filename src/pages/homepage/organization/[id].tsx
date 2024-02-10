@@ -11,24 +11,23 @@ import {
 } from "react-text-gradients-and-animations";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import OrgCard from "~/components/orgcard";
 
-type OrganizationProps = {
-  id: string;
-  orgName: string;
-  phoneNumber: string;
-  mission: string;
-  bio: string;
-  vision: string;
-  objectives: string;
-  user: {
-    id: string;
-    role: string;
-    image: string | null;
-    email: string | null;
-  };
-  userId: string;
-};
+// type OrganizationProps = {
+//   id: string;
+//   orgName: string;
+//   phoneNumber: string;
+//   mission: string;
+//   bio: string;
+//   vision: string;
+//   objectives: string;
+//   user: {
+//     id: string;
+//     role: string;
+//     image: string | null;
+//     email: string | null;
+//   };
+//   userId: string;
+// };
 
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();

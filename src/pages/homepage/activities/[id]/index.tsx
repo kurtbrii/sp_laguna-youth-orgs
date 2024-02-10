@@ -1,13 +1,8 @@
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Image from "next/image";
-import vol2 from "../../../../../assets/vol2.png";
+import vol2 from "public/images/vol2.png";
 
-import {
-  LinearTextGradient,
-  RadialTextGradient,
-  ConicTextGradient,
-} from "react-text-gradients-and-animations";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import DeleteIcon from "@mui/icons-material/Delete";
