@@ -7,30 +7,12 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ActivitiesCard from "~/components/ActivitiesCard";
+import SpeakersCard from "~/components/SpeakersCard";
 
-const Index = () => {
+const Speakers = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  const activity = api.activity.getActivities.useQuery({});
-
-  // type QueryActivity = {
-  //   id: string;
-  //   name: string;
-  //   details: string;
-  //   date: Date;
-  //   createdAt: Date;
-  //   location: string;
-  //   organization: {
-  //     user: {
-  //       id: string;
-  //       image: string | null;
-  //     };
-  //   };
-  //   hasOrganizations: boolean;
-  //   hasVolunteers: boolean;
-  //   hasParticipants: boolean;
-  //   organizationId: string;
-  // };
+  const speakers = api.speaker.getSpeakers.useQuery({});
 
   const router = useRouter();
 
@@ -42,11 +24,11 @@ const Index = () => {
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
-      {/* ADD EVENT AND SEARCH BAR */}
+      {/* ADD SPEAKERS AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
           <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
-            Get Involved
+            Pool of Speakers
           </h1>
         </div>
 
@@ -70,26 +52,26 @@ const Index = () => {
             </IconButton>
           </div>
 
-          {/* ADD EVENT */}
+          {/* ADD SPEAKERS */}
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
               className="btn-active w-1/4 px-2 py-2"
-              onClick={() => router.push("/homepage/activities/add")}
+              onClick={() => router.push("/homepage/speakers/add")}
             >
-              Promote an Activity
+              Add Speaker
             </button>
           )}
         </div>
       </div>
 
-      {/* ACTIVITIES CARD */}
+      {/* SPEAKERS CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {activity?.data?.map((queryActivity) => (
-          <ActivitiesCard key={queryActivity.id} activity={queryActivity} />
+        {speakers?.data?.map((querySpeaker) => (
+          <SpeakersCard key={querySpeaker.id} speaker={querySpeaker} />
         ))}
       </div>
     </div>
   );
 };
 
-export default Index;
+export default Speakers;
