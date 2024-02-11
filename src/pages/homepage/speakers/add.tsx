@@ -68,11 +68,11 @@ const Add = () => {
     createSpeaker.mutate({
       name: speakersData.name,
       bio: speakersData.bio,
-      age: speakersData.age,
+      age: parseInt(speakersData.age),
       orgId: orgId,
     });
 
-    window.location.replace("/homepage/speaker");
+    void router.push("/homepage/speakers");
   };
 
   return (

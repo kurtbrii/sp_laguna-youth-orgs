@@ -67,6 +67,7 @@ export const speakerRouter = createTRPCRouter({
         include: {
           organization: {
             select: {
+              orgName: true,
               user: true
             }
           },
