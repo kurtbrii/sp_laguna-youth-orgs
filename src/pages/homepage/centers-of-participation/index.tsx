@@ -6,10 +6,9 @@ import TuneIcon from "@mui/icons-material/Tune";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import ActivitiesCard from "~/components/ActivitiesCard";
-import SpeakersCard from "~/components/SpeakersCard";
+import ParticipationNav from "~/components/ParticipationsNav";
 
-const Speakers = () => {
+const Participation = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const speakers = api.speaker.getSpeakers.useQuery({});
@@ -24,15 +23,15 @@ const Speakers = () => {
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
-      {/* ADD SPEAKERS AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
           <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
-            Pool of Speakers
+            PYDP CENTERS OF PARTICIPATION
           </h1>
         </div>
 
         <div className=" flex items-center justify-between">
+          {/* SEARCH FUNCTION */}
           <div className="flex w-3/5 items-center">
             <input
               type="text"
@@ -50,27 +49,12 @@ const Speakers = () => {
               <TuneIcon />
             </IconButton>
           </div>
-
-          {/* ADD SPEAKERS */}
-          {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
-            <button
-              className="btn-active w-1/4 px-2 py-2"
-              onClick={() => router.push("/homepage/speakers/add")}
-            >
-              Add Speaker
-            </button>
-          )}
         </div>
-      </div>
 
-      {/* SPEAKERS CARD */}
-      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {speakers?.data?.map((querySpeaker) => (
-          <SpeakersCard key={querySpeaker.id} speaker={querySpeaker} />
-        ))}
+        <ParticipationNav />
       </div>
     </div>
   );
 };
 
-export default Speakers;
+export default Participation;
