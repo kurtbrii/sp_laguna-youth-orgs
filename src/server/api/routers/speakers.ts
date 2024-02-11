@@ -39,8 +39,6 @@ export const speakerRouter = createTRPCRouter({
   getSpeaker: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
-
-      // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.speakers.findUnique({
         where: { id },
         select: {
@@ -56,7 +54,6 @@ export const speakerRouter = createTRPCRouter({
     .input(z.object({ take: z.number().optional(), orgId: z.string().optional() }))
     .query(async ({ ctx, input }) => {
 
-      // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.speakers.findMany({
         where: {
           organizationId: input.orgId

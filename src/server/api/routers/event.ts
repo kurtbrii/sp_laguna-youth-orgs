@@ -54,6 +54,7 @@ export const eventRouter = createTRPCRouter({
           partners: true,
           organization: {
             select: {
+              orgName: true,
               user: true
             }
           }
@@ -73,6 +74,7 @@ export const eventRouter = createTRPCRouter({
         select: {
           organization: {
             select: {
+              orgName: true,
               user: {
                 select: {
                   id: true,

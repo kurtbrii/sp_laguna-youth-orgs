@@ -21,7 +21,18 @@ export const userRouter = createTRPCRouter({
           id: true,
           image: true,
           role: true,
-          organization: true,
+          organization: {
+            select: {
+              id: true,
+              phoneNumber: true,
+              bio: true,
+              mission: true,
+              vision: true,
+              objectives: true,
+              orgName: true,
+              centersOfParticipation: true,
+            }
+          },
           volunteer: true
         },
       });

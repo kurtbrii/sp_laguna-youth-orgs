@@ -123,7 +123,18 @@ export const orgRouter = createTRPCRouter({
     }),
 
   updateOrganization: protectedProcedure
-    .input(z.object({ id: z.string(), phoneNumber: z.string(), bio: z.string(), mission: z.string(), vision: z.string(), objectives: z.string() }))
+    .input(z.object({
+      id: z.string(), phoneNumber: z.string(), bio: z.string(), mission: z.string(), vision: z.string(), objectives: z.string(), health: z.string().optional(),
+      education: z.string(),
+      economicEmpowerment: z.string(),
+      socialInclusion: z.string(),
+      peaceBuilding: z.string(),
+      governance: z.string(),
+      activeCitizenship: z.string(),
+      environment: z.string(),
+      globalMobility: z.string(),
+      agriculture: z.string(),
+    }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -136,6 +147,20 @@ export const orgRouter = createTRPCRouter({
           mission: input.mission,
           vision: input.vision,
           objectives: input.objectives,
+          centersOfParticipation: {
+            update: {
+              health: input.health,
+              education: input.education,
+              economicEmpowerment: input.economicEmpowerment,
+              socialInclusion: input.socialInclusion,
+              peaceBuilding: input.peaceBuilding,
+              governance: input.governance,
+              activeCitizenship: input.activeCitizenship,
+              environment: input.environment,
+              globalMobility: input.globalMobility,
+              agriculture: input.agriculture,
+            }
+          }
         },
       });
     }),

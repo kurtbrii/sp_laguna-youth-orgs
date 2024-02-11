@@ -94,8 +94,8 @@ model Organization {
 
     partneredOrganizations OrganizationActivity[] // list of organizations who applied for partnership
 
-    CentersOfParticipation CentersOfParticipation?
-    Speakers               Speakers[]
+    centersOfParticipation CentersOfParticipation?
+    speakers               Speakers[]
 }
 
 model Volunteer {
@@ -170,8 +170,8 @@ model CentersOfParticipation {
     globalMobility      String
     agriculture         String
 
-    organization   Organization? @relation(fields: [organizationId], references: [id])
-    organizationId String?       @unique
+    organization   Organization @relation(fields: [organizationId], references: [id])
+    organizationId String       @unique
 }
 
 model Speakers {
