@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import vol2 from "public/images/vol2.png";
 import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { Organization, type User } from "@prisma/client";
-import EventIcon from "@mui/icons-material/Event";
-import PlaceIcon from "@mui/icons-material/Place";
-import { Box, Dialog, Modal } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { IconButton } from "@mui/material";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import router from "next/router";
 
 type SpeakersProps = {
   speaker: {
@@ -19,6 +18,7 @@ type SpeakersProps = {
         id: string;
         image: string | null;
       };
+      orgName: string;
     };
   };
 };
@@ -26,52 +26,78 @@ type SpeakersProps = {
 const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  const [toggleModal, setToggleModal] = useState(false);
+  const [toggleSeeMore, setToggleSeeMore] = useState(false);
 
-  const handleModal = () => {
-    setToggleModal(!toggleModal);
+  const handleSeeMore = () => {
+    setToggleSeeMore(!toggleSeeMore);
+  };
+
+  const handleEditButton = () => {
+    void router.push({
+      pathname: `/homepage/speakers/[id]/edit`,
+      query: {
+        id: speaker?.id,
+      },
+    });
   };
 
   return (
     <>
       <div
-        onClick={() => handleModal()}
         // href={`/homepage/speakers/${speaker.id}`}
-        className=" relative w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
-        style={{ height: "26rem" }}
+        className="flex flex-col justify-between  rounded-md  p-4  text-customBlack-100 shadow-2xl"
+        style={{ height: "17rem", width: "24rem" }}
       >
-        <Image
-          src={vol2}
-          className="h-2/5 w-full object-cover"
-          alt="sunset "
-          loading="lazy"
-        />
-        <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100"></div>
-        <Image
-          className="absolute left-4 top-32 rounded-md"
-          src={`${speaker.organization?.user?.image}`}
-          height={60}
-          width={60}
-          alt="user image role"
-          loading="lazy"
-        />
-      </div>
-      {toggleModal && (
-        <Dialog
-          className=" text-customBlack-100"
-          open={toggleModal}
-          onClose={handleModal}
+        <div className=" mb-2 flex  gap-4  font-custom-lexend ">
+          <Image
+            className="w-1/3 rounded-md"
+            src={`${speaker.organization?.user?.image}`}
+            height={80}
+            width={80}
+            alt="user image role"
+            loading="lazy"
+          />
+
+          <div className="overflow-hidden">
+            <p className="text-gradient overflow-hidden text-ellipsis whitespace-nowrap font-custom-epilogue text-lg font-extrabold">
+              {speaker.name}
+            </p>
+            <p className="overflow-hidden  text-ellipsis whitespace-nowrap">
+              from {speaker.organization.orgName}
+            </p>
+            <p className="text-ellipsis whitespace-nowrap">
+              Age: {speaker.age}
+            </p>
+          </div>
+        </div>
+
+        <div
+          className={`mb-4 line-clamp-3  ${toggleSeeMore ? "overflow-y-scroll" : "overflow-clip"}`}
+          style={{ maxHeight: "6rem" }}
         >
-          <Box sx={{ width: 400, height: 200, padding: 12 }}>
-            <div className="self-center">
-              <h2 id="parent-modal-title">Text in a modal</h2>
-              <p id="parent-modal-description">
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-              </p>
+          <p className="overflow-ellipsis">{speaker.bio}</p>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => handleSeeMore()}
+            className=" text-customBlack-50"
+          >
+            {toggleSeeMore ? <>See less ^</> : <>See more &gt;</>}
+          </button>
+
+          {sessionData?.user.id === speaker?.organization.user.id && (
+            <div className="flex gap-4">
+              <IconButton onClick={handleEditButton} size="small">
+                <EditTwoToneIcon />
+              </IconButton>
+              <IconButton size="small">
+                <DeleteIcon />
+              </IconButton>
             </div>
-          </Box>
-        </Dialog>
-      )}
+          )}
+        </div>
+      </div>
     </>
   );
 };

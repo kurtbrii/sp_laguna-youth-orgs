@@ -72,7 +72,7 @@ const Add = () => {
       orgId: orgId,
     });
 
-    window.location.replace("/homepage/speaker");
+    // void router.push("/homepage/speakers");
   };
 
   return (

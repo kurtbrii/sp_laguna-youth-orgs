@@ -18,7 +18,7 @@ import { api } from "~/utils/api";
 //   organizationId: string;
 // }
 
-const EditActivity = () => {
+const EditSpeaker = () => {
   const editSpeaker = api.speaker.updateSpeaker.useMutation();
 
   const router = useRouter();
@@ -58,8 +58,8 @@ const EditActivity = () => {
   }, [speakerQueryData]);
 
   useEffect(() => {
-    setSpeakerData((prevActivityData) => ({
-      ...prevActivityData,
+    setSpeakerData((prevSpeakerData) => ({
+      ...prevSpeakerData,
       organizationId: orgId,
     }));
   }, [orgId]);
@@ -94,7 +94,7 @@ const EditActivity = () => {
       id: id as string,
     });
 
-    window.location.replace("/homepage/activities");
+    window.location.replace("/homepage/speakers");
   };
 
   return (
@@ -102,7 +102,7 @@ const EditActivity = () => {
       <Navbar />
       <section className=" mt-6 flex flex-row items-center justify-center bg-primary p-4 ">
         <p className="font-custom-epilogue text-xl font-extrabold text-white">
-          EDIT AN ACTIVITY
+          EDIT SPEAKER
         </p>
       </section>
       <form
@@ -153,7 +153,7 @@ const EditActivity = () => {
             Edit Speaker
           </button>
           <button
-            onClick={() => window.location.replace("/homepage/activities")}
+            onClick={() => router.back()}
             type="reset"
             className="btn-outline   px-20 py-3"
             style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
@@ -168,4 +168,4 @@ const EditActivity = () => {
   );
 };
 
-export default EditActivity;
+export default EditSpeaker;
