@@ -46,7 +46,7 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
       <div
         // href={`/homepage/speakers/${speaker.id}`}
         className="flex flex-col justify-between  rounded-md  p-4  text-customBlack-100 shadow-2xl"
-        style={{ height: "16rem", width: "24rem" }}
+        style={{ height: "17rem", width: "24rem" }}
       >
         <div className=" mb-2 flex  gap-4  font-custom-lexend ">
           <Image
