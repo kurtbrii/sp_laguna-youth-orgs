@@ -39,16 +39,17 @@ const EditSpeaker = () => {
 
   const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
-  const speakerQueryDataForm = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const speakerQueryDataForm: any = {
     name: speakerQueryData?.name ?? "",
     bio: speakerQueryData?.bio ?? "",
-    age: speakerQueryData?.age ?? 10,
+    age: speakerQueryData?.age,
   };
 
   const [speakerData, setSpeakerData] = useState({
     name: "",
     bio: "",
-    age: 10,
+    age: "10",
   });
 
   useEffect(() => {
@@ -90,7 +91,7 @@ const EditSpeaker = () => {
     editSpeaker.mutate({
       name: speakerData.name,
       bio: speakerData.bio,
-      age: speakerData.age,
+      age: parseInt(speakerData.age),
       id: id as string,
     });
 

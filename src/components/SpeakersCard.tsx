@@ -6,6 +6,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import router from "next/router";
+import { api } from "~/utils/api";
+import DeleteModal from "./DeleteModal";
 
 type SpeakersProps = {
   speaker: {
@@ -28,6 +30,10 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
 
   const [toggleSeeMore, setToggleSeeMore] = useState(false);
 
+  const [toggleModal, setToggleModal] = useState(false);
+
+  const deleteSpeaker = api.speaker.deleteSpeaker.useMutation();
+
   const handleSeeMore = () => {
     setToggleSeeMore(!toggleSeeMore);
   };
@@ -39,6 +45,18 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
         id: speaker?.id,
       },
     });
+  };
+
+  const handleToggleButton = () => {
+    setToggleModal(!toggleModal);
+  };
+
+  const handleDeleteButton = () => {
+    deleteSpeaker.mutate({
+      id: speaker.id,
+    });
+
+    void router.push("/homepage");
   };
 
   return (
@@ -91,13 +109,20 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
               <IconButton onClick={handleEditButton} size="small">
                 <EditTwoToneIcon />
               </IconButton>
-              <IconButton size="small">
+              <IconButton size="small" onClick={() => handleToggleButton()}>
                 <DeleteIcon />
               </IconButton>
             </div>
           )}
         </div>
       </div>
+
+      <DeleteModal
+        toggleModal={toggleModal}
+        handleToggleButton={handleToggleButton}
+        handleDeleteButton={handleDeleteButton}
+        string={"speaker"}
+      />
     </>
   );
 };
