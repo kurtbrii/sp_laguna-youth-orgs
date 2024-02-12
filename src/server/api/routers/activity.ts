@@ -122,6 +122,16 @@ export const activityRouter = createTRPCRouter({
       });
     }),
 
+  deleteActivity: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.activity.delete({
+        where: {
+          id: input.id
+        }
+      })
+    })
+
 
 
 });

@@ -117,4 +117,15 @@ export const eventRouter = createTRPCRouter({
       });
     }),
 
+  deleteEvent: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.event.delete({
+        where: {
+          id: input.id
+        }
+      })
+    })
+
+
 });

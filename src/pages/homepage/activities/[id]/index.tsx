@@ -8,22 +8,24 @@ import { useSession } from "next-auth/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import DeleteModal from "~/components/DeleteModal";
+import { useState } from "react";
 
-const EventPage = () => {
+const ActivitiesPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
+
+  const [toggleModal, setToggleModal] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
-
-  const user = api.user.getUser.useQuery({
-    userId: sessionData?.user.id ?? "",
-  });
 
   const activityQuery = api.activity?.getOne.useQuery({
     id: id as string,
   });
 
   const activity = activityQuery.data;
+
+  const deleteActivity = api.activity.deleteActivity.useMutation();
 
   if (!id) {
     return <div>No organization ID provided</div>;
@@ -37,6 +39,10 @@ const EventPage = () => {
     return <div>Error loading organization data</div>;
   }
 
+  const handleToggleButton = () => {
+    setToggleModal(!toggleModal);
+  };
+
   const handleEditButton = () => {
     void router.push({
       pathname: `/homepage/activities/[id]/edit`,
@@ -44,6 +50,14 @@ const EventPage = () => {
         id: activity?.id,
       },
     });
+  };
+
+  const handleDeleteButton = () => {
+    deleteActivity.mutate({
+      id: id as string,
+    });
+
+    void router.push("/homepage/activities");
   };
 
   return (
@@ -97,7 +111,7 @@ const EventPage = () => {
                   <IconButton onClick={handleEditButton}>
                     <EditTwoToneIcon />
                   </IconButton>
-                  <IconButton>
+                  <IconButton onClick={() => handleToggleButton()}>
                     <DeleteIcon />
                   </IconButton>
                 </div>
@@ -120,6 +134,13 @@ const EventPage = () => {
 
             <p className="mt-12 whitespace-pre-wrap">{activity?.details}</p>
           </div>
+
+          <DeleteModal
+            toggleModal={toggleModal}
+            handleToggleButton={handleToggleButton}
+            handleDeleteButton={handleDeleteButton}
+            string={"activity"}
+          />
 
           {sessionStatus !== "authenticated" && activity?.hasParticipants && (
             <button className="btn-active w-1/2 self-center px-2 py-2">
@@ -147,4 +168,4 @@ const EventPage = () => {
   );
 };
 
-export default EventPage;
+export default ActivitiesPage;
