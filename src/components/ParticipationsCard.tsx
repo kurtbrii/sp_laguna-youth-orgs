@@ -126,9 +126,6 @@ const ParticipationsCard = ({
             <IconButton onClick={handleEditButton} size="small">
               <EditTwoToneIcon />
             </IconButton>
-            <IconButton size="small">
-              <DeleteIcon />
-            </IconButton>
           </div>
         )}
       </div>

@@ -16,6 +16,7 @@ type ActivityProps = {
     createdAt: Date;
     location: string;
     organization: {
+      orgName: string;
       user: {
         id: string;
         image: string | null;
@@ -40,7 +41,7 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
         <p className="text-gradient mb-3 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
-          {/* {activity.organizedBy.toLocaleUpperCase()} */}
+          {activity.organization.orgName.toLocaleUpperCase()}
         </p>
         <p className="mb-2 overflow-hidden text-ellipsis  whitespace-nowrap  text-sm font-bold">
           {activity.name}

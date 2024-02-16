@@ -11,6 +11,7 @@ import {
 } from "react-text-gradients-and-animations";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 // type OrganizationProps = {
 //   id: string;
@@ -45,6 +46,15 @@ const OrganizationPage = () => {
 
   const organization = organizationsQuery.data;
 
+  const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
+
+  const orgCheckJoin = api.volJoinOrg.checkIfOrganizationExists.useQuery({
+    orgId: id as string,
+    volId: user.data?.volunteer?.id ?? "",
+  });
+
+  const deleteVolJoinOrg = api.volJoinOrg.deleteVolJoinOrg.useMutation();
+
   if (!id) {
     return <div>No organization ID provided</div>;
   }
@@ -56,6 +66,30 @@ const OrganizationPage = () => {
   if (organizationsQuery.error ?? !organizationsQuery.data) {
     return <div>Error loading organization data</div>;
   }
+
+  const handleJoinOrg = () => {
+    volJoinOrg.mutate(
+      {
+        orgId: id as string,
+        volId: user.data?.volunteer?.id ?? "  ",
+      },
+      {
+        onSuccess: void orgCheckJoin.refetch(),
+      },
+    );
+  };
+
+  const handleDeleteVolJoinOrg = () => {
+    deleteVolJoinOrg.mutate(
+      {
+        orgId: id as string,
+        volId: user.data?.volunteer?.id ?? "",
+      },
+      {
+        onSuccess: void orgCheckJoin.refetch(),
+      },
+    );
+  };
 
   return (
     <>
@@ -86,16 +120,7 @@ const OrganizationPage = () => {
               {organization?.orgName}
             </h1>
 
-            <p className="mb-6 mr-32 text-sm">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in
-              tortor urna. Fusce in ante at purus rhoncus auctor. In tincidunt
-              ipsum vel tortor malesuada, et ti Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit. Sed in tortor urna. Fusce in ante at
-              purus rhoncus auctor. In tincidunt ipsum vel tortor malesuada, et
-              tincidunt tellus tempus. Vivamus a posuere ipsum. Sed convallis
-              odio non sagittis lacinia. Nullam mattis tincidunt felis ac
-              vehicula.
-            </p>
+            <p className="mb-6 mr-32 text-sm">{organization?.bio}</p>
 
             {sessionStatus === "authenticated" && user.data && (
               <div className="flex gap-5">
@@ -113,8 +138,19 @@ const OrganizationPage = () => {
                     </>
                   )}
 
-                {user.data.role === "VOLUNTEER" && (
-                  <button className="btn-active px-8 py-3">
+                {user.data.role === "VOLUNTEER" &&
+                orgCheckJoin.data?.[0]?.organizationId ? (
+                  <button
+                    className="btn-outline px-8 py-3"
+                    onClick={() => handleDeleteVolJoinOrg()}
+                  >
+                    Cancel Request
+                  </button>
+                ) : (
+                  <button
+                    className="btn-active px-8 py-3"
+                    onClick={() => handleJoinOrg()}
+                  >
                     Join Organization
                   </button>
                 )}

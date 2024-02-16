@@ -32,7 +32,7 @@ const Add = () => {
   const [speakersData, setSpeakersData] = useState({
     name: "",
     bio: "",
-    age: 10,
+    age: "10",
   });
 
   useEffect(() => {
@@ -61,18 +61,20 @@ const Add = () => {
       [name]: value,
     });
 
-    console.log(speakersData);
+    console.log(typeof speakersData.age);
   };
 
   const submitSpeaker = () => {
+    const newAge = parseInt(speakersData.age);
+
     createSpeaker.mutate({
       name: speakersData.name,
       bio: speakersData.bio,
-      age: speakersData.age,
+      age: newAge,
       orgId: orgId,
     });
 
-    // void router.push("/homepage/speakers");
+    void router.push("/homepage/speakers");
   };
 
   return (

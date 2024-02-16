@@ -35,7 +35,6 @@ export const speakerRouter = createTRPCRouter({
       });
     }),
 
-
   getSpeaker: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id }, ctx }) => {
@@ -73,6 +72,15 @@ export const speakerRouter = createTRPCRouter({
       });
     }),
 
+  deleteSpeaker: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.speakers.delete({
+        where: {
+          id: input.id
+        }
+      })
+    })
 
 
 

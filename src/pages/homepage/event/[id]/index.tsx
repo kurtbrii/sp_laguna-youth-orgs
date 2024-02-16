@@ -7,9 +7,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import vol1 from "public/images/vol1.png";
+import React, { useState } from "react";
+import DeleteModal from "~/components/DeleteModal";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
+
+  const [toggleModal, setToggleModal] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
@@ -19,6 +23,8 @@ const EventPage = () => {
   });
 
   const event = eventQuery.data;
+
+  const deleteEvent = api.event.deleteEvent.useMutation();
 
   if (!id) {
     return <div>No organization ID provided</div>;
@@ -32,6 +38,10 @@ const EventPage = () => {
     return <div>Error loading organization data</div>;
   }
 
+  const handleToggleButton = () => {
+    setToggleModal(!toggleModal);
+  };
+
   const handleEditButton = () => {
     void router.push({
       pathname: `/homepage/event/[id]/edit`,
@@ -41,10 +51,18 @@ const EventPage = () => {
     });
   };
 
+  const handleDeleteButton = () => {
+    deleteEvent.mutate({
+      id: id as string,
+    });
+
+    void router.push("/homepage");
+  };
+
   return (
     <>
       <Navbar />
-      <div className="mx-16 my-10  flex  justify-center gap-2 font-custom-lexend   text-customBlack-100">
+      <div className="relative   mx-16 my-10  flex  justify-center gap-2 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
         <div className="mr-24 flex w-2/5 flex-col gap-1">
           <Image
@@ -91,17 +109,15 @@ const EventPage = () => {
                 <IconButton onClick={handleEditButton}>
                   <EditTwoToneIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => handleToggleButton()}>
                   <DeleteIcon />
                 </IconButton>
               </div>
             )}
           </section>
-
           <p className="text-md mb-6 italic text-customBlack-50">
             {event?.date.toLocaleString()}
           </p>
-
           <p
             className="text-md text-customBlack-50"
             style={{ fontSize: "12px" }}
@@ -109,7 +125,6 @@ const EventPage = () => {
             Organized By:
           </p>
           <p className="text-gradient text-sm">{event?.organizedBy}</p>
-
           {event && event?.partners?.length > 0 && (
             <>
               <p
@@ -125,10 +140,41 @@ const EventPage = () => {
               ))}
             </>
           )}
-
           <p className="mt-12 whitespace-pre-wrap">{event?.details}</p>
         </div>
       </div>
+
+      <DeleteModal
+        toggleModal={toggleModal}
+        handleToggleButton={handleToggleButton}
+        handleDeleteButton={handleDeleteButton}
+        string={"event"}
+      />
+
+      {/* {toggleModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-80">
+          <div className="rounded-md bg-white p-12">
+            <p className="mb-6 font-bold">Do you want to delete this event?</p>
+            <div className=" flex justify-center">
+              <button
+                className="rounded-mdpx-4 btn-outline mr-3 px-5 py-2"
+                style={{ color: "var(--red)", borderColor: "var(--red)" }}
+                onClick={handleDeleteButton}
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:border-blue-300 focus:outline-none focus:ring"
+                onClick={handleDeleteButton}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )} */}
+
+      {/* <handleDeleteButton /> */}
     </>
   );
 };
