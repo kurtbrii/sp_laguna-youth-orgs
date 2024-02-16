@@ -41,7 +41,6 @@ export const activityRouter = createTRPCRouter({
         orderBy: {
           createdAt: "desc",
         },
-        // where: whereCondition,
         select: {
           id: true,
           name: true,
@@ -55,6 +54,7 @@ export const activityRouter = createTRPCRouter({
           organizationId: true,
           organization: {
             select: {
+              orgName: true,
               user: {
                 select: {
                   image: true,
