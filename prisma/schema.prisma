@@ -183,15 +183,12 @@ model Speakers {
 
 // ! MANY TO MANY RELATIONS
 model VolJoinOrg {
-    id String @id @default(cuid())
-
+    id             String       @id @default(cuid())
     organization   Organization @relation(fields: [organizationId], references: [id])
-    organizationId String       @unique
-
-    volunteer   Volunteer @relation(fields: [volunteerId], references: [id])
-    volunteerId String    @unique
-
-    status STATUS @default(PENDING) // pending or not
+    organizationId String
+    volunteer      Volunteer    @relation(fields: [volunteerId], references: [id])
+    volunteerId    String
+    status         STATUS       @default(PENDING)
 
     @@unique([organizationId, volunteerId])
 }
