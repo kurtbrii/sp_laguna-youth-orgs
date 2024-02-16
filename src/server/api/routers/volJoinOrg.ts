@@ -21,8 +21,8 @@ export const volJoinOrgRouter = createTRPCRouter({
       });
     }),
 
-  checkIfOrganizationExists: publicProcedure
-    .input(z.object({ orgId: z.string(), volId: z.string(), }))
+  getOrganizations: publicProcedure
+    .input(z.object({ orgId: z.string().optional(), volId: z.string().optional(), }))
     .query(async ({ input, ctx }) => {
       const data = await ctx.db.volJoinOrg.findMany({
         where: {
@@ -33,6 +33,17 @@ export const volJoinOrgRouter = createTRPCRouter({
         select: {
           organizationId: true,
           status: true,
+          organization: {
+            select: {
+              id: true,
+              orgName: true,
+              phoneNumber: true,
+              bio: true,
+              user: true,
+            }
+          },
+          volunteer: true,
+          volunteerId: true,
         }
       });
 
