@@ -1,5 +1,6 @@
 import { postRouter } from "~/server/api/routers/post";
 import { createTRPCRouter } from "~/server/api/trpc";
+
 import { orgRouter } from "./routers/organization";
 import { volunteerRouter } from "./routers/volunteer";
 import { userRouter } from "./routers/user";
@@ -7,6 +8,8 @@ import { eventRouter } from "./routers/event";
 import { activityRouter } from "./routers/activity";
 import { speakerRouter } from "./routers/speakers";
 import { participationRouter } from "./routers/participation";
+import { volJoinOrgRouter } from "./routers/volJoinOrg";
+import { orgSponsorOrgRouter, } from "./routers/orgSponsorOrg";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +17,7 @@ import { participationRouter } from "./routers/participation";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  volJoinOrg: volJoinOrgRouter,
   post: postRouter,
   user: userRouter,
   organization: orgRouter,
@@ -22,6 +26,7 @@ export const appRouter = createTRPCRouter({
   activity: activityRouter,
   speaker: speakerRouter,
   particpation: participationRouter,
+  orgSponsorOrg: orgSponsorOrgRouter,
 });
 
 // export type definition of API

@@ -91,10 +91,16 @@ model Organization {
     centersOfParticipation CentersOfParticipation?
     speakers               Speakers[]
 
-    partneredOrganizations OrganizationActivity[] // list of organizations who applied for partnership
-
     user   User   @relation(fields: [userId], references: [id])
     userId String @unique
+
+    // ! Many to Many Relations
+    VolJoinOrg VolJoinOrg[]
+
+    OrgSponsored            OrgSponsorOrg[] @relation(name: "AcceptingOrganization")
+    OrgRequestedSponsorship OrgSponsorOrg[] @relation(name: "RequestingOrganization")
+
+    partneredOrganizations OrganizationActivity[] // list of organizations who applied for partnership
 }
 
 model Volunteer {
@@ -111,6 +117,8 @@ model Volunteer {
 
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
+
+    VolJoinOrg VolJoinOrg[]
 }
 
 model Event {
@@ -145,17 +153,6 @@ model Activity {
     organizations OrganizationActivity[]
 }
 
-model OrganizationActivity {
-    id             String       @id @default(cuid())
-    organization   Organization @relation(fields: [organizationId], references: [id])
-    organizationId String
-
-    activity   Activity @relation(fields: [activityId], references: [id])
-    activityId String
-
-    status String // pending or not
-}
-
 model CentersOfParticipation {
     id                  String @id @default(cuid())
     health              String
@@ -184,8 +181,54 @@ model Speakers {
     organizationId String
 }
 
+// ! MANY TO MANY RELATIONS
+model VolJoinOrg {
+    id String @id @default(cuid())
+
+    organization   Organization @relation(fields: [organizationId], references: [id])
+    organizationId String       @unique
+
+    volunteer   Volunteer @relation(fields: [volunteerId], references: [id])
+    volunteerId String    @unique
+
+    status STATUS @default(PENDING) // pending or not
+
+    @@unique([organizationId, volunteerId])
+}
+
+model OrgSponsorOrg {
+    id String @id @default(cuid())
+
+    organizationRequesting   Organization @relation(name: "RequestingOrganization", fields: [organizationIdRequesting], references: [id])
+    organizationIdRequesting String
+
+    organizationAccepting   Organization @relation(name: "AcceptingOrganization", fields: [organizationIdAccepting], references: [id])
+    organizationIdAccepting String
+
+    status STATUS @default(PENDING) // pending or not
+
+    @@unique([organizationIdRequesting, organizationIdAccepting])
+}
+
+model OrganizationActivity {
+    id             String       @id @default(cuid())
+    organization   Organization @relation(fields: [organizationId], references: [id])
+    organizationId String
+
+    activity   Activity @relation(fields: [activityId], references: [id])
+    activityId String
+
+    status STATUS // pending or not
+}
+
+// ! Enums
 enum ROLE {
     GUEST
     ORGANIZATION
     VOLUNTEER
+}
+
+enum STATUS {
+    PENDING
+    APPROVED
 }
