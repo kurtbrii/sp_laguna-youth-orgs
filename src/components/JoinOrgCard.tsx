@@ -43,19 +43,21 @@ const JoinOrgCard = ({ organization, volId }: any) => {
   const cancelOrgRequest = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
   const handleViewOrg = () => {
-    void router.push(`/homepage/organization/${organization.id}`);
+    void router.push(``);
   };
 
-  const handleCancelRequest = () => {
+  const handleCancelRequest = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     cancelOrgRequest.mutate({ volId: volId, orgId: organization.id });
 
     alert("Cancelled Successfully");
   };
 
   return (
-    <div
+    <Link
       className="relative h-72 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill font-custom-lexend shadow-2xl"
       onClick={() => handleViewOrg()}
+      href={`/homepage/organization/${organization.id}`}
     >
       {/* <div className="h-2/5 bg-slate-600"> */}
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
@@ -67,7 +69,7 @@ const JoinOrgCard = ({ organization, volId }: any) => {
         <p className="mb-5 text-sm">Role: {organization?.user?.role}</p>
 
         <button
-          onClick={() => handleCancelRequest()}
+          onClick={(e) => handleCancelRequest(e)}
           className="btn-outline self-center px-5 py-2"
           style={{ color: "var(--red)", borderColor: "var(--red)" }}
         >
@@ -81,7 +83,7 @@ const JoinOrgCard = ({ organization, volId }: any) => {
         width={60}
         alt="user image role"
       />
-    </div>
+    </Link>
   );
 };
 
