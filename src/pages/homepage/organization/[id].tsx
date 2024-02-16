@@ -48,7 +48,7 @@ const OrganizationPage = () => {
 
   const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
 
-  const orgCheckJoin = api.volJoinOrg.getOrganizations.useQuery({
+  const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
     orgId: id as string,
     volId: user.data?.volunteer?.id ?? "",
   });

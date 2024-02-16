@@ -126,7 +126,9 @@ const Navbar = () => {
                         ? router.push(
                             "/manage-activities/volunteer/org-requests",
                           )
-                        : router.push("/manage-activities/organization")
+                        : router.push(
+                            "/manage-activities/organization/volunteer-requests",
+                          )
                     }
                   >
                     Manage Activities

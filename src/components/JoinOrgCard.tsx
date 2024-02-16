@@ -35,7 +35,7 @@ import { useRouter } from "next/router";
 // }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const JoinOrgCard = ({ organization, volId }: any) => {
+const JoinOrgCard = ({ organization, volunteer, isVolunteer }: any) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const router = useRouter();
@@ -43,21 +43,20 @@ const JoinOrgCard = ({ organization, volId }: any) => {
   const cancelOrgRequest = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
   const handleViewOrg = () => {
-    void router.push(``);
+    void router.push(`/homepage/organization/${organization.id}`);
   };
 
   const handleCancelRequest = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    cancelOrgRequest.mutate({ volId: volId, orgId: organization.id });
+    cancelOrgRequest.mutate({ volId: volunteer.id, orgId: organization.id });
 
     alert("Cancelled Successfully");
   };
 
   return (
-    <Link
-      className="relative h-72 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill font-custom-lexend shadow-2xl"
+    <div
+      className="relative h-72 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill font-custom-lexend text-customBlack-100 shadow-2xl"
       onClick={() => handleViewOrg()}
-      href={`/homepage/organization/${organization.id}`}
     >
       {/* <div className="h-2/5 bg-slate-600"> */}
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
@@ -83,7 +82,7 @@ const JoinOrgCard = ({ organization, volId }: any) => {
         width={60}
         alt="user image role"
       />
-    </Link>
+    </div>
   );
 };
 

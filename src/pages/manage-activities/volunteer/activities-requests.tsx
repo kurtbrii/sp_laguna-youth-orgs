@@ -15,7 +15,7 @@ const VolunteerManageActivities = () => {
 
   // const userData = sessionData?.user.organization.bio;
 
-  const getOrganizations = api.volJoinOrg.getOrganizations.useQuery({});
+  const getOrganizations = api.volJoinOrg.getOrgOrVol.useQuery({});
 
   return (
     <div className="flex flex-col">
