@@ -48,11 +48,12 @@ const OrganizationPage = () => {
 
   const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
 
-  const orgCheckJoin = api.volJoinOrg.checkIfOrganizationExists.useQuery({
+  const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
     orgId: id as string,
     volId: user.data?.volunteer?.id ?? "",
   });
 
+  // alert(orgCheckJoin);
   const deleteVolJoinOrg = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
   if (!id) {
@@ -68,27 +69,17 @@ const OrganizationPage = () => {
   }
 
   const handleJoinOrg = () => {
-    volJoinOrg.mutate(
-      {
-        orgId: id as string,
-        volId: user.data?.volunteer?.id ?? "  ",
-      },
-      {
-        onSuccess: void orgCheckJoin.refetch(),
-      },
-    );
+    volJoinOrg.mutate({
+      orgId: id as string,
+      volId: user.data?.volunteer?.id ?? "  ",
+    });
   };
 
   const handleDeleteVolJoinOrg = () => {
-    deleteVolJoinOrg.mutate(
-      {
-        orgId: id as string,
-        volId: user.data?.volunteer?.id ?? "",
-      },
-      {
-        onSuccess: void orgCheckJoin.refetch(),
-      },
-    );
+    deleteVolJoinOrg.mutate({
+      orgId: id as string,
+      volId: user.data?.volunteer?.id ?? "",
+    });
   };
 
   return (
@@ -122,11 +113,12 @@ const OrganizationPage = () => {
 
             <p className="mb-6 mr-32 text-sm">{organization?.bio}</p>
 
-            {sessionStatus === "authenticated" && user.data && (
-              <div className="flex gap-5">
-                {sessionData &&
-                  sessionData.user.id !== organization?.user.id &&
-                  user.data.role === "ORGANIZATION" && (
+            {sessionStatus === "authenticated" &&
+              user.data &&
+              sessionData.user.id !== organization?.user.id && (
+                <div className="flex gap-5">
+                  {sessionData && user.data.role === "ORGANIZATION" ? (
+                    // ! LOGIC IF ORGANIZAION
                     <>
                       <button className="btn-active px-8 py-3">
                         Request Partnership
@@ -136,26 +128,38 @@ const OrganizationPage = () => {
                         Request Sponsorship
                       </button>
                     </>
+                  ) : (
+                    // ! LOGIC IF VOLUNTEER
+                    <>
+                      {user.data.role === "VOLUNTEER" &&
+                      orgCheckJoin.data?.[0]?.organizationId ? (
+                        orgCheckJoin.data?.[0]?.status === "PENDING" ? (
+                          <button
+                            className="btn-outline px-8 py-3"
+                            onClick={() => handleDeleteVolJoinOrg()}
+                          >
+                            Cancel Request
+                          </button>
+                        ) : (
+                          <button
+                            className="btn-active cursor-no-drop px-8 py-3  opacity-60 hover:translate-y-0"
+                            disabled
+                          >
+                            Already Joined
+                          </button>
+                        )
+                      ) : (
+                        <button
+                          className="btn-active px-8 py-3"
+                          onClick={() => handleJoinOrg()}
+                        >
+                          Join Organization
+                        </button>
+                      )}
+                    </>
                   )}
-
-                {user.data.role === "VOLUNTEER" &&
-                orgCheckJoin.data?.[0]?.organizationId ? (
-                  <button
-                    className="btn-outline px-8 py-3"
-                    onClick={() => handleDeleteVolJoinOrg()}
-                  >
-                    Cancel Request
-                  </button>
-                ) : (
-                  <button
-                    className="btn-active px-8 py-3"
-                    onClick={() => handleJoinOrg()}
-                  >
-                    Join Organization
-                  </button>
-                )}
-              </div>
-            )}
+                </div>
+              )}
           </div>
         </div>
 

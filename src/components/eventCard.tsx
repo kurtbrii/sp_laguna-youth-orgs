@@ -68,7 +68,7 @@ const EventCard = ({ event }: EventProps) => {
             {event.date.toLocaleString()}
           </p>
         </div>
-        <div className=" flex items-center gap-1">
+        <div className=" flex items-center gap-1 overflow-hidden  overflow-ellipsis  whitespace-nowrap text-sm ">
           <PlaceIcon className="h-4 w-4" />
           <p className=" italic" style={{ fontSize: "10px" }}>
             {event.location.toLocaleString()}

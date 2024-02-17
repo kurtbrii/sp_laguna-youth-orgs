@@ -121,7 +121,15 @@ const Navbar = () => {
                   </p>
                   <p
                     className="cursor-pointer"
-                    onClick={() => signOut({ callbackUrl: "/homepage" })}
+                    onClick={() =>
+                      sessionData.user.role === "VOLUNTEER"
+                        ? router.push(
+                            "/manage-activities/volunteer/org-requests",
+                          )
+                        : router.push(
+                            "/manage-activities/organization/volunteer-requests",
+                          )
+                    }
                   >
                     Manage Activities
                   </p>

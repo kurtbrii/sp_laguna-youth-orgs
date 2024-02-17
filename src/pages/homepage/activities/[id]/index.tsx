@@ -10,6 +10,8 @@ import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteModal from "~/components/DeleteModal";
 import { useState } from "react";
+import EventIcon from "@mui/icons-material/Event";
+import PlaceIcon from "@mui/icons-material/Place";
 
 const ActivitiesPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -61,7 +63,7 @@ const ActivitiesPage = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col">
       <Navbar />
       <div className="mx-16 my-10  flex  justify-center gap-2 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
@@ -99,7 +101,14 @@ const ActivitiesPage = () => {
           </div>
         </div>
 
-        <div className="flex w-4/5 flex-col justify-between ">
+        <div
+          className="flex w-4/5 flex-col"
+          style={{
+            wordBreak: "break-word",
+            whiteSpace: "pre-line",
+            hyphens: "auto",
+          }}
+        >
           <div>
             {/* EVENT NAME */}
             <section className="flex items-center justify-between">
@@ -118,9 +127,29 @@ const ActivitiesPage = () => {
               )}
             </section>
 
-            <p className="text-md mb-6 italic text-customBlack-50">
-              {activity?.date.toLocaleString()}
-            </p>
+            <div>
+              <div className="my-2 flex items-center gap-1 ">
+                <EventIcon
+                  className="h-4 w-4 opacity-75"
+                  style={{ color: "var(--black100)" }}
+                />
+
+                <p className="text-md italic text-customBlack-50">
+                  {activity?.date.toLocaleString()}
+                </p>
+              </div>
+
+              <div className="flex items-stretch gap-1">
+                <PlaceIcon
+                  className="h-4 w-4 opacity-75"
+                  style={{ color: "var(--black100)" }}
+                />
+
+                <p className="text-md mb-6 italic text-customBlack-50">
+                  {activity?.location}
+                </p>
+              </div>
+            </div>
 
             <p
               className="text-md text-customBlack-50"
@@ -132,7 +161,9 @@ const ActivitiesPage = () => {
               {activity?.organization?.orgName}
             </p>
 
-            <p className="mt-12 whitespace-pre-wrap">{activity?.details}</p>
+            <p className="mb-20 mt-12 whitespace-pre-wrap">
+              {activity?.details}
+            </p>
           </div>
 
           <DeleteModal
@@ -164,7 +195,7 @@ const ActivitiesPage = () => {
             )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -9,6 +9,8 @@ import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import vol1 from "public/images/vol1.png";
 import React, { useState } from "react";
 import DeleteModal from "~/components/DeleteModal";
+import EventIcon from "@mui/icons-material/Event";
+import PlaceIcon from "@mui/icons-material/Place";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -60,7 +62,7 @@ const EventPage = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col flex-wrap">
       <Navbar />
       <div className="relative   mx-16 my-10  flex  justify-center gap-2 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
@@ -98,7 +100,14 @@ const EventPage = () => {
           </div>
         </div>
 
-        <div className="flex w-4/5 flex-col">
+        <div
+          className="flex w-4/5 flex-col"
+          style={{
+            wordBreak: "break-word",
+            whiteSpace: "pre-line",
+            hyphens: "auto",
+          }}
+        >
           {/* EVENT NAME */}
           <section className="flex items-center justify-between">
             <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
@@ -115,9 +124,28 @@ const EventPage = () => {
               </div>
             )}
           </section>
-          <p className="text-md mb-6 italic text-customBlack-50">
-            {event?.date.toLocaleString()}
-          </p>
+
+          <div className="my-2 flex items-center gap-1 ">
+            <EventIcon
+              className="h-4 w-4 opacity-75"
+              style={{ color: "var(--black100)" }}
+            />
+
+            <p className="text-md italic text-customBlack-50">
+              {event?.date.toLocaleString()}
+            </p>
+          </div>
+
+          <div className="flex items-stretch gap-1">
+            <PlaceIcon
+              className="h-4 w-4 opacity-75"
+              style={{ color: "var(--black100)" }}
+            />
+
+            <p className="text-md mb-6 italic text-customBlack-50">
+              {event?.location}
+            </p>
+          </div>
           <p
             className="text-md text-customBlack-50"
             style={{ fontSize: "12px" }}
@@ -140,7 +168,9 @@ const EventPage = () => {
               ))}
             </>
           )}
-          <p className="mt-12 whitespace-pre-wrap">{event?.details}</p>
+          <p className="overflow-wrap break-word mt-12 whitespace-pre-wrap">
+            {event?.details}
+          </p>
         </div>
       </div>
 
@@ -175,7 +205,7 @@ const EventPage = () => {
       )} */}
 
       {/* <handleDeleteButton /> */}
-    </>
+    </div>
   );
 };
 
