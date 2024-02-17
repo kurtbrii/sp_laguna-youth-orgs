@@ -9,33 +9,8 @@ import { $Enums, User } from "@prisma/client";
 import Image from "next/image";
 import { api } from "~/utils/api";
 
-type VolunteerProps = {
-  volunteer: {
-    organizationId: string;
-    status: string;
-    organization: {
-      id: string;
-      orgName: string;
-      phoneNumber: string;
-      bio: string;
-      user: User;
-    };
-    volunteer: {
-      select: {
-        id: string;
-        name: string | null;
-        email: string | null;
-        emailVerified: Date | null;
-        image: string | null;
-        role: $Enums.ROLE;
-      };
-    };
-    volunteerId: string;
-  };
-};
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VolunteerList = ({ volunteer, organization }: any) => {
+const SponsorsList = ({ orgRequesting, orgAcceptingId }: any) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [expanded, setExpanded] = useState(false);
@@ -44,25 +19,24 @@ const VolunteerList = ({ volunteer, organization }: any) => {
     setExpanded(!expanded);
   };
 
-  const approveStatus = api.volJoinOrg.updateVolJoinOrg.useMutation();
+  const approveStatus = api.orgSponsorOrg.updateOrgSpon.useMutation();
 
-  const discard = api.volJoinOrg.deleteVolJoinOrg.useMutation();
+  const discardOrg = api.orgSponsorOrg.deleteOrgSpon.useMutation();
 
   const handleApproveVol = () => {
     approveStatus.mutate({
-      volId: volunteer.id,
-      orgId: organization.id,
+      orgRequesting: orgRequesting.id,
+      orgAccepting: orgAcceptingId,
     });
 
     alert("Request Approved");
   };
 
   const handleDiscard = () => {
-    discard.mutate({
-      volId: volunteer.id,
-      orgId: organization.id,
+    discardOrg.mutate({
+      orgRequesting: orgRequesting.id,
+      orgAccepting: orgAcceptingId,
     });
-
     alert("Request Discarded");
   };
 
@@ -84,27 +58,33 @@ const VolunteerList = ({ volunteer, organization }: any) => {
         }}
         expandIcon={<ExpandMoreIcon />}
       >
-        {volunteer.firstName} {volunteer.middleInitial} {volunteer.lastName}
+        {orgRequesting.orgName}
       </AccordionSummary>
       <AccordionDetails>
         <div className="flex gap-4 py-6 font-custom-lexend text-customBlack-100">
           <Image
-            className="rounded-md"
-            src={`${volunteer.user.image}`}
+            className="h-full w-1/5 rounded-md object-cover"
+            src={`${orgRequesting.user.image}`}
             height={300}
             width={300}
             alt="user image role"
           />
-          <div className="flex flex-col">
+          <div className="flex w-4/5 flex-col">
             <p className="text-gradient text-lg font-bold">
-              {volunteer.firstName} {volunteer.middleInitial}{" "}
-              {volunteer.lastName}
+              {orgRequesting.orgName}
             </p>
-            <p>Sex: {volunteer.sex}</p>
-            <p>Age: {volunteer.age}</p>
-            <p>Email: {volunteer.user.email}</p>
-            <p className="mb-5">Phone Number: {volunteer.phoneNumber}</p>
-            <p className="mb-10">{volunteer.bio}</p>
+            <p>Email: {orgRequesting.user.email}</p>
+            <p className="mb-5">Phone Number: {orgRequesting.phoneNumber}</p>
+            <p
+              className="mb-10"
+              style={{
+                wordBreak: "break-word",
+                whiteSpace: "pre-line",
+                hyphens: "auto",
+              }}
+            >
+              {orgRequesting.bio}
+            </p>
 
             <div className="flex gap-4">
               <button
@@ -123,9 +103,10 @@ const VolunteerList = ({ volunteer, organization }: any) => {
             </div>
           </div>
         </div>
+        {/* <button onClick={() => alert(orgRequesting.id)}>buton</button> */}
       </AccordionDetails>
     </Accordion>
   );
 };
 
-export default VolunteerList;
+export default SponsorsList;

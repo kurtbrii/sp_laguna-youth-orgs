@@ -36,7 +36,7 @@ const OrgNav = () => {
     } else if (
       currentRoute === "/manage-activities/organization/sponsorship-requests"
     ) {
-      setActiveLink("Join Organization Requests");
+      setActiveLink("Sponsorship Requests");
     }
   }, [router.asPath]);
 

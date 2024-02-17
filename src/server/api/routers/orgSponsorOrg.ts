@@ -36,6 +36,7 @@ export const orgSponsorOrgRouter = createTRPCRouter({
           status: true,
           organizationRequesting: {
             select: {
+              id: true,
               orgName: true,
               phoneNumber: true,
               bio: true,
@@ -44,6 +45,7 @@ export const orgSponsorOrgRouter = createTRPCRouter({
           },
           organizationAccepting: {
             select: {
+              id: true,
               orgName: true,
               phoneNumber: true,
               bio: true,
