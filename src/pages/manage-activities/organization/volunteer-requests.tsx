@@ -9,7 +9,7 @@ import { api } from "~/utils/api";
 import OrgNav from "~/components/OrgNav";
 import VolunteerList from "~/components/VolunteerList";
 
-const VolunteerManageActivities = () => {
+const OrgManageVolunteerRequests = () => {
   const router = useRouter();
 
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -22,6 +22,7 @@ const VolunteerManageActivities = () => {
 
   const getOrganizations = api.volJoinOrg.getOrgOrVol.useQuery({
     orgId: org?.id,
+    status: "PENDING",
   });
 
   return (
@@ -37,8 +38,12 @@ const VolunteerManageActivities = () => {
         <OrgNav />
 
         <div>
-          {getOrganizations?.data?.map((volunteer, index) => (
-            <VolunteerList key={index} volunteer={volunteer.volunteer} />
+          {getOrganizations?.data?.map((data, index) => (
+            <VolunteerList
+              key={index}
+              volunteer={data.volunteer}
+              organization={org}
+            />
           ))}
         </div>
       </div>
@@ -46,4 +51,4 @@ const VolunteerManageActivities = () => {
   );
 };
 
-export default VolunteerManageActivities;
+export default OrgManageVolunteerRequests;

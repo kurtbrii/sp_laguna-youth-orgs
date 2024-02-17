@@ -22,6 +22,7 @@ const VolunteerManageActivities = () => {
 
   const getOrganizations = api.volJoinOrg.getOrgOrVol.useQuery({
     volId: volunteer?.id,
+    status: "PENDING",
   });
 
   const [searchText, setSearchText] = useState("");

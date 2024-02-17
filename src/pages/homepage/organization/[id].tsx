@@ -53,6 +53,7 @@ const OrganizationPage = () => {
     volId: user.data?.volunteer?.id ?? "",
   });
 
+  // alert(orgCheckJoin);
   const deleteVolJoinOrg = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
   if (!id) {
@@ -68,27 +69,17 @@ const OrganizationPage = () => {
   }
 
   const handleJoinOrg = () => {
-    volJoinOrg.mutate(
-      {
-        orgId: id as string,
-        volId: user.data?.volunteer?.id ?? "  ",
-      },
-      {
-        onSuccess: void orgCheckJoin.refetch(),
-      },
-    );
+    volJoinOrg.mutate({
+      orgId: id as string,
+      volId: user.data?.volunteer?.id ?? "  ",
+    });
   };
 
   const handleDeleteVolJoinOrg = () => {
-    deleteVolJoinOrg.mutate(
-      {
-        orgId: id as string,
-        volId: user.data?.volunteer?.id ?? "",
-      },
-      {
-        onSuccess: void orgCheckJoin.refetch(),
-      },
-    );
+    deleteVolJoinOrg.mutate({
+      orgId: id as string,
+      volId: user.data?.volunteer?.id ?? "",
+    });
   };
 
   return (
@@ -142,12 +133,21 @@ const OrganizationPage = () => {
                     <>
                       {user.data.role === "VOLUNTEER" &&
                       orgCheckJoin.data?.[0]?.organizationId ? (
-                        <button
-                          className="btn-outline px-8 py-3"
-                          onClick={() => handleDeleteVolJoinOrg()}
-                        >
-                          Cancel Request
-                        </button>
+                        orgCheckJoin.data?.[0]?.status === "PENDING" ? (
+                          <button
+                            className="btn-outline px-8 py-3"
+                            onClick={() => handleDeleteVolJoinOrg()}
+                          >
+                            Cancel Request
+                          </button>
+                        ) : (
+                          <button
+                            className="btn-active cursor-no-drop px-8 py-3  opacity-60 hover:translate-y-0"
+                            disabled
+                          >
+                            Already Joined
+                          </button>
+                        )
                       ) : (
                         <button
                           className="btn-active px-8 py-3"

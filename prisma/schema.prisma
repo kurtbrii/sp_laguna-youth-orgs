@@ -188,7 +188,7 @@ model VolJoinOrg {
     organizationId String
     volunteer      Volunteer    @relation(fields: [volunteerId], references: [id])
     volunteerId    String
-    status         STATUS       @default(PENDING)
+    status         String       @default("PENDING")
 
     @@unique([organizationId, volunteerId])
 }

@@ -7,6 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSession } from "next-auth/react";
 import { $Enums, User } from "@prisma/client";
 import Image from "next/image";
+import { api } from "~/utils/api";
 
 type VolunteerProps = {
   volunteer: {
@@ -34,13 +35,24 @@ type VolunteerProps = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VolunteerList = ({ volunteer }: any) => {
+const VolunteerList = ({ volunteer, organization }: any) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [expanded, setExpanded] = useState(false);
 
   const handleChange = () => {
     setExpanded(!expanded);
+  };
+
+  const approveStatus = api.volJoinOrg.updateVolJoinOrg.useMutation();
+
+  const handleApproveVol = () => {
+    approveStatus.mutate({
+      volId: volunteer.id,
+      orgId: organization.id,
+    });
+
+    alert("Volunteer Approved");
   };
 
   return (
@@ -90,7 +102,12 @@ const VolunteerList = ({ volunteer }: any) => {
               >
                 Discard
               </button>
-              <button className="btn-active w-1/2 px-16 py-2">Confirm</button>
+              <button
+                className="btn-active w-1/2 px-16 py-2"
+                onClick={() => handleApproveVol()}
+              >
+                Confirm
+              </button>
             </div>
           </div>
         </div>
