@@ -1,50 +1,78 @@
 import { z } from "zod";
-import { useSession } from "next-auth/react";
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { triggerAsyncId } from "async_hooks";
 
 
 export const orgSponsorOrgRouter = createTRPCRouter({
-  createVolJoinOrg: publicProcedure
-    .input(z.object({ orgId: z.string(), volId: z.string() }))
+  createOrgSponOrg: protectedProcedure
+    .input(z.object({ orgRequesting: z.string(), orgAccepting: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.volJoinOrg.create({
+      return ctx.db.orgSponsorOrg.create({
         data: {
-          organizationId: input.orgId,
-          volunteerId: input.volId
+          organizationIdRequesting: input.orgRequesting,
+          organizationIdAccepting: input.orgAccepting,
+          status: 'PENDING'
         },
       });
     }),
 
-  checkIfOrganizationExists: publicProcedure
-    .input(z.object({ orgId: z.string(), volId: z.string(), }))
+  getBothOrganizations: protectedProcedure
+    .input(z.object({ orgRequesting: z.string().optional(), orgAccepting: z.string().optional(), status: z.string().optional(), }))
     .query(async ({ input, ctx }) => {
-      const data = await ctx.db.volJoinOrg.findMany({
+
+      const data = await ctx.db.orgSponsorOrg.findMany({
         where: {
           AND: [
-            { volunteerId: input.volId }, { organizationId: input.orgId }
+            { organizationIdRequesting: input.orgRequesting },
+            { organizationIdAccepting: input.orgAccepting },
+            { status: input.status }
           ]
         },
         select: {
-          organizationId: true,
           status: true,
+          organizationRequesting: {
+            select: {
+              orgName: true,
+              phoneNumber: true,
+              bio: true,
+              user: true,
+            }
+          },
+          organizationAccepting: {
+            select: {
+              orgName: true,
+              phoneNumber: true,
+              bio: true,
+              user: true,
+            }
+          }
         }
       });
 
       return data;
     }),
 
-  deleteVolJoinOrg: publicProcedure
-    .input(z.object({ orgId: z.string(), volId: z.string(), }))
+  updateOrgSpon: protectedProcedure
+    .input(z.object({ orgRequesting: z.string(), orgAccepting: z.string(), }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.orgSponsorOrg.updateMany({
+        where: { organizationIdRequesting: input.orgRequesting, organizationIdAccepting: input.orgAccepting },
+        data: {
+          status: 'APPROVED',
+        },
+      });
+    }),
+
+  deleteOrgSpon: publicProcedure
+    .input(z.object({ orgRequesting: z.string(), orgAccepting: z.string(), }))
     .mutation(async ({ input, ctx }) => {
-      const data = await ctx.db.volJoinOrg.deleteMany({
+      const data = await ctx.db.orgSponsorOrg.deleteMany({
         where: {
-          volunteerId: input.volId, organizationId: input.orgId
+          organizationIdAccepting: input.orgAccepting, organizationIdRequesting: input.orgRequesting
         },
 
       });
