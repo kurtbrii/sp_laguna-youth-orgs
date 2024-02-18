@@ -119,6 +119,10 @@ const ActivitiesPage = () => {
     alert("Cancel Successful");
   };
 
+  const handleRouterPush = (link: string) => {
+    void router.push(`${id as string}/${link}`);
+  };
+
   return (
     <div className="flex flex-col">
       <Navbar />
@@ -264,6 +268,7 @@ const ActivitiesPage = () => {
             ))}
 
           {sessionData?.user.role === "ORGANIZATION" &&
+            organization?.id !== activity?.organizationId &&
             activity?.hasOrganizations &&
             (getOrgOrVol.data?.[0]?.organizationId ? (
               getOrgOrVol.data?.[0]?.status === "PENDING" ? (
@@ -290,15 +295,43 @@ const ActivitiesPage = () => {
               </button>
             ))}
 
-          {/* {sessionData?.user.id !== activity?.organization.user.id &&
-            sessionData?.user.role === "ORGANIZATION" &&
-            activity?.hasOrganizations && (
-              <button className="btn-active w-1/2 self-center px-2 py-2">
-                Partner with Us
-              </button>
-            )} */}
+          <div className="flex gap-3 ">
+            {/* MANAGING ACTIVITIES */}
+            {sessionData?.user.role === "ORGANIZATION" &&
+              organization?.id === activity?.organizationId &&
+              activity?.hasOrganizations && (
+                <button
+                  className="btn-outline w-1/2 self-center px-2 py-2"
+                  onClick={() => handleRouterPush("partnership")}
+                >
+                  Manage Partnership
+                </button>
+              )}
+
+            {sessionData?.user.role === "ORGANIZATION" &&
+              organization?.id === activity?.organizationId &&
+              activity?.hasParticipants && (
+                <button
+                  className="btn-outline w-1/2 self-center px-2 py-2"
+                  onClick={() => handleRouterPush("participants")}
+                >
+                  Manage Participants
+                </button>
+              )}
+
+            {sessionData?.user.role === "ORGANIZATION" &&
+              organization?.id === activity?.organizationId &&
+              activity?.hasVolunteers && (
+                <button
+                  className="btn-outline w-1/2 self-center px-2 py-2"
+                  onClick={() => handleRouterPush("volunteers")}
+                >
+                  Manage Volunteers
+                </button>
+              )}
+          </div>
         </div>
-        <button onClick={() => alert(organization?.id)}>button</button>
+        {/* <button onClick={() => alert(organization?.id)}>button</button> */}
       </div>
     </div>
   );
