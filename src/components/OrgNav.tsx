@@ -47,13 +47,11 @@ const OrgNav = () => {
   const links = [
     "Join Organization Requests",
     "Ongoing Activities",
-    "Partnership Requests",
     "Sponsorship Requests",
   ];
   const linksNav = [
     "volunteer-requests",
     "ongoing-activities",
-    "partnership-requests",
     "sponsorship-requests",
   ];
 

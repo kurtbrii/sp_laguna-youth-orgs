@@ -42,15 +42,16 @@ const ActivitiesPage = () => {
   const deleteOrgOrVol = api.activityCall.deleteVolJoinOrg.useMutation();
 
   // ! LOGIC FOR GETTING ORGANIZATIONS
-  const getOrganization = api.activityCall.getOrgOrVol.useQuery({
-    activityId: id as string,
-    orgId: organization?.id,
-    status: "PENDING",
-  });
+  // const getOrganization = api.activityCall.getOrgOrVol.useQuery({
+  //   activityId: id as string,
+  //   orgId: organization?.id ?? "",
+  //   status: "PENDING",
+  // });
 
-  const getVolunteer = api.activityCall.getOrgOrVol.useQuery({
+  const getOrgOrVol = api.activityCall.getOrgOrVol.useQuery({
     activityId: id as string,
     volId: volunteer?.id,
+    orgId: organization?.id,
     status: "PENDING",
   });
 
@@ -89,10 +90,20 @@ const ActivitiesPage = () => {
   };
 
   // ! VOLUNTEER/ORGANIZATION JOINING/PARTNERING LOGIC
-  const handleVolunteerNow = () => {
+  const handleVolunteerCall = () => {
     addOrgOrVol.mutate({
       activityId: id as string,
       volId: volunteer?.id,
+      orgId: organization?.id,
+    });
+
+    alert("Request Successful");
+  };
+
+  const handleOrganizationCall = () => {
+    addOrgOrVol.mutate({
+      activityId: id as string,
+      orgId: organization?.id,
     });
 
     alert("Request Successful");
@@ -104,6 +115,8 @@ const ActivitiesPage = () => {
       volId: volunteer?.id,
       orgId: organization?.id,
     });
+
+    alert("Cancel Successful");
   };
 
   return (
@@ -225,8 +238,8 @@ const ActivitiesPage = () => {
 
           {sessionData?.user.role === "VOLUNTEER" &&
             activity?.hasVolunteers &&
-            (getVolunteer.data?.[0]?.volunteerId ? (
-              getVolunteer.data?.[0]?.status === "PENDING" ? (
+            (getOrgOrVol.data?.[0]?.volunteerId ? (
+              getOrgOrVol.data?.[0]?.status === "PENDING" ? (
                 <button
                   className="btn-outline w-1/2 self-center px-2 py-2"
                   onClick={() => handleDeleteOrgOrVolActivity()}
@@ -244,19 +257,46 @@ const ActivitiesPage = () => {
             ) : (
               <button
                 className="btn-active w-1/2 self-center px-2 py-2"
-                onClick={() => handleVolunteerNow()}
+                onClick={() => handleVolunteerCall()}
               >
                 Volunteer Now
               </button>
             ))}
 
-          {sessionData?.user.id !== activity?.organization.user.id &&
+          {sessionData?.user.role === "ORGANIZATION" &&
+            activity?.hasOrganizations &&
+            (getOrgOrVol.data?.[0]?.organizationId ? (
+              getOrgOrVol.data?.[0]?.status === "PENDING" ? (
+                <button
+                  className="btn-outline w-1/2 self-center px-2 py-2"
+                  onClick={() => handleDeleteOrgOrVolActivity()}
+                >
+                  Cancel Request
+                </button>
+              ) : (
+                <button
+                  className="btn-active w-1/2 cursor-no-drop self-center px-2 py-2  opacity-60 hover:translate-y-0"
+                  disabled
+                >
+                  Already Partnered With
+                </button>
+              )
+            ) : (
+              <button
+                className="btn-active w-1/2 self-center px-2 py-2"
+                onClick={() => handleOrganizationCall()}
+              >
+                Partner With Us
+              </button>
+            ))}
+
+          {/* {sessionData?.user.id !== activity?.organization.user.id &&
             sessionData?.user.role === "ORGANIZATION" &&
             activity?.hasOrganizations && (
               <button className="btn-active w-1/2 self-center px-2 py-2">
                 Partner with Us
               </button>
-            )}
+            )} */}
         </div>
         <button onClick={() => alert(organization?.id)}>button</button>
       </div>

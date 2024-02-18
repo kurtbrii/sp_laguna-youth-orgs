@@ -211,7 +211,7 @@ model OrgSponsorOrg {
 model ActivityCall {
     id String @id @default(cuid())
 
-    activity   Activity @relation(fields: [activityId], references: [id])
+    activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
     activityId String
 
     organization   Organization? @relation(fields: [organizationId], references: [id])
