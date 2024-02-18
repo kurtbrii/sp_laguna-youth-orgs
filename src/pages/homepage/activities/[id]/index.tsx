@@ -29,6 +29,31 @@ const ActivitiesPage = () => {
 
   const deleteActivity = api.activity.deleteActivity.useMutation();
 
+  // ! USER IS AN ORGANIZATION OR VOLUNTEER
+  const user = api.user.getUser.useQuery({
+    userId: sessionData?.user.id ?? "",
+  });
+
+  const volunteer = user.data?.volunteer;
+  const organization = user.data?.organization;
+
+  const addOrgOrVol = api.activityCall.createJoinActivity.useMutation();
+
+  const deleteOrgOrVol = api.activityCall.deleteVolJoinOrg.useMutation();
+
+  // ! LOGIC FOR GETTING ORGANIZATIONS
+  const getOrganization = api.activityCall.getOrgOrVol.useQuery({
+    activityId: id as string,
+    orgId: organization?.id,
+    status: "PENDING",
+  });
+
+  const getVolunteer = api.activityCall.getOrgOrVol.useQuery({
+    activityId: id as string,
+    volId: volunteer?.id,
+    status: "PENDING",
+  });
+
   if (!id) {
     return <div>No organization ID provided</div>;
   }
@@ -40,16 +65,6 @@ const ActivitiesPage = () => {
   if (activityQuery.error ?? !activityQuery.data) {
     return <div>Error loading organization data</div>;
   }
-
-  const addOrgOrVol = api.activityCall.createJoinActivity.useMutation();
-
-  const user = api.user.getUser.useQuery({
-    userId: sessionData?.user.id ?? "",
-  });
-
-  const volunteer = user.data?.volunteer;
-
-  const organization = user.data?.organization;
 
   const handleToggleButton = () => {
     setToggleModal(!toggleModal);
@@ -73,7 +88,7 @@ const ActivitiesPage = () => {
     void router.push("/homepage/activities");
   };
 
-  // ! VOLUNTEER ACCEPT LOGIC
+  // ! VOLUNTEER/ORGANIZATION JOINING/PARTNERING LOGIC
   const handleVolunteerNow = () => {
     addOrgOrVol.mutate({
       activityId: id as string,
@@ -81,6 +96,14 @@ const ActivitiesPage = () => {
     });
 
     alert("Request Successful");
+  };
+
+  const handleDeleteOrgOrVolActivity = () => {
+    deleteOrgOrVol.mutate({
+      activityId: id as string,
+      volId: volunteer?.id,
+      orgId: organization?.id,
+    });
   };
 
   return (
@@ -201,14 +224,31 @@ const ActivitiesPage = () => {
           )}
 
           {sessionData?.user.role === "VOLUNTEER" &&
-            activity?.hasVolunteers && (
+            activity?.hasVolunteers &&
+            (getVolunteer.data?.[0]?.volunteerId ? (
+              getVolunteer.data?.[0]?.status === "PENDING" ? (
+                <button
+                  className="btn-outline w-1/2 self-center px-2 py-2"
+                  onClick={() => handleDeleteOrgOrVolActivity()}
+                >
+                  Cancel Request
+                </button>
+              ) : (
+                <button
+                  className="btn-active w-1/2 cursor-no-drop self-center px-2 py-2  opacity-60 hover:translate-y-0"
+                  disabled
+                >
+                  Already Joined
+                </button>
+              )
+            ) : (
               <button
                 className="btn-active w-1/2 self-center px-2 py-2"
                 onClick={() => handleVolunteerNow()}
               >
                 Volunteer Now
               </button>
-            )}
+            ))}
 
           {sessionData?.user.id !== activity?.organization.user.id &&
             sessionData?.user.role === "ORGANIZATION" &&

@@ -68,23 +68,23 @@ export const activityCallRouter = createTRPCRouter({
       return data;
     }),
 
-  updateVolJoinOrg: protectedProcedure
-    .input(z.object({ orgId: z.string(), volId: z.string(), }))
+  updateActivityCall: protectedProcedure
+    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.volJoinOrg.updateMany({
-        where: { organizationId: input.orgId, volunteerId: input.volId },
+      return ctx.db.activityCall.updateMany({
+        where: { activityId: input.activityId, organizationId: input.orgId, volunteerId: input.volId },
         data: {
           status: 'APPROVED',
         },
       });
     }),
 
-  deleteVolJoinOrg: publicProcedure
-    .input(z.object({ orgId: z.string(), volId: z.string(), }))
+  deleteVolJoinOrg: protectedProcedure
+    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), }))
     .mutation(async ({ input, ctx }) => {
-      const data = await ctx.db.volJoinOrg.deleteMany({
+      const data = await ctx.db.activityCall.deleteMany({
         where: {
-          volunteerId: input.volId, organizationId: input.orgId
+          activityId: input.activityId, volunteerId: input.volId, organizationId: input.orgId
         },
 
       });
