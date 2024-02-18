@@ -200,7 +200,7 @@ const OrganizationPage = () => {
                 </div>
               )}
           </div>
-          <button onClick={() => alert(id)}>Button</button>
+          {/* <button onClick={() => alert(id)}>Button</button> */}
         </div>
 
         {/* MISSION, VISION, OBJECTIVES */}

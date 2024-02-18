@@ -46,15 +46,13 @@ const OrgNav = () => {
 
   const links = [
     "Join Organization Requests",
-    "Ongoing Activities",
-    "Partnership Requests",
     "Sponsorship Requests",
+    "Ongoing Activities",
   ];
   const linksNav = [
     "volunteer-requests",
-    "ongoing-activities",
-    "partnership-requests",
     "sponsorship-requests",
+    "ongoing-activities",
   ];
 
   const [linkData, setLinkData] = useState("Join Organization Requests");

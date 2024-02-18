@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Organization, type User } from "@prisma/client";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
+import { router } from "@trpc/server";
+import { useRouter } from "next/router";
 
 type ActivityProps = {
   activity: {
@@ -32,9 +34,15 @@ type ActivityProps = {
 const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
+  const router = useRouter();
+
+  const handleClick = () => {
+    void router.push(`/homepage/activities/${activity.id}`);
+  };
+
   return (
-    <Link
-      href={`/homepage/activities/${activity.id}`}
+    <div
+      onClick={() => handleClick()}
       className=" relative w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
       style={{ height: "26rem" }}
     >
@@ -98,7 +106,7 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
         width={60}
         alt="user image role"
       />
-    </Link>
+    </div>
   );
 };
 
