@@ -46,16 +46,27 @@ const OrganizationPage = () => {
 
   const organization = organizationsQuery.data;
 
-  const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
-
+  // ! VOLUNTEERS JOINING ORGANIZATIONS
   const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
-    orgId: id as string,
     volId: user.data?.volunteer?.id ?? "",
+    orgId: id as string,
   });
 
-  // alert(orgCheckJoin);
+  const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
+
   const deleteVolJoinOrg = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
+  // ! ORGANIZATIONS SPONSORING ORGANIZATIONS
+  const orgCheckSpon = api.orgSponsorOrg.getBothOrganizations.useQuery({
+    orgRequesting: user.data?.organization?.id ?? "",
+    orgAccepting: id as string,
+  });
+
+  const orgSponOrg = api.orgSponsorOrg.createOrgSponOrg.useMutation();
+
+  const deleteOrgSponOrg = api.orgSponsorOrg.deleteOrgSpon.useMutation();
+
+  // ! AUTHENTICATED OR NOT
   if (!id) {
     return <div>No organization ID provided</div>;
   }
@@ -68,10 +79,11 @@ const OrganizationPage = () => {
     return <div>Error loading organization data</div>;
   }
 
+  // ! VOLUNTEERS JOINING ORGANIZATIONS
   const handleJoinOrg = () => {
     volJoinOrg.mutate({
       orgId: id as string,
-      volId: user.data?.volunteer?.id ?? "  ",
+      volId: user.data?.volunteer?.id ?? "",
     });
   };
 
@@ -80,6 +92,27 @@ const OrganizationPage = () => {
       orgId: id as string,
       volId: user.data?.volunteer?.id ?? "",
     });
+
+    alert("Delete Successful");
+  };
+
+  // ! ORGANIZATIONS SPONSORING ORGANIZATIONS
+  const handleOrgSpon = () => {
+    orgSponOrg.mutate({
+      orgRequesting: user.data?.organization?.id ?? "",
+      orgAccepting: id as string,
+    });
+
+    alert("successful");
+  };
+
+  const handleDeleteOrgSpon = () => {
+    deleteOrgSponOrg.mutate({
+      orgRequesting: user.data?.organization?.id ?? "",
+      orgAccepting: id as string,
+    });
+
+    alert("Delete Successful");
   };
 
   return (
@@ -116,18 +149,24 @@ const OrganizationPage = () => {
             {sessionStatus === "authenticated" &&
               user.data &&
               sessionData.user.id !== organization?.user.id && (
+                // ! LOGIC IF ORGANIZATION
                 <div className="flex gap-5">
                   {sessionData && user.data.role === "ORGANIZATION" ? (
-                    // ! LOGIC IF ORGANIZAION
-                    <>
-                      <button className="btn-active px-8 py-3">
-                        Request Partnership
+                    orgCheckSpon.data?.[0]?.organizationRequesting ? (
+                      <button
+                        className="btn-outline px-8 py-3"
+                        onClick={() => handleDeleteOrgSpon()}
+                      >
+                        Cancel Request
                       </button>
-
-                      <button className="btn-active px-8 py-3">
+                    ) : (
+                      <button
+                        className="btn-active px-8 py-3"
+                        onClick={() => handleOrgSpon()}
+                      >
                         Request Sponsorship
                       </button>
-                    </>
+                    )
                   ) : (
                     // ! LOGIC IF VOLUNTEER
                     <>
@@ -161,6 +200,7 @@ const OrganizationPage = () => {
                 </div>
               )}
           </div>
+          <button onClick={() => alert(id)}>Button</button>
         </div>
 
         {/* MISSION, VISION, OBJECTIVES */}

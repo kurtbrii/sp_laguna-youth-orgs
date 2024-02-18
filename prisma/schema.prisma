@@ -202,7 +202,7 @@ model OrgSponsorOrg {
     organizationAccepting   Organization @relation(name: "AcceptingOrganization", fields: [organizationIdAccepting], references: [id])
     organizationIdAccepting String
 
-    status STATUS @default(PENDING) // pending or not
+    status String @default("PENDING")
 
     @@unique([organizationIdRequesting, organizationIdAccepting])
 }
