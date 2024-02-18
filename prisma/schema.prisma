@@ -100,7 +100,7 @@ model Organization {
     OrgSponsored            OrgSponsorOrg[] @relation(name: "AcceptingOrganization")
     OrgRequestedSponsorship OrgSponsorOrg[] @relation(name: "RequestingOrganization")
 
-    partneredOrganizations OrganizationActivity[] // list of organizations who applied for partnership
+    partneredOrganizations ActivityCall[] // list of organizations who applied for partnership
 }
 
 model Volunteer {
@@ -108,7 +108,7 @@ model Volunteer {
     firstName     String
     lastName      String
     middleInitial String
-    suffix        String
+    suffix        String?
     phoneNumber   String
     bio           String?
 
@@ -118,7 +118,8 @@ model Volunteer {
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
 
-    VolJoinOrg VolJoinOrg[]
+    VolJoinOrg    VolJoinOrg[]
+    activityCalls ActivityCall[]
 }
 
 model Event {
@@ -150,7 +151,7 @@ model Activity {
     organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     organizationId String
 
-    organizations OrganizationActivity[]
+    activityCalls ActivityCall[]
 }
 
 model CentersOfParticipation {
@@ -207,15 +208,22 @@ model OrgSponsorOrg {
     @@unique([organizationIdRequesting, organizationIdAccepting])
 }
 
-model OrganizationActivity {
-    id             String       @id @default(cuid())
-    organization   Organization @relation(fields: [organizationId], references: [id])
-    organizationId String
+model ActivityCall {
+    id String @id @default(cuid())
 
     activity   Activity @relation(fields: [activityId], references: [id])
     activityId String
 
-    status STATUS // pending or not
+    organization   Organization? @relation(fields: [organizationId], references: [id])
+    organizationId String?
+
+    volunteer   Volunteer? @relation(fields: [volunteerId], references: [id])
+    volunteerId String?
+
+    status String
+
+    @@unique([activityId, organizationId])
+    @@unique([activityId, volunteerId])
 }
 
 // ! Enums

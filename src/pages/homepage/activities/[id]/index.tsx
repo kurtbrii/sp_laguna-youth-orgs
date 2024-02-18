@@ -41,10 +41,21 @@ const ActivitiesPage = () => {
     return <div>Error loading organization data</div>;
   }
 
+  const addOrgOrVol = api.activityCall.createJoinActivity.useMutation();
+
+  const user = api.user.getUser.useQuery({
+    userId: sessionData?.user.id ?? "",
+  });
+
+  const volunteer = user.data?.volunteer;
+
+  const organization = user.data?.organization;
+
   const handleToggleButton = () => {
     setToggleModal(!toggleModal);
   };
 
+  // ! ADD/EDIT ACTIVITY
   const handleEditButton = () => {
     void router.push({
       pathname: `/homepage/activities/[id]/edit`,
@@ -60,6 +71,16 @@ const ActivitiesPage = () => {
     });
 
     void router.push("/homepage/activities");
+  };
+
+  // ! VOLUNTEER ACCEPT LOGIC
+  const handleVolunteerNow = () => {
+    addOrgOrVol.mutate({
+      activityId: id as string,
+      volId: volunteer?.id,
+    });
+
+    alert("Request Successful");
   };
 
   return (
@@ -175,13 +196,16 @@ const ActivitiesPage = () => {
 
           {sessionStatus !== "authenticated" && activity?.hasParticipants && (
             <button className="btn-active w-1/2 self-center px-2 py-2">
-              Join Activity?
+              Join Activity
             </button>
           )}
 
           {sessionData?.user.role === "VOLUNTEER" &&
             activity?.hasVolunteers && (
-              <button className="btn-active w-1/2 self-center px-2 py-2">
+              <button
+                className="btn-active w-1/2 self-center px-2 py-2"
+                onClick={() => handleVolunteerNow()}
+              >
                 Volunteer Now
               </button>
             )}
@@ -190,10 +214,11 @@ const ActivitiesPage = () => {
             sessionData?.user.role === "ORGANIZATION" &&
             activity?.hasOrganizations && (
               <button className="btn-active w-1/2 self-center px-2 py-2">
-                Partner with Us!
+                Partner with Us
               </button>
             )}
         </div>
+        <button onClick={() => alert(organization?.id)}>button</button>
       </div>
     </div>
   );

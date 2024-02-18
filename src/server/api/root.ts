@@ -9,7 +9,8 @@ import { activityRouter } from "./routers/activity";
 import { speakerRouter } from "./routers/speakers";
 import { participationRouter } from "./routers/participation";
 import { volJoinOrgRouter } from "./routers/volJoinOrg";
-import { orgSponsorOrgRouter, } from "./routers/orgSponsorOrg";
+import { orgSponsorOrgRouter } from "./routers/orgSponsorOrg";
+import { activityCallRouter as activityCallRouter } from "./routers/joinActivity";
 
 /**
  * This is the primary router for your server.
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   speaker: speakerRouter,
   particpation: participationRouter,
   orgSponsorOrg: orgSponsorOrgRouter,
+  activityCall: activityCallRouter,
 });
 
 // export type definition of API
