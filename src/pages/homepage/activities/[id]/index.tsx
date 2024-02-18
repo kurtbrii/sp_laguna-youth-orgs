@@ -52,7 +52,7 @@ const ActivitiesPage = () => {
     activityId: id as string,
     volId: volunteer?.id,
     orgId: organization?.id,
-    status: "PENDING",
+    // status: "PENDING",
   });
 
   if (!id) {
@@ -331,7 +331,9 @@ const ActivitiesPage = () => {
               )}
           </div>
         </div>
-        {/* <button onClick={() => alert(organization?.id)}>button</button> */}
+        <button onClick={() => alert(getOrgOrVol.data?.[0]?.volunteerId)}>
+          button
+        </button>
       </div>
     </div>
   );

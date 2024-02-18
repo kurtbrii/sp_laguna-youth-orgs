@@ -13,6 +13,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { IconButton } from "@mui/material";
 
 const CallForVolunteers = () => {
@@ -59,7 +60,7 @@ const CallForVolunteers = () => {
       phoneNumber: data?.volunteer?.phoneNumber,
       action: (
         <IconButton onClick={() => handleAccept(data?.volunteer?.id ?? "")}>
-          <DeleteIcon />
+          <AddCircleIcon />
         </IconButton>
       ),
     };
@@ -86,7 +87,7 @@ const CallForVolunteers = () => {
                 <TableCell align="right">Sex</TableCell>
                 <TableCell align="right">Age</TableCell>
                 <TableCell align="right">Phone Number</TableCell>
-                <TableCell align="right">Delete</TableCell>
+                <TableCell align="right">Add</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
