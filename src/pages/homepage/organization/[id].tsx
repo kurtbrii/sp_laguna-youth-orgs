@@ -37,6 +37,7 @@ const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [toggleJoinOrg, setToggleJoinOrg] = useState(false);
+  const [toggleSponOrg, setToggleSponOrg] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
@@ -65,8 +66,6 @@ const OrganizationPage = () => {
     orgAccepting: id as string,
   });
 
-  const orgSponOrg = api.orgSponsorOrg.createOrgSponOrg.useMutation();
-
   const deleteOrgSponOrg = api.orgSponsorOrg.deleteOrgSpon.useMutation();
 
   // ! AUTHENTICATED OR NOT
@@ -92,6 +91,15 @@ const OrganizationPage = () => {
     });
   };
 
+  const handleToggleSponOrg = () => {
+    setToggleSponOrg(!toggleSponOrg);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
+    });
+  };
+
   const handleDeleteVolJoinOrg = () => {
     deleteVolJoinOrg.mutate({
       orgId: id as string,
@@ -102,15 +110,6 @@ const OrganizationPage = () => {
   };
 
   // ! ORGANIZATIONS SPONSORING ORGANIZATIONS
-  const handleOrgSpon = () => {
-    orgSponOrg.mutate({
-      orgRequesting: user.data?.organization?.id ?? "",
-      orgAccepting: id as string,
-    });
-
-    alert("successful");
-  };
-
   const handleDeleteOrgSpon = () => {
     deleteOrgSponOrg.mutate({
       orgRequesting: user.data?.organization?.id ?? "",
@@ -167,7 +166,9 @@ const OrganizationPage = () => {
                     ) : (
                       <button
                         className="btn-active px-8 py-3"
-                        onClick={() => handleOrgSpon()}
+                        onClick={() => handleToggleSponOrg()}
+
+                        // onClick={() => handleOrgSpon()}
                       >
                         Request Sponsorship
                       </button>
@@ -272,22 +273,33 @@ const OrganizationPage = () => {
           <div className="flex gap-4"></div>
         </div>
 
-        {toggleJoinOrg && (
+        {toggleJoinOrg || toggleSponOrg ? (
           <>
-            <section className=" mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
-              <p className="font-custom-epilogue text-xl font-extrabold text-white">
-                Join Organization
-              </p>
-            </section>
+            {toggleSponOrg && (
+              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+                <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                  Request Sponsorship
+                </p>
+              </section>
+            )}
+
+            {toggleJoinOrg && (
+              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+                <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                  Join Organization
+                </p>
+              </section>
+            )}
             <EmailComponent
-              orgId={id as string} // id of the one clicked in find organizations
-              organizationEmail={organization?.user.email} // email of the one clicked in find organizations
-              volunteerLoggedIn={user.data?.volunteer} // currently logged in volunteer
-              organizationLoggedIn={user.data?.organization} // currently logged in organization
-              sessionEmail={sessionData?.user.email} // currently logged in email
+              orgId={id as string}
+              organizationEmail={organization?.user.email}
+              volunteerLoggedIn={user.data?.volunteer}
+              organizationLoggedIn={user.data?.organization}
+              sessionEmail={sessionData?.user.email}
+              role={user?.data?.role}
             />
           </>
-        )}
+        ) : null}
       </div>
     </>
   );

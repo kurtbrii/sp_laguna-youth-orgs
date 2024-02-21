@@ -14,6 +14,7 @@ const EmailComponent = ({
   volunteerLoggedIn,
   organizationLoggedIn,
   sessionEmail,
+  role,
 }: any) => {
   const [eventData, setEventData] = useState<EmailProps>({
     subject: "",
@@ -21,6 +22,8 @@ const EmailComponent = ({
   });
 
   const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
+
+  const orgSponOrg = api.orgSponsorOrg.createOrgSponOrg.useMutation();
 
   const handleEventForm = (
     e:
@@ -37,11 +40,26 @@ const EmailComponent = ({
   };
 
   const handleButton = () => {
+    if (role === "ORGANIZATION") {
+      orgSponOrg.mutate({
+        orgRequesting: organizationLoggedIn?.id,
+        orgAccepting: orgId,
+      });
+    } else {
+      volJoinOrg.mutate({
+        orgId: orgId,
+        volId: volunteerLoggedIn?.id,
+      });
+    }
+
     void emailjs.send(
       "service_sb8pzif",
       "template_pm7npxj",
       {
-        vol_name: `${volunteerLoggedIn?.firstName} ${volunteerLoggedIn?.middleInitial}  ${volunteerLoggedIn?.lastName}  ${volunteerLoggedIn?.suffix} `,
+        vol_name:
+          role === "ORGANIZATION"
+            ? organizationLoggedIn.orgName
+            : `${volunteerLoggedIn?.firstName} ${volunteerLoggedIn?.middleInitial} ${volunteerLoggedIn?.lastName} ${volunteerLoggedIn?.suffix}`,
         subject: eventData.subject,
         body: eventData.body,
         from_email: sessionEmail,
@@ -50,12 +68,7 @@ const EmailComponent = ({
       "AxPqfUq-9Oy9tdLJv",
     );
 
-    volJoinOrg.mutate({
-      orgId: orgId,
-      volId: volunteerLoggedIn?.id ?? "",
-    });
-
-    alert("hi");
+    alert("Request Successul");
   };
 
   return (
@@ -85,7 +98,7 @@ const EmailComponent = ({
         </button>
       </form>
 
-      <button onClick={() => alert(volunteerLoggedIn.firstName)}> sfd</button>
+      <button onClick={() => alert(role)}> sfd</button>
     </>
   );
 };
