@@ -55,6 +55,8 @@ export const activityCallRouter = createTRPCRouter({
               id: true,
               firstName: true,
               lastName: true,
+              suffix: true,
+              middleInitial: true,
               phoneNumber: true,
               bio: true,
               sex: true,
