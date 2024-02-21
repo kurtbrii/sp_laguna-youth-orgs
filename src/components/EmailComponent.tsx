@@ -44,11 +44,15 @@ const EmailComponent = ({
       orgSponOrg.mutate({
         orgRequesting: organizationLoggedIn?.id,
         orgAccepting: orgId,
+        subject: eventData.subject,
+        body: eventData.body,
       });
     } else {
       volJoinOrg.mutate({
         orgId: orgId,
         volId: volunteerLoggedIn?.id,
+        subject: eventData.subject,
+        body: eventData.body,
       });
     }
 

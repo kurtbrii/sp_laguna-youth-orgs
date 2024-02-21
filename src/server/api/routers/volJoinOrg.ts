@@ -11,12 +11,14 @@ import { triggerAsyncId } from "async_hooks";
 
 export const volJoinOrgRouter = createTRPCRouter({
   createVolJoinOrg: publicProcedure
-    .input(z.object({ orgId: z.string(), volId: z.string() }))
+    .input(z.object({ orgId: z.string(), volId: z.string(), body: z.string(), subject: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.volJoinOrg.create({
         data: {
           organizationId: input.orgId,
-          volunteerId: input.volId
+          volunteerId: input.volId,
+          subject: input.subject,
+          body: input.body
         },
       });
     }),
@@ -35,6 +37,8 @@ export const volJoinOrgRouter = createTRPCRouter({
           ]
         },
         select: {
+          subject: true,
+          body: true,
           organizationId: true,
           status: true,
           organization: {

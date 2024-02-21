@@ -41,6 +41,7 @@ const OrgManageVolunteerRequests = () => {
           {getOrganizations?.data?.map((data, index) => (
             <VolunteerList
               key={index}
+              data={data}
               volunteer={data.volunteer}
               organization={org}
             />

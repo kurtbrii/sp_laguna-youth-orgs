@@ -35,7 +35,7 @@ type VolunteerProps = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VolunteerList = ({ volunteer, organization }: any) => {
+const VolunteerList = ({ volunteer, organization, data }: any) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [expanded, setExpanded] = useState(false);
@@ -87,35 +87,95 @@ const VolunteerList = ({ volunteer, organization }: any) => {
         {volunteer.firstName} {volunteer.middleInitial} {volunteer.lastName}
       </AccordionSummary>
       <AccordionDetails>
-        <div className="flex gap-4 py-6 font-custom-lexend text-customBlack-100">
+        <div className="flex gap-10 py-6 font-custom-lexend text-customBlack-100">
           <Image
-            className="rounded-md"
+            className="h-1/5 w-1/5 rounded-md"
             src={`${volunteer.user.image}`}
             height={300}
             width={300}
             alt="user image role"
           />
-          <div className="flex flex-col">
-            <p className="text-gradient text-lg font-bold">
+          <div className="flex w-4/5 flex-col">
+            <Typography
+              className="text-gradient text-lg font-bold"
+              style={{
+                fontWeight: "bold",
+                fontSize: "20px",
+                color: "var(--black-100)",
+                fontFamily: "Lexend, sans-serif",
+              }}
+            >
               {volunteer.firstName} {volunteer.middleInitial}{" "}
               {volunteer.lastName}
-            </p>
-            <p>Sex: {volunteer.sex}</p>
-            <p>Age: {volunteer.age}</p>
-            <p>Email: {volunteer.user.email}</p>
-            <p className="mb-5">Phone Number: {volunteer.phoneNumber}</p>
-            <p className="mb-10">{volunteer.bio}</p>
+            </Typography>
+            <Typography
+              style={{
+                color: "var(--black-100)",
+                fontFamily: "Lexend, sans-serif",
+              }}
+            >
+              Sex: {volunteer.sex}
+            </Typography>
+            <Typography>Age: {volunteer.age}</Typography>
+            <Typography
+              style={{
+                color: "var(--black-100)",
+                fontFamily: "Lexend, sans-serif",
+              }}
+            >
+              Email: {volunteer.user.email}
+            </Typography>
+            <Typography
+              className="mb-5"
+              style={{
+                marginBottom: "30px",
 
-            <div className="flex gap-4">
+                color: "var(--black-100)",
+                fontFamily: "Lexend, sans-serif",
+              }}
+            >
+              Phone Number: {volunteer.phoneNumber}
+            </Typography>
+
+            <Typography
+              className="mb-10"
+              style={{
+                color: "var(--black-100)",
+                fontFamily: "Lexend, sans-serif",
+              }}
+            >
+              <p className="italic text-customBlack-50">Bio:</p>
+              {volunteer.bio}
+            </Typography>
+            <Typography
+              style={{
+                color: "var(--black-100)",
+                fontFamily: "Lexend, sans-serif",
+                marginBottom: "28px",
+              }}
+            ></Typography>
+
+            <Typography
+              style={{
+                color: "var(--black-100)",
+                fontFamily: "Lexend, sans-serif",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              <p className="italic text-customBlack-50">Email Content:</p>
+              {data.body}
+            </Typography>
+
+            <div className="mt-12 flex gap-4">
               <button
-                className="btn-outline w-1/2 px-16 py-2"
+                className="btn-outline w-1/3 px-16 py-2"
                 style={{ color: "var(--red)", borderColor: "var(--red)" }}
                 onClick={() => handleDiscard()}
               >
                 Discard
               </button>
               <button
-                className="btn-active w-1/2 px-16 py-2"
+                className="btn-active w-1/3 px-16 py-2"
                 onClick={() => handleApproveVol()}
               >
                 Confirm

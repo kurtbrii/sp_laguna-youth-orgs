@@ -189,7 +189,11 @@ model VolJoinOrg {
     organizationId String
     volunteer      Volunteer    @relation(fields: [volunteerId], references: [id])
     volunteerId    String
-    status         String       @default("PENDING")
+
+    subject String
+    body    String
+
+    status String @default("PENDING")
 
     @@unique([organizationId, volunteerId])
 }
@@ -202,6 +206,9 @@ model OrgSponsorOrg {
 
     organizationAccepting   Organization @relation(name: "AcceptingOrganization", fields: [organizationIdAccepting], references: [id])
     organizationIdAccepting String
+
+    subject String
+    body    String
 
     status String @default("PENDING")
 

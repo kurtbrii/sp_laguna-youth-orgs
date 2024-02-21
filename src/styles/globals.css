@@ -8,6 +8,14 @@
   --secondary: #00bd6e;
   --red: #ec4b42;
   --black100: #021422;
+  --custom-lexend: "Lexend", sans-serif;
+}
+
+@font-face {
+  font-family: "Lexend";
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://fonts.googleapis.com/css?family=Lexend"); /* Replace 'path-to-your-font' with the actual path to your font files */
 }
 
 @layer components {
