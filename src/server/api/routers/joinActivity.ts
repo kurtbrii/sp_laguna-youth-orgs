@@ -25,7 +25,7 @@ export const activityCallRouter = createTRPCRouter({
 
 
   getOrgOrVol: protectedProcedure
-    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), status: z.string().optional(), }))
+    .input(z.object({ activityId: z.string().optional(), orgId: z.string().optional(), volId: z.string().optional(), status: z.string().optional(), }))
     .query(async ({ input, ctx }) => {
 
       const data = await ctx.db.activityCall.findMany({
@@ -38,6 +38,24 @@ export const activityCallRouter = createTRPCRouter({
           ]
         },
         select: {
+          activity: {
+            select: {
+              id: true,
+              date: true,
+              name: true,
+              details: true,
+              location: true,
+              organization: {
+                select: {
+                  id: true,
+                  orgName: true,
+                  phoneNumber: true,
+                  bio: true,
+                  user: true,
+                }
+              },
+            }
+          },
           organizationId: true,
           status: true,
           organization: {
