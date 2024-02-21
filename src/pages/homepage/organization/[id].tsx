@@ -13,7 +13,7 @@ import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { ToggleButton } from "@mui/material";
-import EmailComponent from "~/components/EmailComponent";
+import EmailJoinOrSpon from "~/components/EmailJoinOrSpon";
 import { volunteerRouter } from "~/server/api/routers/volunteer";
 
 // type OrganizationProps = {
@@ -290,7 +290,7 @@ const OrganizationPage = () => {
                 </p>
               </section>
             )}
-            <EmailComponent
+            <EmailJoinOrSpon
               orgId={id as string}
               organizationEmail={organization?.user.email}
               volunteerLoggedIn={user.data?.volunteer}

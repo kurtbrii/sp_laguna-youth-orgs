@@ -14,7 +14,7 @@ import {
 export const volunteerRouter = createTRPCRouter({
 
   createVolunteer: publicProcedure
-    .input(z.object({ firstName: z.string(), lastName: z.string(), middleInitial: z.string(), suffix: z.string(), phoneNumber: z.string(), userId: z.string() }))
+    .input(z.object({ firstName: z.string(), lastName: z.string(), middleInitial: z.string(), suffix: z.string(), phoneNumber: z.string(), userId: z.string(), email: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -26,7 +26,8 @@ export const volunteerRouter = createTRPCRouter({
           middleInitial: input.middleInitial,
           suffix: input.suffix,
           phoneNumber: input.phoneNumber,
-          userId: input.userId
+          userId: input.userId,
+          email: input.email
         },
       });
     }),

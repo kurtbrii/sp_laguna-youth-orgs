@@ -55,6 +55,11 @@ const ActivitiesPage = () => {
     // status: "PENDING",
   });
 
+  // ! LOGIC FOR TOGGLE BUTTONS
+  const [toggleVolunteerNow, setToggleVolunteerNow] = useState(false);
+  const [togglePartnership, setTogglePartnership] = useState(false);
+  const [toggleJoinActivity, setToggleJoinActivity] = useState(false);
+
   if (!id) {
     return <div>No organization ID provided</div>;
   }
@@ -66,6 +71,16 @@ const ActivitiesPage = () => {
   if (activityQuery.error ?? !activityQuery.data) {
     return <div>Error loading organization data</div>;
   }
+
+  // ! LOGIC FOR TOGGLE HANDLING
+  const handleToggleVolunteer = () => {
+    setToggleVolunteerNow(!toggleVolunteerNow);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
+    });
+  };
 
   const handleToggleButton = () => {
     setToggleModal(!toggleModal);
@@ -261,6 +276,7 @@ const ActivitiesPage = () => {
             ) : (
               <button
                 className="btn-active w-1/2 self-center px-2 py-2"
+                // onClick={() => handleToggleVolunteer()}
                 onClick={() => handleVolunteerCall()}
               >
                 Volunteer Now
@@ -331,9 +347,25 @@ const ActivitiesPage = () => {
               )}
           </div>
         </div>
-        <button onClick={() => alert(getOrgOrVol.data?.[0]?.volunteerId)}>
+
+        {/* <button onClick={() => alert(getOrgOrVol.data?.[0]?.volunteerId)}>
           button
-        </button>
+        </button> */}
+      </div>
+
+      <div className="mx-16">
+        {toggleVolunteerNow || toggleJoinActivity || togglePartnership ? (
+          <>
+            {toggleVolunteerNow && (
+              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+                <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                  Volunteer Now
+                </p>
+              </section>
+            )}
+            <div>hi</div>
+          </>
+        ) : null}
       </div>
     </div>
   );

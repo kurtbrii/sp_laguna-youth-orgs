@@ -8,7 +8,7 @@ interface EmailProps {
   body: string;
 }
 
-const EmailComponent = ({
+const EmailJoinOrSpon = ({
   orgId,
   organizationEmail,
   volunteerLoggedIn,
@@ -58,7 +58,7 @@ const EmailComponent = ({
 
     void emailjs.send(
       "service_sb8pzif",
-      "template_pm7npxj",
+      "template_g280rll",
       {
         vol_name:
           role === "ORGANIZATION"
@@ -107,4 +107,4 @@ const EmailComponent = ({
   );
 };
 
-export default EmailComponent;
+export default EmailJoinOrSpon;

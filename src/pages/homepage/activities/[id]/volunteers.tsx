@@ -57,11 +57,12 @@ const CallForVolunteers = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell align="right">Sex</TableCell>
-                <TableCell align="right">Age</TableCell>
-                <TableCell align="right">Phone Number</TableCell>
-                <TableCell align="right">Add</TableCell>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="center">Sex</TableCell>
+                <TableCell align="center">Age</TableCell>
+                <TableCell align="center">Email Address</TableCell>
+                <TableCell align="center">Phone Number</TableCell>
+                <TableCell align="center">Add</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -78,12 +79,15 @@ const CallForVolunteers = () => {
                       {volunteer?.firstName} {volunteer?.middleInitial}{" "}
                       {volunteer?.lastName} {volunteer?.suffix}
                     </TableCell>
-                    <TableCell align="right">{volunteer?.sex}</TableCell>
-                    <TableCell align="right">{volunteer?.age}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">{volunteer?.sex}</TableCell>
+                    <TableCell align="center">{volunteer?.age}</TableCell>
+                    <TableCell align="center">
+                      {volunteer?.user?.email}
+                    </TableCell>
+                    <TableCell align="center">
                       {volunteer?.phoneNumber}
                     </TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">
                       <IconButton
                         onClick={() => handleAccept(volunteer?.id ?? "")}
                       >
