@@ -12,6 +12,9 @@ import {
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { ToggleButton } from "@mui/material";
+import EmailComponent from "~/components/EmailComponent";
+import { volunteerRouter } from "~/server/api/routers/volunteer";
 
 // type OrganizationProps = {
 //   id: string;
@@ -33,6 +36,8 @@ import { useEffect, useState } from "react";
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
+  const [toggleJoinOrg, setToggleJoinOrg] = useState(false);
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -51,8 +56,6 @@ const OrganizationPage = () => {
     volId: user.data?.volunteer?.id ?? "",
     orgId: id as string,
   });
-
-  const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
 
   const deleteVolJoinOrg = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
@@ -80,10 +83,12 @@ const OrganizationPage = () => {
   }
 
   // ! VOLUNTEERS JOINING ORGANIZATIONS
-  const handleJoinOrg = () => {
-    volJoinOrg.mutate({
-      orgId: id as string,
-      volId: user.data?.volunteer?.id ?? "",
+  const handleToggleJoinOrg = () => {
+    setToggleJoinOrg(!toggleJoinOrg);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
     });
   };
 
@@ -188,12 +193,14 @@ const OrganizationPage = () => {
                           </button>
                         )
                       ) : (
-                        <button
-                          className="btn-active px-8 py-3"
-                          onClick={() => handleJoinOrg()}
-                        >
-                          Join Organization
-                        </button>
+                        <>
+                          <button
+                            className="btn-active px-8 py-3"
+                            onClick={() => handleToggleJoinOrg()}
+                          >
+                            Join Organization
+                          </button>
+                        </>
                       )}
                     </>
                   )}
@@ -258,12 +265,29 @@ const OrganizationPage = () => {
         </div>
 
         {/* POOL OF SPEAKERS */}
-        <div className="flex flex-col gap-6">
+        <div className="mb-20 flex flex-col gap-6">
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Pool of Speakers
           </h1>
           <div className="flex gap-4"></div>
         </div>
+
+        {toggleJoinOrg && (
+          <>
+            <section className=" mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+              <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                Join Organization
+              </p>
+            </section>
+            <EmailComponent
+              orgId={id as string} // id of the one clicked in find organizations
+              organizationEmail={organization?.user.email} // email of the one clicked in find organizations
+              volunteerLoggedIn={user.data?.volunteer} // currently logged in volunteer
+              organizationLoggedIn={user.data?.organization} // currently logged in organization
+              sessionEmail={sessionData?.user.email} // currently logged in email
+            />
+          </>
+        )}
       </div>
     </>
   );
