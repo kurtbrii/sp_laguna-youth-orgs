@@ -126,6 +126,17 @@ model Volunteer {
     activityCalls ActivityCall[]
 }
 
+model Guest {
+    id          String @id @default(cuid())
+    name        String
+    email       String @unique
+    sex         String
+    phoneNumber String
+    age         Int
+
+    activityCalls ActivityCall[]
+}
+
 model Event {
     id          String   @id @default(cuid())
     name        String
@@ -230,6 +241,9 @@ model ActivityCall {
 
     volunteer   Volunteer? @relation(fields: [volunteerId], references: [id])
     volunteerId String?
+
+    guest   Guest?  @relation(fields: [guestId], references: [id])
+    guestId String?
 
     status String
 

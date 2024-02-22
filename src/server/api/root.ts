@@ -10,7 +10,8 @@ import { speakerRouter } from "./routers/speakers";
 import { participationRouter } from "./routers/participation";
 import { volJoinOrgRouter } from "./routers/volJoinOrg";
 import { orgSponsorOrgRouter } from "./routers/orgSponsorOrg";
-import { activityCallRouter as activityCallRouter } from "./routers/joinActivity";
+import { activityCallRouter } from "./routers/joinActivity";
+import { guestRouter } from "./routers/guest";
 
 /**
  * This is the primary router for your server.
@@ -22,8 +23,9 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   user: userRouter,
   organization: orgRouter,
-  event: eventRouter,
   volunteer: volunteerRouter,
+  guest: guestRouter,
+  event: eventRouter,
   activity: activityRouter,
   speaker: speakerRouter,
   particpation: participationRouter,
