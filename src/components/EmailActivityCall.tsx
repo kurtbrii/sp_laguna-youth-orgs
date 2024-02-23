@@ -8,22 +8,19 @@ interface EmailProps {
   body: string;
 }
 
-const EmailJoinOrSpon = ({
-  orgId,
-  organizationEmail,
-  volunteerLoggedIn,
-  organizationLoggedIn,
+const EmailActivityCall = ({
+  activity,
   sessionEmail,
   role,
+  volunteer,
+  organization,
 }: any) => {
+  const addOrgOrVol = api.activityCall.createJoinActivity.useMutation();
+
   const [eventData, setEventData] = useState<EmailProps>({
     subject: "",
     body: "",
   });
-
-  const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
-
-  const orgSponOrg = api.orgSponsorOrg.createOrgSponOrg.useMutation();
 
   const handleEventForm = (
     e:
@@ -41,36 +38,56 @@ const EmailJoinOrSpon = ({
 
   const handleButton = () => {
     if (role === "ORGANIZATION") {
-      orgSponOrg.mutate({
-        orgRequesting: organizationLoggedIn?.id,
-        orgAccepting: orgId,
+      addOrgOrVol.mutate({
+        activityId: activity?.id,
+        orgId: organization?.id,
         subject: eventData.subject,
-        body: eventData.body,
+        body: eventData.subject,
       });
     } else {
-      volJoinOrg.mutate({
-        orgId: orgId,
-        volId: volunteerLoggedIn?.id,
+      addOrgOrVol.mutate({
+        activityId: activity?.id,
+        volId: volunteer?.id,
         subject: eventData.subject,
-        body: eventData.body,
+        body: eventData.subject,
       });
+
+      void emailjs.send(
+        "service_sb8pzif",
+        "template_g280rll",
+        {
+          user_name: `${volunteer?.firstName} ${volunteer?.middleInitial} ${volunteer?.lastName} ${volunteer?.suffix}`,
+          subject: eventData.subject,
+          body: eventData.body,
+          from_email: sessionEmail,
+          to_email: activity?.organization?.user?.email,
+          action: "wants to volunteer on your activity",
+          activity_name: activity?.name,
+          activity_loc: activity?.location,
+          activity_date: activity?.date,
+          role: "Volunteer",
+          user_email: sessionEmail,
+          user_phone_number: volunteer?.phoneNumber,
+        },
+        "AxPqfUq-9Oy9tdLJv",
+      );
     }
 
-    void emailjs.send(
-      "service_sb8pzif",
-      "template_g280rll",
-      {
-        vol_name:
-          role === "ORGANIZATION"
-            ? organizationLoggedIn.orgName
-            : `${volunteerLoggedIn?.firstName} ${volunteerLoggedIn?.middleInitial} ${volunteerLoggedIn?.lastName} ${volunteerLoggedIn?.suffix}`,
-        subject: eventData.subject,
-        body: eventData.body,
-        from_email: sessionEmail,
-        to_email: organizationEmail,
-      },
-      "AxPqfUq-9Oy9tdLJv",
-    );
+    // void emailjs.send(
+    //   "service_sb8pzif",
+    //   "template_g280rll",
+    //   {
+    //     user_name:
+    //       role === "ORGANIZATION"
+    //         ? organizationLoggedIn.orgName
+    //         : `${volunteerLoggedIn?.firstName} ${volunteerLoggedIn?.middleInitial} ${volunteerLoggedIn?.lastName} ${volunteerLoggedIn?.suffix}`,
+    //     subject: eventData.subject,
+    //     body: eventData.body,
+    //     from_email: sessionEmail,
+    //     to_email: organizationEmail,
+    //   },
+    //   "AxPqfUq-9Oy9tdLJv",
+    // );
 
     alert("Request Successul");
   };
@@ -101,10 +118,34 @@ const EmailJoinOrSpon = ({
           Send Email
         </button>
       </form>
-
-      <button onClick={() => alert(role)}> sfd</button>
+      <button
+        onClick={() =>
+          void emailjs.send(
+            "service_sb8pzif",
+            "template_g280rll",
+            {
+              user_name: `${volunteer?.firstName} ${volunteer?.middleInitial} ${volunteer?.lastName} ${volunteer?.suffix}`,
+              subject: eventData.subject,
+              body: eventData.body,
+              from_email: sessionEmail,
+              to_email: activity?.organization?.user?.email,
+              action: "wants to volunteer on your activity",
+              activity_name: activity?.name,
+              activity_loc: activity?.location,
+              activity_date: activity?.date,
+              role: "Volunteer",
+              user_email: sessionEmail,
+              user_phone_number: volunteer?.phoneNumber,
+            },
+            "AxPqfUq-9Oy9tdLJv",
+          )
+        }
+      >
+        {" "}
+        sfd
+      </button>
     </>
   );
 };
 
-export default EmailJoinOrSpon;
+export default EmailActivityCall;

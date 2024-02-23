@@ -34,18 +34,18 @@ const EditVolunteer = () => {
   const volunteer = user.data?.volunteer;
 
   const [volunteerData, setVolunteerData] = useState({
-    phoneNumber: volunteer?.phoneNumber,
-    bio: volunteer?.bio,
-    sex: volunteer?.sex,
-    age: volunteer?.age,
+    phoneNumber: "",
+    bio: "",
+    sex: "Male",
+    age: "",
   });
 
   useEffect(() => {
     setVolunteerData(() => ({
-      phoneNumber: volunteer?.phoneNumber,
-      bio: volunteer?.bio,
-      sex: volunteer?.sex,
-      age: volunteer?.age,
+      phoneNumber: volunteer?.phoneNumber ?? "",
+      bio: volunteer?.bio ?? "",
+      sex: volunteer?.sex ?? "Male",
+      age: volunteer?.age?.toString() ?? "",
     }));
   }, [volunteeerId]);
 
@@ -69,11 +69,11 @@ const EditVolunteer = () => {
       [name]: value,
     });
 
-    console.log(volunteerData);
+    console.log("Data", volunteerData);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const submitOrganization = (volunteerData: any) => {
+  const submitVolunteer = (volunteerData: any) => {
     updateVolunteer.mutate({
       id: volunteer?.id ?? "",
       phoneNumber: volunteerData.phoneNumber,
@@ -82,7 +82,7 @@ const EditVolunteer = () => {
       age: parseInt(volunteerData.age),
     });
 
-    void router.push("/profile/volunteer");
+    alert("Successul");
   };
 
   return (
@@ -94,6 +94,11 @@ const EditVolunteer = () => {
         </p>
       </section>
       <form
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          submitVolunteer(volunteerData);
+          void router.push("/profile/volunteer");
+        }}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
       >
@@ -104,6 +109,7 @@ const EditVolunteer = () => {
         </section> */}
 
         <input
+          required
           type="text"
           value={volunteerData.phoneNumber}
           name="phoneNumber"
@@ -123,6 +129,10 @@ const EditVolunteer = () => {
 
         <div className="flex gap-3">
           <input
+            required
+            type="number"
+            min={10}
+            max={40}
             className=" w-1/2 rounded border p-2 shadow "
             name="age"
             value={volunteerData.age?.toString()}
@@ -131,8 +141,10 @@ const EditVolunteer = () => {
           />
 
           <select
+            defaultValue={"Male"}
             id="example-dropdown"
             name="sex"
+            value={volunteerData.sex}
             className=" w-1/2 rounded border p-2 shadow "
             onChange={handleEventForm}
           >
@@ -140,7 +152,7 @@ const EditVolunteer = () => {
             <option value="Female">Female</option>
           </select>
 
-          {/* <input
+          {/* <input required
           type=""
             className=" w-1/2 rounded border p-2 shadow "
             name="sex"
@@ -149,30 +161,27 @@ const EditVolunteer = () => {
             placeholder="Sex"
           /> */}
         </div>
-      </form>
-
-      <div className="my-20 flex justify-center">
-        <div className="flex flex-col gap-4">
-          <button
-            type="submit"
-            className="btn-active px-40 py-3"
-            onClick={() => {
-              submitOrganization(volunteerData);
-            }}
-          >
-            Update Profile
-          </button>
-          <button
-            onClick={() => router.back()}
-            type="reset"
-            className="btn-outline   px-20 py-3"
-            style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
-          >
-            Discard
-          </button>
-          {/* <button onClick={() => alert(volunteerData.sex)}>buton</button> */}
+        <div className="my-20 flex justify-center">
+          <div className="flex flex-col gap-4">
+            <button
+              type="submit"
+              className="btn-active px-40 py-3"
+              // onClick={() => {}}
+            >
+              Update Profile
+            </button>
+            <button
+              onClick={() => router.back()}
+              type="reset"
+              className="btn-outline   px-20 py-3"
+              style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
+            >
+              Discard
+            </button>
+            {/* <button onClick={() => alert(volunteerData.sex)}>buton</button> */}
+          </div>
         </div>
-      </div>
+      </form>
 
       {/* <button onClick={() }>dsd</button> */}
     </div>

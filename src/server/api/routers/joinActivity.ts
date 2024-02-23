@@ -11,14 +11,16 @@ import { triggerAsyncId } from "async_hooks";
 
 export const activityCallRouter = createTRPCRouter({
   createJoinActivity: publicProcedure
-    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional() }))
+    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), subject: z.string(), body: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activityCall.create({
         data: {
           organizationId: input.orgId,
           volunteerId: input.volId,
           activityId: input.activityId,
-          status: "PENDING"
+          status: "PENDING",
+          subject: input.subject,
+          body: input.body,
         },
       });
     }),

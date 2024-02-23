@@ -80,7 +80,8 @@ export const activityRouter = createTRPCRouter({
               user: {
                 select: {
                   id: true,
-                  image: true
+                  image: true,
+                  email: true,
                 }
               },
             },

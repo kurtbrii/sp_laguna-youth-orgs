@@ -227,7 +227,7 @@ model OrgSponsorOrg {
 
     status String @default("PENDING")
 
-    @@unique([organizationIdRequesting, organizationIdAccepting])
+    // @@unique([organizationIdRequesting, organizationIdAccepting])
 }
 
 model ActivityCall {
@@ -247,8 +247,12 @@ model ActivityCall {
 
     status String
 
+    body    String?
+    subject String?
+
     @@unique([activityId, organizationId])
     @@unique([activityId, volunteerId])
+    @@unique([activityId, guestId])
 }
 
 // ! Enums

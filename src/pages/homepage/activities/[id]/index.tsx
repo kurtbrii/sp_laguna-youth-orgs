@@ -12,6 +12,7 @@ import DeleteModal from "~/components/DeleteModal";
 import { useState } from "react";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
+import EmailActivityCall from "~/components/EmailActivityCall";
 
 const ActivitiesPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -82,6 +83,15 @@ const ActivitiesPage = () => {
     });
   };
 
+  const handleToggleGuest = () => {
+    setToggleJoinActivity(!toggleJoinActivity);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
+    });
+  };
+
   const handleToggleButton = () => {
     setToggleModal(!toggleModal);
   };
@@ -105,24 +115,23 @@ const ActivitiesPage = () => {
   };
 
   // ! VOLUNTEER/ORGANIZATION JOINING/PARTNERING LOGIC
-  const handleVolunteerCall = () => {
-    addOrgOrVol.mutate({
-      activityId: id as string,
-      volId: volunteer?.id,
-      orgId: organization?.id,
-    });
+  // const handleVolunteerCall = () => {
+  //   addOrgOrVol.mutate({
+  //     activityId: id as string,
+  //     volId: volunteer?.id,
+  //   });
 
-    alert("Request Successful");
-  };
+  //   alert("Request Successful");
+  // };
 
-  const handleOrganizationCall = () => {
-    addOrgOrVol.mutate({
-      activityId: id as string,
-      orgId: organization?.id,
-    });
+  // const handleOrganizationCall = () => {
+  //   addOrgOrVol.mutate({
+  //     activityId: id as string,
+  //     orgId: organization?.id,
+  //   });
 
-    alert("Request Successful");
-  };
+  //   alert("Request Successful");
+  // };
 
   const handleDeleteOrgOrVolActivity = () => {
     deleteOrgOrVol.mutate({
@@ -250,7 +259,10 @@ const ActivitiesPage = () => {
           />
 
           {sessionStatus !== "authenticated" && activity?.hasParticipants && (
-            <button className="btn-active w-1/2 self-center px-2 py-2">
+            <button
+              className="btn-active w-1/2 self-center px-2 py-2"
+              onClick={() => handleToggleGuest()}
+            >
               Join Activity
             </button>
           )}
@@ -276,8 +288,8 @@ const ActivitiesPage = () => {
             ) : (
               <button
                 className="btn-active w-1/2 self-center px-2 py-2"
-                // onClick={() => handleToggleVolunteer()}
-                onClick={() => handleVolunteerCall()}
+                onClick={() => handleToggleVolunteer()}
+                // onClick={() => handleVolunteerCall()}
               >
                 Volunteer Now
               </button>
@@ -305,7 +317,7 @@ const ActivitiesPage = () => {
             ) : (
               <button
                 className="btn-active w-1/2 self-center px-2 py-2"
-                onClick={() => handleOrganizationCall()}
+                // onClick={() => handleOrganizationCall()}
               >
                 Partner With Us
               </button>
@@ -354,7 +366,7 @@ const ActivitiesPage = () => {
       </div>
 
       <div className="mx-16">
-        {toggleVolunteerNow || toggleJoinActivity || togglePartnership ? (
+        {toggleVolunteerNow || togglePartnership ? (
           <>
             {toggleVolunteerNow && (
               <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
@@ -363,10 +375,34 @@ const ActivitiesPage = () => {
                 </p>
               </section>
             )}
-            <div>hi</div>
+            <EmailActivityCall
+              activity={activity}
+              sessionEmail={sessionData?.user.email}
+              role={sessionData?.user.role ?? "GUEST"}
+              volunteer={volunteer}
+              organization={organization}
+            />
           </>
         ) : null}
+
+        {toggleJoinActivity && (
+          <>
+            <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+              <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                Join Activity
+              </p>
+            </section>
+            <EmailActivityCall
+              activity={activity}
+              sessionEmail={sessionData?.user.email}
+              role={sessionData?.user.role ?? "GUEST"}
+            />
+          </>
+        )}
       </div>
+      <button onClick={() => alert(activity?.organization?.user?.email)}>
+        kodo
+      </button>
     </div>
   );
 };
