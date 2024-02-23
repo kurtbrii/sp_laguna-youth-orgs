@@ -11,7 +11,7 @@ import { triggerAsyncId } from "async_hooks";
 
 export const activityCallRouter = createTRPCRouter({
   createJoinActivity: publicProcedure
-    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), subject: z.string(), body: z.string() }))
+    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), subject: z.string(), body: z.string(), label: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activityCall.create({
         data: {
@@ -21,13 +21,14 @@ export const activityCallRouter = createTRPCRouter({
           status: "PENDING",
           subject: input.subject,
           body: input.body,
+          label: input.label
         },
       });
     }),
 
 
   getOrgOrVol: protectedProcedure
-    .input(z.object({ activityId: z.string().optional(), orgId: z.string().optional(), volId: z.string().optional(), status: z.string().optional(), }))
+    .input(z.object({ activityId: z.string().optional(), orgId: z.string().optional(), volId: z.string().optional(), status: z.string().optional(), label: z.string().optional() }))
     .query(async ({ input, ctx }) => {
 
       const data = await ctx.db.activityCall.findMany({
@@ -36,7 +37,8 @@ export const activityCallRouter = createTRPCRouter({
             { activityId: input.activityId },
             { volunteerId: input.volId },
             { organizationId: input.orgId },
-            { status: input.status }
+            { status: input.status },
+            { label: input.label }
           ]
         },
         select: {

@@ -43,6 +43,7 @@ const EmailActivityCall = ({
         orgId: organization?.id,
         subject: eventData.subject,
         body: eventData.subject,
+        label: "partnership",
       });
     } else {
       addOrgOrVol.mutate({
@@ -50,6 +51,7 @@ const EmailActivityCall = ({
         volId: volunteer?.id,
         subject: eventData.subject,
         body: eventData.subject,
+        label: "volunteer",
       });
     }
 

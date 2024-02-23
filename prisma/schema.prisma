@@ -246,6 +246,7 @@ model ActivityCall {
     guestId String?
 
     status String
+    label  String
 
     body    String?
     subject String?

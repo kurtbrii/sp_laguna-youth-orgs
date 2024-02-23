@@ -30,7 +30,8 @@ const CallForVolunteers = () => {
 
   const getPendingOrgOrVol = api.activityCall.getOrgOrVol.useQuery({
     activityId: id as string,
-    volId: volunteer?.id,
+    label: "volunteer",
+    // volId: volunteer?.id,
     status: "PENDING",
   });
 
