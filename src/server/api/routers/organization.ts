@@ -14,7 +14,7 @@ const loremText = "(replace with your data...) Lorem ipsum dolor sit amet, conse
 export const orgRouter = createTRPCRouter({
 
   createOrganization: publicProcedure
-    .input(z.object({ orgName: z.string(), phoneNumber: z.string(), userId: z.string() }))
+    .input(z.object({ orgName: z.string(), phoneNumber: z.string(), userId: z.string(), email: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -28,6 +28,21 @@ export const orgRouter = createTRPCRouter({
           vision: loremText,
           objectives: loremText,
           bio: loremText,
+          email: input.email,
+          centersOfParticipation: {
+            create: {
+              activeCitizenship: loremText,
+              agriculture: loremText,
+              economicEmpowerment: loremText,
+              education: loremText,
+              environment: loremText,
+              globalMobility: loremText,
+              governance: loremText,
+              health: loremText,
+              peaceBuilding: loremText,
+              socialInclusion: loremText
+            }
+          }
         },
       });
     }),

@@ -93,7 +93,7 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
           className={`mb-4 line-clamp-3  ${toggleSeeMore ? "overflow-y-scroll" : "overflow-clip"}`}
           style={{ maxHeight: "6rem" }}
         >
-          <p className="overflow-ellipsis">{speaker.bio}</p>
+          <p className="overflow-ellipsis whitespace-pre-wrap">{speaker.bio}</p>
         </div>
 
         <div className="flex items-center justify-between">

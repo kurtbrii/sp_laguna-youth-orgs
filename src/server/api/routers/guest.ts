@@ -7,27 +7,23 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
 
+export const guestRouter = createTRPCRouter({
 
-
-export const volunteerRouter = createTRPCRouter({
-
-  createVolunteer: publicProcedure
-    .input(z.object({ firstName: z.string(), lastName: z.string(), middleInitial: z.string(), suffix: z.string(), phoneNumber: z.string(), userId: z.string(), email: z.string() }))
+  createGuest: publicProcedure
+    .input(z.object({ name: z.string(), sex: z.string(), age: z.number(), phoneNumber: z.string(), email: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      return ctx.db.volunteer.create({
+      return ctx.db.guest.create({
         data: {
-          firstName: input.firstName,
-          lastName: input.lastName,
-          middleInitial: input.middleInitial,
-          suffix: input.suffix,
+          name: input.name,
+          sex: input.sex,
+          age: input.age,
           phoneNumber: input.phoneNumber,
-          userId: input.userId,
           email: input.email
+
         },
       });
     }),
@@ -44,22 +40,43 @@ export const volunteerRouter = createTRPCRouter({
   // userId String? @unique
 
   getOne: publicProcedure
-    .input(z.object({ id: z.string().optional(), userId: z.string().optional() }))
-    .query(async ({ input: { id, userId }, ctx }) => {
-      const data = await ctx.db.volunteer.findUnique({
+    .input(z.object({ id: z.string(), name: z.string(), sex: z.string(), age: z.number(), phoneNumber: z.string(), email: z.string() }))
+    .query(async ({ input: { id, email }, ctx }) => {
+      const data = await ctx.db.guest.findUnique({
         where: {
-          userId,
           id,
+          email
         },
         select: {
+          name: true,
+          sex: true,
+          age: true,
+          phoneNumber: true,
+          email: true,
+        }
+      })
+      return data;
+    }),
+
+  // ! TODO: NOT YET SURE
+  getGuests: publicProcedure
+    .input(z.object({ id: z.string().optional(), take: z.number().optional() }))
+    .query(async ({ ctx, input }) => {
+      const whereCondition = {
+        id: input.id,
+      }
+
+      return ctx.db.organization.findMany({
+        where: whereCondition,
+        select: {
           id: true,
-          firstName: true,
-          lastName: true,
-          middleInitial: true,
-          suffix: true,
+          orgName: true,
           phoneNumber: true,
           bio: true,
           userId: true,
+          mission: true,
+          vision: true,
+          objectives: true,
           user: {
             select: {
               id: true,
@@ -68,11 +85,23 @@ export const volunteerRouter = createTRPCRouter({
               email: true
             }
           },
-        }
-        // include: {
-        // }
+          event: {
+            select: {
+              name: true,
+              id: true,
+              organizedBy: true,
+              details: true,
+              location: true,
+              date: true,
+              partners: true,
+            },
+          }
+
+        },
+        take: input.take
       })
-      return data;
+
+
     }),
 
   updateVolunteer: protectedProcedure

@@ -100,6 +100,8 @@ model Organization {
     OrgSponsored            OrgSponsorOrg[] @relation(name: "AcceptingOrganization")
     OrgRequestedSponsorship OrgSponsorOrg[] @relation(name: "RequestingOrganization")
 
+    email String @unique
+
     partneredOrganizations ActivityCall[] // list of organizations who applied for partnership
 }
 
@@ -118,7 +120,20 @@ model Volunteer {
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
 
+    email String @unique
+
     VolJoinOrg    VolJoinOrg[]
+    activityCalls ActivityCall[]
+}
+
+model Guest {
+    id          String @id @default(cuid())
+    name        String
+    email       String @unique
+    sex         String
+    phoneNumber String
+    age         Int
+
     activityCalls ActivityCall[]
 }
 
@@ -189,7 +204,11 @@ model VolJoinOrg {
     organizationId String
     volunteer      Volunteer    @relation(fields: [volunteerId], references: [id])
     volunteerId    String
-    status         String       @default("PENDING")
+
+    subject String
+    body    String
+
+    status String @default("PENDING")
 
     @@unique([organizationId, volunteerId])
 }
@@ -202,6 +221,9 @@ model OrgSponsorOrg {
 
     organizationAccepting   Organization @relation(name: "AcceptingOrganization", fields: [organizationIdAccepting], references: [id])
     organizationIdAccepting String
+
+    subject String
+    body    String
 
     status String @default("PENDING")
 
@@ -219,6 +241,9 @@ model ActivityCall {
 
     volunteer   Volunteer? @relation(fields: [volunteerId], references: [id])
     volunteerId String?
+
+    guest   Guest?  @relation(fields: [guestId], references: [id])
+    guestId String?
 
     status String
 

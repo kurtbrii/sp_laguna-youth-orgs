@@ -91,6 +91,7 @@ const SignUp = () => {
       orgName: orgFormData.orgName,
       phoneNumber: orgFormData.phoneNumber,
       userId: sessionData?.user.id ?? "",
+      email: sessionData?.user.email ?? "",
     });
 
     updateRole.mutate({
@@ -114,6 +115,7 @@ const SignUp = () => {
       suffix: volunteerFormData.suffix,
       phoneNumber: volunteerFormData.phoneNumber,
       userId: sessionData?.user.id ?? "",
+      email: sessionData?.user.email ?? "",
     });
 
     updateRole.mutate({

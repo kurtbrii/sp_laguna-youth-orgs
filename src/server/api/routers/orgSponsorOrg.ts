@@ -9,13 +9,15 @@ import {
 
 export const orgSponsorOrgRouter = createTRPCRouter({
   createOrgSponOrg: protectedProcedure
-    .input(z.object({ orgRequesting: z.string(), orgAccepting: z.string() }))
+    .input(z.object({ orgRequesting: z.string(), orgAccepting: z.string(), body: z.string(), subject: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.orgSponsorOrg.create({
         data: {
           organizationIdRequesting: input.orgRequesting,
           organizationIdAccepting: input.orgAccepting,
-          status: 'PENDING'
+          status: 'PENDING',
+          subject: input.subject,
+          body: input.body
         },
       });
     }),
@@ -33,6 +35,8 @@ export const orgSponsorOrgRouter = createTRPCRouter({
           ]
         },
         select: {
+          subject: true,
+          body: true,
           status: true,
           organizationRequesting: {
             select: {

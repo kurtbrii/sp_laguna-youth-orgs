@@ -12,6 +12,9 @@ import {
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { ToggleButton } from "@mui/material";
+import EmailJoinOrSpon from "~/components/EmailJoinOrSpon";
+import { volunteerRouter } from "~/server/api/routers/volunteer";
 
 // type OrganizationProps = {
 //   id: string;
@@ -33,6 +36,9 @@ import { useEffect, useState } from "react";
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
+  const [toggleJoinOrg, setToggleJoinOrg] = useState(false);
+  const [toggleSponOrg, setToggleSponOrg] = useState(false);
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -52,8 +58,6 @@ const OrganizationPage = () => {
     orgId: id as string,
   });
 
-  const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
-
   const deleteVolJoinOrg = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
   // ! ORGANIZATIONS SPONSORING ORGANIZATIONS
@@ -61,8 +65,6 @@ const OrganizationPage = () => {
     orgRequesting: user.data?.organization?.id ?? "",
     orgAccepting: id as string,
   });
-
-  const orgSponOrg = api.orgSponsorOrg.createOrgSponOrg.useMutation();
 
   const deleteOrgSponOrg = api.orgSponsorOrg.deleteOrgSpon.useMutation();
 
@@ -80,10 +82,21 @@ const OrganizationPage = () => {
   }
 
   // ! VOLUNTEERS JOINING ORGANIZATIONS
-  const handleJoinOrg = () => {
-    volJoinOrg.mutate({
-      orgId: id as string,
-      volId: user.data?.volunteer?.id ?? "",
+  const handleToggleJoinOrg = () => {
+    setToggleJoinOrg(!toggleJoinOrg);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
+    });
+  };
+
+  const handleToggleSponOrg = () => {
+    setToggleSponOrg(!toggleSponOrg);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
     });
   };
 
@@ -97,15 +110,6 @@ const OrganizationPage = () => {
   };
 
   // ! ORGANIZATIONS SPONSORING ORGANIZATIONS
-  const handleOrgSpon = () => {
-    orgSponOrg.mutate({
-      orgRequesting: user.data?.organization?.id ?? "",
-      orgAccepting: id as string,
-    });
-
-    alert("successful");
-  };
-
   const handleDeleteOrgSpon = () => {
     deleteOrgSponOrg.mutate({
       orgRequesting: user.data?.organization?.id ?? "",
@@ -162,7 +166,9 @@ const OrganizationPage = () => {
                     ) : (
                       <button
                         className="btn-active px-8 py-3"
-                        onClick={() => handleOrgSpon()}
+                        onClick={() => handleToggleSponOrg()}
+
+                        // onClick={() => handleOrgSpon()}
                       >
                         Request Sponsorship
                       </button>
@@ -188,12 +194,14 @@ const OrganizationPage = () => {
                           </button>
                         )
                       ) : (
-                        <button
-                          className="btn-active px-8 py-3"
-                          onClick={() => handleJoinOrg()}
-                        >
-                          Join Organization
-                        </button>
+                        <>
+                          <button
+                            className="btn-active px-8 py-3"
+                            onClick={() => handleToggleJoinOrg()}
+                          >
+                            Join Organization
+                          </button>
+                        </>
                       )}
                     </>
                   )}
@@ -258,12 +266,40 @@ const OrganizationPage = () => {
         </div>
 
         {/* POOL OF SPEAKERS */}
-        <div className="flex flex-col gap-6">
+        <div className="mb-20 flex flex-col gap-6">
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Pool of Speakers
           </h1>
           <div className="flex gap-4"></div>
         </div>
+
+        {toggleJoinOrg || toggleSponOrg ? (
+          <>
+            {toggleSponOrg && (
+              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+                <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                  Request Sponsorship
+                </p>
+              </section>
+            )}
+
+            {toggleJoinOrg && (
+              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+                <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                  Join Organization
+                </p>
+              </section>
+            )}
+            <EmailJoinOrSpon
+              orgId={id as string}
+              organizationEmail={organization?.user.email}
+              volunteerLoggedIn={user.data?.volunteer}
+              organizationLoggedIn={user.data?.organization}
+              sessionEmail={sessionData?.user.email}
+              role={user?.data?.role}
+            />
+          </>
+        ) : null}
       </div>
     </>
   );

@@ -15,6 +15,8 @@ import ActivitiesCard from "~/components/ActivitiesCard";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { IconButton } from "@mui/material";
 import router from "next/router";
+import { Resend } from "resend";
+import emailjs from "@emailjs/browser";
 
 export default function Home() {
   const { data: sessionData } = useSession();
@@ -30,6 +32,25 @@ export default function Home() {
 
   // ! Get Activities
   const activity = api.activity.getActivities.useQuery({ take: 3 });
+
+  // const handleButton = async () => {
+  //   // service_sb8pzif
+  //   // template_pm7npxj
+  //   // AxPqfUq-9Oy9tdLJv
+  //   emailjs.send(
+  //     "service_sb8pzif",
+  //     "template_pm7npxj",
+  //     {
+  //       vol_name: "vol",
+  //       body: "body",
+  //       from_email: "kbpunzalan@up.edu.ph",
+  //       to_email: "kurtbriandaine.1225@gmail.com",
+  //     },
+  //     "AxPqfUq-9Oy9tdLJv",
+  //   );
+
+  //   alert("helo");
+  // };
 
   return (
     <>
@@ -139,6 +160,8 @@ export default function Home() {
 
           <div className="mb-96"></div>
         </header>
+
+        {/* <button onClick={() => handleButton()}>helloo</button> */}
       </main>
     </>
   );

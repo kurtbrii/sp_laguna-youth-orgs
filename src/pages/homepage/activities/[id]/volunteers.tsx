@@ -36,38 +36,12 @@ const CallForVolunteers = () => {
 
   const updateStatus = api.activityCall.updateActivityCall.useMutation();
 
-  // const activityQuery = api.activity?.getOne.useQuery({
-  //   id: id as string,
-  // });
-
   const handleAccept = (volId: string) => {
     updateStatus.mutate({
       activityId: id as string,
       volId: volId,
     });
   };
-
-  const rows: any = [];
-
-  getPendingOrgOrVol.data?.map((data, index) => {
-    // console.log(data.volunteer?.firstName);
-
-    const pendingData = {
-      id: data?.volunteer?.id,
-      name: data.volunteer?.firstName,
-      sex: data?.volunteer?.sex,
-      age: data?.volunteer?.age,
-      phoneNumber: data?.volunteer?.phoneNumber,
-      action: (
-        <IconButton onClick={() => handleAccept(data?.volunteer?.id ?? "")}>
-          <AddCircleIcon />
-        </IconButton>
-      ),
-    };
-
-    rows.push(pendingData);
-    // <VolunteersCall key={index} volunteer={data?.volunteer} />
-  });
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -83,44 +57,50 @@ const CallForVolunteers = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell align="right">Sex</TableCell>
-                <TableCell align="right">Age</TableCell>
-                <TableCell align="right">Phone Number</TableCell>
-                <TableCell align="right">Add</TableCell>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="center">Sex</TableCell>
+                <TableCell align="center">Age</TableCell>
+                <TableCell align="center">Email Address</TableCell>
+                <TableCell align="center">Phone Number</TableCell>
+                <TableCell align="center">Add</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row: any) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.sex}</TableCell>
-                  <TableCell align="right">{row.age}</TableCell>
-                  <TableCell align="right">{row.phoneNumber}</TableCell>
-                  <TableCell align="right">{row.action}</TableCell>
-                </TableRow>
-              ))}
+              {getPendingOrgOrVol?.data?.map((data, index) => {
+                // Declare a constant to simplify access to nested properties
+                const volunteer = data.volunteer;
+
+                return (
+                  <TableRow
+                    key={index}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {volunteer?.firstName} {volunteer?.middleInitial}{" "}
+                      {volunteer?.lastName} {volunteer?.suffix}
+                    </TableCell>
+                    <TableCell align="center">{volunteer?.sex}</TableCell>
+                    <TableCell align="center">{volunteer?.age}</TableCell>
+                    <TableCell align="center">
+                      {volunteer?.user?.email}
+                    </TableCell>
+                    <TableCell align="center">
+                      {volunteer?.phoneNumber}
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        onClick={() => handleAccept(volunteer?.id ?? "")}
+                      >
+                        <AddCircleIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
       </div>
-
-      {/* <div className="flex flex-col p-40">
-        <div className="flex justify-around gap-4">
-          <p>Name</p>
-          <p>Address</p>
-          <p>Email Address</p>
-        </div>
-
-        {getPendingOrgOrVol.data?.map((data, index) => (
-          <VolunteersCall key={index} volunteer={data?.volunteer} />
-        ))}
-      </div> */}
     </div>
   );
 };

@@ -42,22 +42,19 @@ const VolunteerNav = () => {
     "/manage-activities/volunteer/activities-requests",
   ];
 
-  const [linkData, setLinkData] = useState("Join Organization Requests");
-  const [dataIndex, setDataIndex] = useState(0);
-
   return (
     // navbar
     <div className="mb-12 flex flex-col gap-2">
-      <hr className="flex  w-full border-t-2 border-customBlack-25" />
+      <hr className="flex  w-full border-t-2 border-customBlack-25 " />
       <nav className="px-32 py-6">
-        <ul className="flex flex-grow flex-wrap items-center justify-center gap-8">
+        <ul className="flex flex-grow flex-wrap items-center justify-center gap-8 font-custom-lexend">
           {links.map((link, index) => (
             <li
               onClick={() => router.push(linksNav[index]!)}
               key={index}
               className={`cursor-pointer ${activeLink === link ? "text-secondary" : "text-primary"}`}
             >
-              {link.charAt(0).toUpperCase() + link.slice(1)}
+              {link}
             </li>
           ))}
         </ul>

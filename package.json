@@ -13,6 +13,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.1.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@material-tailwind/html": "^2.2.2",
@@ -34,11 +35,13 @@
     "gradient-string": "^2.0.2",
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
+    "nodemailer": "^6.9.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native-text-gradient": "^0.1.7",
     "react-responsive-modal": "^6.4.2",
     "react-text-gradients-and-animations": "^1.1.7",
+    "resend": "^3.2.0",
     "styled-component": "^2.8.0",
     "superjson": "^2.2.1",
     "tw-elements": "^1.1.0",

@@ -7,15 +7,21 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import VolunteerNav from "~/components/VolunteerNav";
+import ActivityList from "~/components/ActivityList";
 
 const VolunteerManageActivities = () => {
   const router = useRouter();
 
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  // const userData = sessionData?.user.organization.bio;
+  const volunteerQuery = api.volunteer.getOne.useQuery({
+    userId: sessionData?.user.id,
+  });
 
-  const getOrganizations = api.volJoinOrg.getOrgOrVol.useQuery({});
+  const volunteer = volunteerQuery.data;
+  const getMyActivities = api.activityCall.getOrgOrVol.useQuery({
+    volId: volunteer?.id,
+  });
 
   return (
     <div className="flex flex-col">
@@ -28,6 +34,12 @@ const VolunteerManageActivities = () => {
         </section>
 
         <VolunteerNav />
+
+        <div className="mb-12 flex flex-col justify-center gap-4 ">
+          {getMyActivities.data?.map((data, index) => (
+            <ActivityList key={index} data={data} />
+          ))}
+        </div>
       </div>
     </div>
   );
