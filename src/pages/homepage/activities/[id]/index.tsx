@@ -54,7 +54,7 @@ const ActivitiesPage = () => {
     volId: volunteer?.id,
     orgId: organization?.id,
     // label: "volunteer",
-    // status: "PENDING",
+    status: "PENDING",
   });
 
   // ! LOGIC FOR TOGGLE BUTTONS
