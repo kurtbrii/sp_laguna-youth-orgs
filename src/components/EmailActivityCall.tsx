@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import emailjs from "@emailjs/browser";
 import React, { useState } from "react";
+import { cn } from "~/lib/utils";
 import { api } from "~/utils/api";
 
 interface EmailProps {
@@ -28,7 +29,7 @@ const EmailActivityCall = ({
   const [guestData, setGuestData] = useState({
     name: "",
     email: "",
-    sex: "",
+    sex: "Male",
     phoneNumber: "",
     age: "",
 
@@ -132,6 +133,22 @@ const EmailActivityCall = ({
     alert("Request Successul");
   };
 
+  const handleSubmitGuest = (e: React.FormEvent<HTMLFormElement>) => {
+    createGuest.mutate({
+      name: guestData.name,
+      age: parseInt(guestData.age),
+      email: guestData.email,
+      phoneNumber: guestData.phoneNumber,
+      sex: guestData.sex,
+      subject: guestData.subject,
+      body: guestData.body,
+      activityId: activity?.id,
+    });
+
+    alert("Request Successul");
+    // e.preventDefault();
+  };
+
   return (
     <>
       {role === "VOLUNTEER" || role === "ORGANIZATION" ? (
@@ -165,9 +182,10 @@ const EmailActivityCall = ({
       ) : (
         <>
           <form
-            onSubmit={() => handleSubmitOrgOrVol()}
+            onSubmit={(e) => handleSubmitGuest(e)}
             className="mx-40 mb-5 mt-5 flex flex-col gap-4 font-custom-lexend text-sm text-customBlack-100"
           >
+            <p className="font-bold italic text-primary">Participant Details</p>
             <input
               type="text"
               value={guestData.name}
@@ -222,12 +240,14 @@ const EmailActivityCall = ({
               />
             </div>
 
+            <p className="mt-12 font-bold italic text-primary">Email Content</p>
+
             <input
               type="text"
               value={guestData.subject}
               name="subject"
               onChange={handleGuestForm}
-              className="mt-12 h-12 w-full rounded border  p-2 shadow"
+              className=" h-12 w-full rounded border  p-2 shadow"
               placeholder="Subject"
             />
             <textarea

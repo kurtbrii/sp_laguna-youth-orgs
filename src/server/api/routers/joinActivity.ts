@@ -11,13 +11,14 @@ import { triggerAsyncId } from "async_hooks";
 
 export const activityCallRouter = createTRPCRouter({
   createJoinActivity: publicProcedure
-    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), subject: z.string(), body: z.string(), label: z.string() }))
+    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), guestID: z.string().optional(), subject: z.string(), body: z.string(), label: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activityCall.create({
         data: {
           organizationId: input.orgId,
           volunteerId: input.volId,
           activityId: input.activityId,
+          guestId: input.guestID,
           status: "PENDING",
           subject: input.subject,
           body: input.body,
@@ -86,6 +87,17 @@ export const activityCallRouter = createTRPCRouter({
               user: true,
             }
           },
+          guestId: true,
+          guest: {
+            select: {
+              id: true,
+              name: true,
+              age: true,
+              email: true,
+              phoneNumber: true,
+              sex: true,
+            }
+          }
         }
       });
 
@@ -93,10 +105,10 @@ export const activityCallRouter = createTRPCRouter({
     }),
 
   updateActivityCall: protectedProcedure
-    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), }))
+    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), guestId: z.string().optional() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activityCall.updateMany({
-        where: { activityId: input.activityId, organizationId: input.orgId, volunteerId: input.volId },
+        where: { activityId: input.activityId, organizationId: input.orgId, volunteerId: input.volId, guestId: input.guestId },
         data: {
           status: 'APPROVED',
         },

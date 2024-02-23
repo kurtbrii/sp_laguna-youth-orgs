@@ -421,9 +421,7 @@ const ActivitiesPage = () => {
           </>
         )}
       </div>
-      <button onClick={() => alert(activity?.organization?.user?.email)}>
-        kodo
-      </button>
+      <button onClick={() => alert(activity?.id)}>kodo</button>
     </div>
   );
 };

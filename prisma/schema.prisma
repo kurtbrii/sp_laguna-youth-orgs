@@ -79,7 +79,7 @@ model Organization {
     id String @id @default(cuid())
 
     orgName     String
-    phoneNumber String
+    phoneNumber String @unique
     bio         String
 
     mission    String
@@ -111,7 +111,7 @@ model Volunteer {
     lastName      String
     middleInitial String
     suffix        String?
-    phoneNumber   String
+    phoneNumber   String  @unique
     bio           String?
 
     sex String?
@@ -130,7 +130,7 @@ model Guest {
     id          String @id @default(cuid())
     name        String
     email       String @unique
-    sex         String
+    sex         String @unique
     phoneNumber String
     age         Int
 
