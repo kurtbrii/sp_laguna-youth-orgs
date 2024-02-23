@@ -51,27 +51,36 @@ const EmailActivityCall = ({
         subject: eventData.subject,
         body: eventData.subject,
       });
-
-      void emailjs.send(
-        "service_sb8pzif",
-        "template_g280rll",
-        {
-          user_name: `${volunteer?.firstName} ${volunteer?.middleInitial} ${volunteer?.lastName} ${volunteer?.suffix}`,
-          subject: eventData.subject,
-          body: eventData.body,
-          from_email: sessionEmail,
-          to_email: activity?.organization?.user?.email,
-          action: "wants to volunteer on your activity",
-          activity_name: activity?.name,
-          activity_loc: activity?.location,
-          activity_date: activity?.date,
-          role: "Volunteer",
-          user_email: sessionEmail,
-          user_phone_number: volunteer?.phoneNumber,
-        },
-        "AxPqfUq-9Oy9tdLJv",
-      );
     }
+
+    void emailjs.send(
+      "service_sb8pzif",
+      "template_g280rll",
+      {
+        user_name:
+          role === "VOLUNTEER"
+            ? `${volunteer?.firstName} ${volunteer?.middleInitial} ${volunteer?.lastName} ${volunteer?.suffix}`
+            : organization.orgName,
+        subject: eventData.subject,
+        body: eventData.body,
+        from_email: sessionEmail,
+        to_email: activity?.organization?.user?.email,
+        action:
+          role === "VOLUNTEER"
+            ? "wants to volunteer on your activity"
+            : "wants to partner with you on this activity",
+        activity_name: activity?.name,
+        activity_loc: activity?.location,
+        activity_date: activity?.date,
+        role: role === "VOLUNTEER" ? "Volunteer" : "Organization",
+        user_email: sessionEmail,
+        user_phone_number:
+          role === "VOLUNTEER"
+            ? volunteer?.phoneNumber
+            : organization?.phoneNumber,
+      },
+      "AxPqfUq-9Oy9tdLJv",
+    );
 
     // void emailjs.send(
     //   "service_sb8pzif",
@@ -124,18 +133,27 @@ const EmailActivityCall = ({
             "service_sb8pzif",
             "template_g280rll",
             {
-              user_name: `${volunteer?.firstName} ${volunteer?.middleInitial} ${volunteer?.lastName} ${volunteer?.suffix}`,
+              user_name:
+                role === "VOLUNTEER"
+                  ? `${volunteer?.firstName} ${volunteer?.middleInitial} ${volunteer?.lastName} ${volunteer?.suffix}`
+                  : organization.orgName,
               subject: eventData.subject,
               body: eventData.body,
               from_email: sessionEmail,
               to_email: activity?.organization?.user?.email,
-              action: "wants to volunteer on your activity",
+              action:
+                role === "VOLUNTEER"
+                  ? "wants to volunteer on your activity"
+                  : "wants to partner with you on this activity",
               activity_name: activity?.name,
               activity_loc: activity?.location,
               activity_date: activity?.date,
-              role: "Volunteer",
+              role: role === "VOLUNTEER" ? "Volunteer" : "Organization",
               user_email: sessionEmail,
-              user_phone_number: volunteer?.phoneNumber,
+              user_phone_number:
+                role === "VOLUNTEER"
+                  ? volunteer?.phoneNumber
+                  : organization?.phoneNumber,
             },
             "AxPqfUq-9Oy9tdLJv",
           )

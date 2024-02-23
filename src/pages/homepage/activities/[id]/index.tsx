@@ -83,6 +83,15 @@ const ActivitiesPage = () => {
     });
   };
 
+  const handleToggleOrganization = () => {
+    setTogglePartnership(!togglePartnership);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
+    });
+  };
+
   const handleToggleGuest = () => {
     setToggleJoinActivity(!toggleJoinActivity);
 
@@ -317,6 +326,8 @@ const ActivitiesPage = () => {
             ) : (
               <button
                 className="btn-active w-1/2 self-center px-2 py-2"
+                onClick={() => handleToggleOrganization()}
+
                 // onClick={() => handleOrganizationCall()}
               >
                 Partner With Us
@@ -375,6 +386,15 @@ const ActivitiesPage = () => {
                 </p>
               </section>
             )}
+
+            {togglePartnership && (
+              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+                <p className="font-custom-epilogue text-xl font-extrabold text-white">
+                  Partner With Us
+                </p>
+              </section>
+            )}
+
             <EmailActivityCall
               activity={activity}
               sessionEmail={sessionData?.user.email}
