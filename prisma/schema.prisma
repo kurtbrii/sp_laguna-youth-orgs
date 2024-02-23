@@ -170,17 +170,17 @@ model Activity {
 }
 
 model CentersOfParticipation {
-    id                  String  @id @default(cuid())
-    health              String?
-    education           String?
-    economicEmpowerment String?
-    socialInclusion     String?
-    peaceBuilding       String?
-    governance          String?
-    activeCitizenship   String?
-    environment         String?
-    globalMobility      String?
-    agriculture         String?
+    id                  String @id @default(cuid())
+    health              String
+    education           String
+    economicEmpowerment String
+    socialInclusion     String
+    peaceBuilding       String
+    governance          String
+    activeCitizenship   String
+    environment         String
+    globalMobility      String
+    agriculture         String
 
     organization   Organization @relation(fields: [organizationId], references: [id])
     organizationId String       @unique
