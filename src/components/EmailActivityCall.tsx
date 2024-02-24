@@ -99,7 +99,7 @@ const EmailActivityCall = ({
         to_email: activity?.organization?.user?.email,
         action:
           role === "VOLUNTEER"
-            ? "wants to volunteer on your activity"
+            ? "wants to volunteer in your activity"
             : "wants to partner with you on this activity",
         activity_name: activity?.name,
         activity_loc: activity?.location,
@@ -113,22 +113,6 @@ const EmailActivityCall = ({
       },
       "AxPqfUq-9Oy9tdLJv",
     );
-
-    // void emailjs.send(
-    //   "service_sb8pzif",
-    //   "template_g280rll",
-    //   {
-    //     user_name:
-    //       role === "ORGANIZATION"
-    //         ? organizationLoggedIn.orgName
-    //         : `${volunteerLoggedIn?.firstName} ${volunteerLoggedIn?.middleInitial} ${volunteerLoggedIn?.lastName} ${volunteerLoggedIn?.suffix}`,
-    //     subject: eventData.subject,
-    //     body: eventData.body,
-    //     from_email: sessionEmail,
-    //     to_email: organizationEmail,
-    //   },
-    //   "AxPqfUq-9Oy9tdLJv",
-    // );
 
     alert("Request Successul");
   };
@@ -144,6 +128,26 @@ const EmailActivityCall = ({
       body: guestData.body,
       activityId: activity?.id,
     });
+
+    void emailjs.send(
+      "service_sb8pzif",
+      "template_g280rll",
+      {
+        user_name: guestData.name,
+        subject: guestData.subject,
+        body: guestData.body,
+        from_email: guestData.email,
+        to_email: activity?.organization?.user?.email,
+        action: "wants to participate in your activity",
+        activity_name: activity?.name,
+        activity_loc: activity?.location,
+        activity_date: activity?.date,
+        role: "Geuest",
+        user_email: guestData.email,
+        user_phone_number: guestData.phoneNumber,
+      },
+      "AxPqfUq-9Oy9tdLJv",
+    );
 
     alert("Request Successul");
     // e.preventDefault();
