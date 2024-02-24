@@ -421,7 +421,7 @@ const ActivitiesPage = () => {
           </>
         )}
       </div>
-      <button onClick={() => alert(activity?.id)}>kodo</button>
+      {/* <button onClick={() => alert(activity?.id)}>kodo</button> */}
     </div>
   );
 };

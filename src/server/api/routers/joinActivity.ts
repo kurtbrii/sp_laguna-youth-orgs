@@ -43,6 +43,7 @@ export const activityCallRouter = createTRPCRouter({
           ]
         },
         select: {
+          body: true,
           activity: {
             select: {
               id: true,

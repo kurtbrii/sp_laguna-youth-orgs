@@ -41,6 +41,7 @@ const SponsorshipRequest = () => {
           {getOrganizations?.data?.map((data, index) => (
             <SponsorsList
               key={index}
+              body={data.body}
               orgRequesting={data.organizationRequesting}
               orgAcceptingId={org?.id}
             />
