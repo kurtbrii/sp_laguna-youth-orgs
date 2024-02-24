@@ -64,34 +64,34 @@ const EventPage = () => {
   return (
     <div className="flex flex-col flex-wrap">
       <Navbar />
-      <div className="relative   mx-16 my-10  flex  justify-center gap-2 font-custom-lexend   text-customBlack-100">
+      <div className="phone:flex-col phone:m-5 phone:gap-10  relative mx-16  my-10  flex justify-center gap-2 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
-        <div className="mr-24 flex w-2/5 flex-col gap-1">
+        <div className="phone:w-full phone:flex-row mr-20 flex w-2/5 flex-col gap-1 ">
           <Image
-            className="flex w-full rounded-md"
+            className="phone:w-1/3 flex w-full rounded-md"
             src={event?.organization?.user.image ?? vol1}
             alt="Organization Image"
             height={300}
             width={300}
           />
 
-          <div className="flex gap-1">
+          <div className="phone:w-full flex gap-1">
             <Image
-              className="rounded-md"
+              className="phone:w-1/3 rounded-md"
               src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
-              className="rounded-md"
+              className="phone:w-1/3 rounded-md"
               src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
               width={300}
             />
             <Image
-              className="rounded-md"
+              className="phone:w-1/3 rounded-md"
               src={event?.organization?.user.image ?? vol1}
               alt="Organization Image"
               height={300}
@@ -110,7 +110,7 @@ const EventPage = () => {
         >
           {/* EVENT NAME */}
           <section className="flex items-center justify-between">
-            <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
+            <h1 className="text-gradient phone:text-3xl  font-custom-epilogue text-4xl  font-extrabold ">
               {event?.name}
             </h1>
             {sessionData?.user.id === event?.organization.user.id && (
@@ -125,13 +125,13 @@ const EventPage = () => {
             )}
           </section>
 
-          <div className="my-2 flex items-center gap-1 ">
+          <div className=" my-2 flex items-center gap-1">
             <EventIcon
               className="h-4 w-4 opacity-75"
               style={{ color: "var(--black100)" }}
             />
 
-            <p className="text-md italic text-customBlack-50">
+            <p className="phone:text-sm text-md italic text-customBlack-50">
               {event?.date.toLocaleString()}
             </p>
           </div>
@@ -142,12 +142,13 @@ const EventPage = () => {
               style={{ color: "var(--black100)" }}
             />
 
-            <p className="text-md mb-6 italic text-customBlack-50">
+            <p className=" phone:text-sm text-md mb-6 italic text-customBlack-50">
               {event?.location}
             </p>
           </div>
+
           <p
-            className="text-md text-customBlack-50"
+            className="text-md phone:text-sm text-customBlack-50"
             style={{ fontSize: "12px" }}
           >
             Organized By:
@@ -168,6 +169,7 @@ const EventPage = () => {
               ))}
             </>
           )}
+
           <p className="overflow-wrap break-word mt-12 whitespace-pre-wrap">
             {event?.details}
           </p>

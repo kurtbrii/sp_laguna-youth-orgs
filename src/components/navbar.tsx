@@ -13,6 +13,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Navbar = () => {
   const router = useRouter();
@@ -92,7 +93,7 @@ const Navbar = () => {
                 onClick={() => setIsNavOpen(!isNavOpen)}
                 className="self-end"
               >
-                <MenuIcon />
+                <CloseIcon />
               </IconButton>
               <Image
                 className={`cursor-pointer self-center rounded-lg `}
@@ -262,7 +263,7 @@ const Navbar = () => {
                   }
                 >
                   <button
-                    className={` ${activeLink === "profile" ? " text-secondary" : ""}`}
+                    className={`tablet:hidden ${activeLink === "profile" ? " text-secondary" : ""}`}
                     onClick={() => handleLinkClick("profile")}
                   >
                     {sessionData.user.name}

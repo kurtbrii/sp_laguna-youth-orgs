@@ -6,17 +6,10 @@ export default {
   theme: {
     extend: {
       screens: {
-        'phone': { 'min': '0px', 'max': '639px' },
-        // => @media (min-width: 375px and max-width: 639px) { ... }
-
-        'tablet': { 'min': '640px', 'max': '1023px' },
-        // => @media (min-width: 640px and max-width: 1023px) { ... }
-
-        'laptop': { 'min': '1024px', 'max': '1279px' },
-        // => @media (min-width: 1024px and max-width: 1279px) { ... }
-
-        'desktop': { 'min': '1280px', 'max': '1535px' },
-        // => @media (min-width: 1280px and max-width: 1535px) { ... }
+        'phone': { 'max': '767px' },
+        'tablet': { 'min': '768px', 'max': '991px' },
+        'laptop': { 'min': '992px', 'max': '1199px' },
+        'desktop': { 'min': '1200px' },
       },
       fontFamily: {
         'custom-epilogue': ["Epilogue", "sans-serif"],

@@ -70,39 +70,41 @@ export default function Home() {
             <Image
               src={vol1}
               alt="Volunteer Image"
-              className="w-full opacity-20"
+              className="phone:h-96 w-full opacity-20"
               style={{
-                height: "485px",
+                // height: "485px",
                 objectFit: "cover",
                 objectPosition: "100% 0%",
               }}
             />
-            <section className="phone:text-base  absolute left-14 top-16 mb-2 h-full w-4/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white">
+            <section className="phone:text-[28px] phone:left-5 tablet:text-[28px]  absolute left-14 top-16 mb-2 h-full w-5/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white">
               <h1 className=" mb-5">
-                The largest network of{" "}
-                <span className="btn-active py-font-extrabold phone:text-sm self-center px-4 text-6xl">
+                The largest network of <br className="phone:hidden" />
+                <span className="phone:text-[28px] tablet:text-[28px] btn-active py-font-extrabold self-center px-4 text-6xl">
                   youth volunteers
                 </span>{" "}
                 in Laguna
               </h1>
-              <p className="custom-lexend text-lg italic">
+              <p className="phone:text-sm tablet:text-sm custom-lexend text-lg italic">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
                 eget placerat nulla.{" "}
               </p>
             </section>
           </section>
 
-          <div className="custom-epilogue mx-10 mb-80 flex h-12 flex-col ">
-            <h1 className="mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
+          {/* FIND ORGANIZATIONS */}
+          <div className="custom-epilogue mx-10 flex flex-col ">
+            <h1 className="mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
               Find Organizations
             </h1>
-            <div className="mb-5 flex flex-wrap justify-start gap-7">
-              {organizations?.data?.map((organization) => (
-                <div className="flex" key={organization.id}>
-                  <OrgCard organization={organization} />
-                </div>
-              ))}
-              <div className=""></div>
+
+            <div className="phone:flex-col tablet:flex-col flex gap-4">
+              <div className=" phone:justify-center  mb-5 flex flex-wrap justify-start gap-7">
+                {organizations?.data?.map((organization) => (
+                  <OrgCard key={organization.id} organization={organization} />
+                ))}
+              </div>
+
               <IconButton
                 className=" self-center"
                 onClick={() => router.push("/homepage/find-organizations")}
@@ -112,39 +114,23 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="custom-epilogue mx-10 mb-96 flex h-12 flex-col justify-between ">
-            <h1 className="mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
-              Recent Events
-            </h1>
-            <div className="flex flex-wrap gap-7">
-              {event?.data?.map((eventQuery) => (
-                <EventCard key={eventQuery.id} event={eventQuery} />
-              ))}
-              <div className=""></div>
-              <IconButton
-                className=" self-center"
-                onClick={() => router.push("/homepage")}
-              >
-                <ArrowForwardRoundedIcon fontSize="large" />
-              </IconButton>
-            </div>
-          </div>
-
-          <div className="custom-epilogue mx-10 flex flex-col justify-between">
+          {/* ACTIVITIES SECTION */}
+          <div className="custom-epilogue mx-10 mt-20 flex flex-col ">
             <h1 className="mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
               All Activities
             </h1>
-            <div className="flex flex-wrap gap-7">
-              {activity?.data?.map((queryActivity) => (
-                <ActivitiesCard
-                  key={queryActivity.id}
-                  activity={queryActivity}
-                />
-              ))}
 
-              <div className=""></div>
+            <div className="phone:flex-col laptop:flex-col flex gap-4">
+              <div className="phone:justify-center  mb-5 flex flex-wrap justify-start gap-7 ">
+                {activity?.data?.map((queryActivity) => (
+                  <ActivitiesCard
+                    key={queryActivity.id}
+                    activity={queryActivity}
+                  />
+                ))}
+              </div>
               <IconButton
-                className=" self-center"
+                className="self-center"
                 onClick={() => router.push("/homepage/activities")}
               >
                 <ArrowForwardRoundedIcon fontSize="large" />
