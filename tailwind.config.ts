@@ -7,8 +7,8 @@ export default {
     extend: {
       screens: {
         'phone': { 'max': '767px' },
-        'tablet': { 'min': '768px', 'max': '950px' },
-        'laptop': { 'min': '951px', 'max': '1199px' },
+        'tablet': { 'min': '768px', 'max': '991px' },
+        'laptop': { 'min': '992px', 'max': '1199px' },
         'desktop': { 'min': '1200px' },
       },
       fontFamily: {

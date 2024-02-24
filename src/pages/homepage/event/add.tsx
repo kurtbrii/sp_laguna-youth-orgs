@@ -129,7 +129,7 @@ const Add = () => {
       <form
         // onSubmit={() => submitEvent(eventData)}
         id="myForm"
-        className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
+        className="phone:mx-5 mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
       >
         <input
           type="text"
@@ -193,8 +193,8 @@ const Add = () => {
         </div>
       </form>
 
-      <div className="my-20 flex justify-center">
-        <div className="flex gap-4">
+      <div className="my-20 flex justify-center ">
+        <div className="phone:flex-col flex gap-4">
           <button
             type="submit"
             className="btn-active px-20 py-3"
@@ -204,6 +204,7 @@ const Add = () => {
           >
             Create Event
           </button>
+
           <button
             onClick={() => window.location.replace("/homepage")}
             type="reset"

@@ -79,7 +79,7 @@ export default function Home() {
             />
             <section className="phone:text-[28px] phone:left-5 tablet:text-[28px]  absolute left-14 top-16 mb-2 h-full w-5/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white">
               <h1 className=" mb-5">
-                The largest network of{" "}
+                The largest network of <br className="phone:hidden" />
                 <span className="phone:text-[28px] tablet:text-[28px] btn-active py-font-extrabold self-center px-4 text-6xl">
                   youth volunteers
                 </span>{" "}

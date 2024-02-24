@@ -19,9 +19,9 @@ const Login = () => {
   }, [router, sessionStatus]);
 
   return (
-    <section className="flex h-screen font-custom-lexend ">
+    <section className="phone:flex-col phone:items-center flex h-screen font-custom-lexend ">
       {/* <!-- Left part with image --> */}
-      <section className="relative w-3/5 flex-shrink-0 bg-customBlack-100">
+      <section className="phone:w-full relative w-3/5 flex-shrink-0 bg-customBlack-100">
         {/* Your image goes here */}
         <Image
           className="h-full w-full object-cover opacity-35"
@@ -30,8 +30,8 @@ const Login = () => {
           alt="Volunteer Image"
         />
         {/* Centered div */}
-        <div className=" absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center text-white">
-          <h1 className="mb-3 font-custom-epilogue text-4xl">
+        <div className="phone:text-xs absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform text-center text-white">
+          <h1 className="mb-3 font-custom-epilogue text-4xl font-bold">
             Laguna Youth Organizations Hub
           </h1>
           <p>
@@ -43,7 +43,7 @@ const Login = () => {
       </section>
 
       {/* <!-- Right part with login page --> */}
-      <section className="flex w-2/5 flex-shrink-0 flex-col items-center justify-center gap-7 p-8">
+      <section className="phone:w-full   flex  w-2/5 flex-shrink-0 flex-col items-center justify-center gap-7 p-8">
         <h1 className="mb-3 bg-gradient-to-r from-primary  to-secondary bg-clip-text font-custom-epilogue text-4xl  font-extrabold text-transparent">
           Welcome Back!
         </h1>
