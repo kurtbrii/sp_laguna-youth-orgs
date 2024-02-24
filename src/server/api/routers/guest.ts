@@ -6,45 +6,43 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { Input } from "postcss";
 
 
 export const guestRouter = createTRPCRouter({
 
   createGuest: publicProcedure
-    .input(z.object({ name: z.string(), sex: z.string(), age: z.number(), phoneNumber: z.string(), email: z.string() }))
+    .input(z.object({ activityId: z.string(), name: z.string(), sex: z.string(), age: z.number(), phoneNumber: z.string(), email: z.string(), subject: z.string(), body: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      return ctx.db.guest.create({
+      const createGuest = await ctx.db.guest.create({
         data: {
           name: input.name,
           sex: input.sex,
           age: input.age,
           phoneNumber: input.phoneNumber,
-          email: input.email
-
+          email: input.email,
         },
       });
+
+      const createActivityCall = await ctx.db.activityCall.create({
+        data: {
+          activityId: input.activityId,
+          guestId: createGuest.id,
+          subject: input.subject,
+          body: input.body,
+          status: 'PENDING',
+          label: 'participant'
+        }
+      })
+
+      return { createGuest, createActivityCall }
     }),
 
-  // id            String @id @default(cuid())
-  // firstName     String
-  // lastName      String
-  // middleInitial String
-  // suffix        String
-  // phoneNumber   String
-  // bio           String
-
-  // user   User?   @relation(fields: [userId], references: [id])
-  // userId String? @unique
-
   getOne: publicProcedure
-    .input(z.object({ id: z.string(), name: z.string(), sex: z.string(), age: z.number(), phoneNumber: z.string(), email: z.string() }))
-    .query(async ({ input: { id, email }, ctx }) => {
+    .input(z.object({ email: z.string() }))
+    .query(async ({ input: { email }, ctx }) => {
       const data = await ctx.db.guest.findUnique({
         where: {
-          id,
           email
         },
         select: {
@@ -55,6 +53,8 @@ export const guestRouter = createTRPCRouter({
           email: true,
         }
       })
+
+
       return data;
     }),
 

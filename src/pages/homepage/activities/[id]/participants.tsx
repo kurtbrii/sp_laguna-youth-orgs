@@ -16,7 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { IconButton } from "@mui/material";
 
-const CallForVolunteers = () => {
+const Participants = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const router = useRouter();
@@ -26,21 +26,21 @@ const CallForVolunteers = () => {
     userId: sessionData?.user.id ?? "",
   });
 
-  const volunteer = user.data?.volunteer;
+  const organization = user.data?.organization;
 
   const getPendingOrgOrVol = api.activityCall.getOrgOrVol.useQuery({
     activityId: id as string,
-    label: "volunteer",
-    // volId: volunteer?.id,
+    label: "participant",
+    // orgId: organization?.id,
     status: "PENDING",
   });
 
   const updateStatus = api.activityCall.updateActivityCall.useMutation();
 
-  const handleAccept = (volId: string) => {
+  const handleAccept = (guestId: string) => {
     updateStatus.mutate({
       activityId: id as string,
-      volId: volId,
+      guestId: guestId,
     });
   };
 
@@ -49,7 +49,7 @@ const CallForVolunteers = () => {
       <Navbar />
       <section className=" mt-6 flex flex-row items-center justify-center bg-primary p-4 ">
         <p className="font-custom-epilogue text-xl font-extrabold text-white">
-          Call for Volunteers
+          Partnership
         </p>
       </section>
 
@@ -58,7 +58,7 @@ const CallForVolunteers = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">Name</TableCell>
+                <TableCell align="left">Name of Participant</TableCell>
                 <TableCell align="center">Sex</TableCell>
                 <TableCell align="center">Age</TableCell>
                 <TableCell align="center">Email Address</TableCell>
@@ -69,7 +69,7 @@ const CallForVolunteers = () => {
             <TableBody>
               {getPendingOrgOrVol?.data?.map((data, index) => {
                 // Declare a constant to simplify access to nested properties
-                const volunteer = data.volunteer;
+                const guest = data.guest;
 
                 return (
                   <TableRow
@@ -77,21 +77,14 @@ const CallForVolunteers = () => {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {volunteer?.firstName} {volunteer?.middleInitial}{" "}
-                      {volunteer?.lastName} {volunteer?.suffix}
+                      {guest?.name}
                     </TableCell>
-                    <TableCell align="center">{volunteer?.sex}</TableCell>
-                    <TableCell align="center">{volunteer?.age}</TableCell>
+                    <TableCell align="center">{guest?.sex}</TableCell>
+                    <TableCell align="center">{guest?.age}</TableCell>
+                    <TableCell align="center">{guest?.email}</TableCell>
+                    <TableCell align="center">{guest?.phoneNumber}</TableCell>
                     <TableCell align="center">
-                      {volunteer?.user?.email}
-                    </TableCell>
-                    <TableCell align="center">
-                      {volunteer?.phoneNumber}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        onClick={() => handleAccept(volunteer?.id ?? "")}
-                      >
+                      <IconButton onClick={() => handleAccept(guest?.id ?? "")}>
                         <AddCircleIcon />
                       </IconButton>
                     </TableCell>
@@ -106,4 +99,4 @@ const CallForVolunteers = () => {
   );
 };
 
-export default CallForVolunteers;
+export default Participants;

@@ -123,10 +123,6 @@ const SignUp = () => {
       role: "VOLUNTEER",
     });
 
-    setTimeout(() => {
-      //C - 1 second later
-    }, 500);
-
     void router.push("/homepage");
   };
 

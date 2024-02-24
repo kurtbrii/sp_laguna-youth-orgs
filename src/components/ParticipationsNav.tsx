@@ -99,17 +99,14 @@ const ParticipationNav = () => {
       <hr className="flex  w-full border-t-2 border-customBlack-25" />
 
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {participationQuery.data?.map((data, index) => {
-          return (
-            <p key={index}>hi</p>
-            // <ParticipationsCard
-            //   key={index}
-            //   data={data}
-            //   linkData={linkData}
-            //   dataIndex={dataIndex}
-            // />;
-          );
-        })}
+        {participationQuery.data?.map((data, index) => (
+          <ParticipationsCard
+            key={index}
+            data={data}
+            linkData={linkData}
+            dataIndex={dataIndex}
+          />
+        ))}
       </div>
     </div>
   );
