@@ -43,7 +43,7 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
   return (
     <div
       onClick={() => handleClick()}
-      className=" relative w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
+      className=" relative flex w-72 cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
       style={{ height: "26rem" }}
     >
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
