@@ -7,6 +7,8 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { Input } from "postcss";
+import emailjs from "@emailjs/browser";
+
 
 
 export const guestRouter = createTRPCRouter({
@@ -34,6 +36,8 @@ export const guestRouter = createTRPCRouter({
           label: 'participant'
         }
       })
+
+
 
       return { createGuest, createActivityCall }
     }),
