@@ -47,7 +47,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex flex-col font-custom-lexend text-customBlack-100">
+    <div className="flex flex-col font-custom-lexend text-customBlack-100 ">
       <Navbar />
       {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">

@@ -70,18 +70,17 @@ export default function Home() {
             <Image
               src={vol1}
               alt="Volunteer Image"
-              className="opacity-20"
+              className="w-full opacity-20"
               style={{
-                width: "100%",
                 height: "485px",
                 objectFit: "cover",
                 objectPosition: "100% 0%",
               }}
             />
-            <section className="absolute left-14 top-16 mb-2 h-full w-4/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white">
-              <h1 className="mb-5">
+            <section className="phone:text-base  absolute left-14 top-16 mb-2 h-full w-4/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white">
+              <h1 className=" mb-5">
                 The largest network of{" "}
-                <span className="btn-active py-font-extrabold  self-center px-4 text-6xl">
+                <span className="btn-active py-font-extrabold phone:text-sm self-center px-4 text-6xl">
                   youth volunteers
                 </span>{" "}
                 in Laguna
@@ -152,7 +151,6 @@ export default function Home() {
               </IconButton>
             </div>
           </div>
-          {/* <button onClick={() => num()}>butn</button> */}
 
           <div className="mb-96"></div>
         </header>

@@ -10,7 +10,7 @@ import Image from "next/image";
 import { api } from "~/utils/api";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SponsorsList = ({ orgRequesting, orgAcceptingId }: any) => {
+const SponsorsList = ({ body, orgRequesting, orgAcceptingId }: any) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [expanded, setExpanded] = useState(false);
@@ -75,6 +75,7 @@ const SponsorsList = ({ orgRequesting, orgAcceptingId }: any) => {
             </p>
             <p>Email: {orgRequesting.user.email}</p>
             <p className="mb-5">Phone Number: {orgRequesting.phoneNumber}</p>
+            <p className="italic text-primary">Bio</p>
             <p
               className="mb-10"
               style={{
@@ -84,6 +85,18 @@ const SponsorsList = ({ orgRequesting, orgAcceptingId }: any) => {
               }}
             >
               {orgRequesting.bio}
+            </p>
+
+            <p className="italic text-primary">Email Content</p>
+            <p
+              className="mb-10"
+              style={{
+                wordBreak: "break-word",
+                whiteSpace: "pre-line",
+                hyphens: "auto",
+              }}
+            >
+              {body}
             </p>
 
             <div className="flex gap-4">

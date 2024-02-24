@@ -86,8 +86,13 @@ const ActivityList = ({ data }: any) => {
           </div>
 
           <p className="">
-            Details: <br />
+            <p className="italic text-primary">Details</p>
             {activity.details}
+          </p>
+
+          <p className="">
+            <p className="italic text-primary">Email Content</p>
+            {data.body}
           </p>
 
           <div className="flex gap-4">
