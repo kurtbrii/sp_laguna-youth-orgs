@@ -90,8 +90,7 @@ const Add = () => {
       partners: eventData.partners,
     });
 
-    console.log("hello");
-    window.location.replace("/homepage");
+    // window.location.replace("/homepage");
   };
 
   const handleAddPartner = () => {
@@ -129,7 +128,7 @@ const Add = () => {
       <form
         // onSubmit={() => submitEvent(eventData)}
         id="myForm"
-        className="phone:mx-5 mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
+        className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm phone:mx-5"
       >
         <input
           type="text"
@@ -194,11 +193,11 @@ const Add = () => {
       </form>
 
       <div className="my-20 flex justify-center ">
-        <div className="phone:flex-col flex gap-4">
+        <div className="flex gap-4 phone:flex-col">
           <button
             type="submit"
             className="btn-active px-20 py-3"
-            onClick={() => {
+            onClick={(e) => {
               submitEvent(eventData);
             }}
           >

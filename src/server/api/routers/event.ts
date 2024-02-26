@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { useSession } from "next-auth/react";
+import vol2 from '~/../public/images/vol2.png'
 
 import {
   createTRPCRouter,
@@ -7,6 +8,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { triggerAsyncId } from "async_hooks";
+import cloudinaryUpload from "../cloudinary";
 
 
 export const eventRouter = createTRPCRouter({
@@ -15,6 +17,11 @@ export const eventRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // void cloudinaryUpload("~/../public/images/vol2.png")
+      const url = await cloudinaryUpload(["~/../public/images/vol1.png", "~/../public/images/vol2.png"]);
+
+      // console.log("res: ", cloudinaryResponse)
 
       return ctx.db.event.create({
         data: {
@@ -25,7 +32,8 @@ export const eventRouter = createTRPCRouter({
           location: input.location,
           organizationId: input.organizationId,
           date: new Date(input.date),
-          partners: input.partners
+          partners: input.partners,
+          images: url
         },
       });
     }),
@@ -52,6 +60,7 @@ export const eventRouter = createTRPCRouter({
           organizationId: true,
           date: true,
           partners: true,
+          images: true,
           organization: {
             select: {
               orgName: true,
@@ -88,6 +97,7 @@ export const eventRouter = createTRPCRouter({
           organizedBy: true,
           details: true,
           location: true,
+          images: true,
           date: true,
           partners: true,
           createdAt: true,

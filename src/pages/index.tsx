@@ -33,25 +33,6 @@ export default function Home() {
   // ! Get Activities
   const activity = api.activity.getActivities.useQuery({ take: 3 });
 
-  // const handleButton = async () => {
-  //   // service_sb8pzif
-  //   // template_pm7npxj
-  //   // AxPqfUq-9Oy9tdLJv
-  //   emailjs.send(
-  //     "service_sb8pzif",
-  //     "template_pm7npxj",
-  //     {
-  //       vol_name: "vol",
-  //       body: "body",
-  //       from_email: "kbpunzalan@up.edu.ph",
-  //       to_email: "kurtbriandaine.1225@gmail.com",
-  //     },
-  //     "AxPqfUq-9Oy9tdLJv",
-  //   );
-
-  //   alert("helo");
-  // };
-
   return (
     <>
       <Head>
@@ -60,6 +41,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <script
+          src="https://upload-widget.cloudinary.com/global/all.js"
+          type="text/javascript"
+          async
+        ></script>
+        <script
+          type="text/javascript"
+          src="../node_modules/tw-elements/dist/js/tw-elements.umd.min.js"
+          async
+        ></script>
       </Head>
       <main className="flex flex-col">
         <header className=" flex flex-col font-custom-lexend text-customBlack-100">
@@ -70,22 +61,22 @@ export default function Home() {
             <Image
               src={vol1}
               alt="Volunteer Image"
-              className="phone:h-96 w-full opacity-20"
+              className="w-full opacity-20 phone:h-96"
               style={{
                 // height: "485px",
                 objectFit: "cover",
                 objectPosition: "100% 0%",
               }}
             />
-            <section className="phone:text-[28px] phone:left-5 tablet:text-[28px]  absolute left-14 top-16 mb-2 h-full w-5/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white">
+            <section className="absolute left-14 top-16  mb-2 h-full w-5/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white phone:left-5 phone:text-[28px] tablet:text-[28px]">
               <h1 className=" mb-5">
                 The largest network of <br className="phone:hidden" />
-                <span className="phone:text-[28px] tablet:text-[28px] btn-active py-font-extrabold self-center px-4 text-6xl">
+                <span className="btn-active py-font-extrabold self-center px-4 text-6xl phone:text-[28px] tablet:text-[28px]">
                   youth volunteers
                 </span>{" "}
                 in Laguna
               </h1>
-              <p className="phone:text-sm tablet:text-sm custom-lexend text-lg italic">
+              <p className="custom-lexend text-lg italic phone:text-sm tablet:text-sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
                 eget placerat nulla.{" "}
               </p>
@@ -98,8 +89,8 @@ export default function Home() {
               Find Organizations
             </h1>
 
-            <div className="phone:flex-col tablet:flex-col flex gap-4">
-              <div className=" phone:justify-center  mb-5 flex flex-wrap justify-start gap-7">
+            <div className="flex gap-4 phone:flex-col tablet:flex-col">
+              <div className=" mb-5  flex flex-wrap justify-start gap-7 phone:justify-center">
                 {organizations?.data?.map((organization) => (
                   <OrgCard key={organization.id} organization={organization} />
                 ))}
@@ -120,8 +111,8 @@ export default function Home() {
               All Activities
             </h1>
 
-            <div className="phone:flex-col laptop:flex-col flex gap-4">
-              <div className="phone:justify-center  mb-5 flex flex-wrap justify-start gap-7 ">
+            <div className="flex gap-4 phone:flex-col laptop:flex-col">
+              <div className="mb-5  flex flex-wrap justify-start gap-7 phone:justify-center ">
                 {activity?.data?.map((queryActivity) => (
                   <ActivitiesCard
                     key={queryActivity.id}
