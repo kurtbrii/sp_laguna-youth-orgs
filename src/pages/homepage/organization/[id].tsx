@@ -64,6 +64,7 @@ const OrganizationPage = () => {
   const orgCheckSpon = api.orgSponsorOrg.getBothOrganizations.useQuery({
     orgRequesting: user.data?.organization?.id ?? "",
     orgAccepting: id as string,
+    status: "PENDING",
   });
 
   const deleteOrgSponOrg = api.orgSponsorOrg.deleteOrgSpon.useMutation();

@@ -101,17 +101,18 @@ const SponsorsList = ({ body, orgRequesting, orgAcceptingId }: any) => {
 
             <div className="flex gap-4">
               <button
+                className="btn-active w-1/2 px-16 py-2"
+                onClick={() => handleApproveVol()}
+              >
+                Confirm
+              </button>
+
+              <button
                 className="btn-outline w-1/2 px-16 py-2"
                 style={{ color: "var(--red)", borderColor: "var(--red)" }}
                 onClick={() => handleDiscard()}
               >
                 Discard
-              </button>
-              <button
-                className="btn-active w-1/2 px-16 py-2"
-                onClick={() => handleApproveVol()}
-              >
-                Confirm
               </button>
             </div>
           </div>
