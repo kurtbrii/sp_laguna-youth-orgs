@@ -19,7 +19,7 @@ export const eventRouter = createTRPCRouter({
       // await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // void cloudinaryUpload("~/../public/images/vol2.png")
-      const url = await cloudinaryUpload(input.images);
+      // const url = await cloudinaryUpload(input.images);
 
       // console.log("res: ", cloudinaryResponse)
 
@@ -33,7 +33,7 @@ export const eventRouter = createTRPCRouter({
           organizationId: input.organizationId,
           date: new Date(input.date),
           partners: input.partners,
-          images: url
+          images: input.images
         },
       });
     }),
