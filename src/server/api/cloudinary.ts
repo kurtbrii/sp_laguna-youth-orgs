@@ -15,7 +15,7 @@ const cloudinaryUpload = async (filesToUpload: any[]) => {
   try {
     const uploadPromises = filesToUpload.map(async (fileToUpload) => {
       const data = await cloudinary.uploader.upload(fileToUpload, {
-        resource_type: "auto",
+        resource_type: "image",
       });
       return data?.secure_url;
     });

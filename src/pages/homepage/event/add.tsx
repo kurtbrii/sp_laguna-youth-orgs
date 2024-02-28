@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
@@ -7,6 +8,8 @@ import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import UploadImage from "~/components/UploadImage";
+import { CldUploadWidget } from "next-cloudinary";
 
 interface EventProps {
   name: "";
@@ -17,6 +20,7 @@ interface EventProps {
   organizationId: string;
   date: string;
   partners: string[];
+  images: string[];
 }
 
 const Add = () => {
@@ -42,6 +46,7 @@ const Add = () => {
     organizationId: orgId,
     date: "",
     partners: [],
+    images: [],
   });
 
   useEffect(() => {
@@ -88,22 +93,28 @@ const Add = () => {
       organizationId: orgId,
       date: eventData.date,
       partners: eventData.partners,
+      images: eventData.images,
     });
+
+    alert(eventData.images);
 
     // window.location.replace("/homepage");
   };
 
   const handleAddPartner = () => {
-    // Get the partner input value
-
-    // Add the partner to the partners array
     setEventData((prevEventData) => ({
       ...prevEventData,
       partners: [...prevEventData.partners, partner],
     }));
 
-    // Clear the partner input field
     setPartner("");
+  };
+
+  const handleAddImages = (newImages: any) => {
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      images: [...prevEventData.images, ...newImages],
+    }));
   };
 
   const handleRemovePartner = (index: number) => {
@@ -190,6 +201,38 @@ const Add = () => {
             ))}
           </div>
         </div>
+
+        <CldUploadWidget
+          uploadPreset="fb3chpuf"
+          options={{ sources: ["local", "camera", "google_drive", "url"] }}
+          onSuccess={(response) => {
+            alert("Upload successful");
+            // Store information about the uploaded image (e.g., public ID) for deletion
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const publicId = response?.info?.public_id;
+            console.log(publicId);
+            // Save publicId or use it to trigger deletion
+          }}
+        >
+          {({ open }) => (
+            <>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  open();
+                }}
+              >
+                Upload an Image
+              </button>
+              {/* Add a delete button that triggers a delete function */}
+            </>
+          )}
+        </CldUploadWidget>
+
+        {eventData.images.map((data, index) => (
+          <p key={index}>{data}</p>
+        ))}
       </form>
 
       <div className="my-20 flex justify-center ">

@@ -185,10 +185,6 @@ const EventPage = () => {
           <p className="overflow-wrap break-word mt-16 whitespace-pre-wrap">
             {event?.details}
           </p>
-
-          <div className="mt-12">
-            <p>hi</p>
-          </div>
         </div>
       </div>
 

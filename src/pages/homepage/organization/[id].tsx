@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { ToggleButton } from "@mui/material";
 import EmailJoinOrSpon from "~/components/EmailJoinOrSpon";
 import { volunteerRouter } from "~/server/api/routers/volunteer";
+import { CldUploadWidget } from "next-cloudinary";
+import { string } from "zod";
 
 // type OrganizationProps = {
 //   id: string;
@@ -211,6 +213,38 @@ const OrganizationPage = () => {
           </div>
           {/* <button onClick={() => alert(id)}>Button</button> */}
         </div>
+
+        {/* <CldUploadWidget
+          options={{ sources: ["local", "camera", "google_drive", "url"] }}
+          uploadPreset="fb3chpuf"
+          onSuccess={(result, { widget }) => {
+            if (typeof result.info === "object" && result.info !== null) {
+              const publicId = result.info.public_id;
+
+              if (publicId) {
+                // Do something with the publicId, for example, set it in your state
+                // setPublicId(publicId);
+
+                console.log(`Public ID: ${publicId}`);
+              }
+            }
+
+            // widget.close();
+          }}
+        >
+          {({ open }) => {
+            return (
+              <button
+                onClick={() => {
+                  open();
+                  // e.preventDefault();
+                }}
+              >
+                Upload an Image
+              </button>
+            );
+          }}
+        </CldUploadWidget> */}
 
         {/* MISSION, VISION, OBJECTIVES */}
         <div className="mb-20 flex flex-col gap-6">

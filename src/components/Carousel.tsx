@@ -9,12 +9,12 @@ interface MyComponentProps {
 
 const Carousel = ({ images }: MyComponentProps) => {
   return (
-    <div className="carousel carousel-center rounded-box max-w-md space-x-4 border border-slate-300">
+    <div className="carousel carousel-center max-w-md space-x-4 rounded-box border border-slate-300">
       {images.length !== 0 ? (
         images.map((url, index) => (
           <Image
             key={index}
-            className="carousel-item flex w-full rounded-md object-fill phone:w-1/3"
+            className="carousel-item flex w-full rounded-md object-cover phone:w-1/3"
             src={url}
             alt="Organization Image"
             height={300}
