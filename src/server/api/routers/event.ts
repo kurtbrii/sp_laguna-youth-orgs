@@ -107,7 +107,7 @@ export const eventRouter = createTRPCRouter({
     }),
 
   updateEvent: protectedProcedure
-    .input(z.object({ id: z.string(), name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string(), partners: z.array(z.string()) }))
+    .input(z.object({ id: z.string(), name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string(), partners: z.array(z.string()), images: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -122,7 +122,8 @@ export const eventRouter = createTRPCRouter({
           location: input.location,
           organizationId: input.organizationId,
           date: new Date(input.date),
-          partners: input.partners
+          partners: input.partners,
+          images: input.images
         },
       });
     }),

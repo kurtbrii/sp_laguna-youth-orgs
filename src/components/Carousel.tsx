@@ -20,16 +20,19 @@ const Carousel = ({ images }: MyComponentProps) => {
         flexDirection: "row",
       }}
     >
+      {/* v1709171109/events/yyy3qebdtlbztpix5kxl.png
+      https://res.cloudinary.com/dif5glv4a/image/upload/v1709171109/events/yyy3qebdtlbztpix5kxl.png */}
       {images.length !== 0 ? (
         images.map((data, index) => (
           <Image
             key={index}
             title={data}
             className="carousel-item flex rounded-md object-contain"
-            src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}.png`}
+            src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
             alt="Organization Image"
             height={300}
             width={300}
+            // https://res.cloudinary.com/dif5glv4a/image/upload/v1709170560/events/psusggknwua4yd8epprk.png
           />
         ))
       ) : (

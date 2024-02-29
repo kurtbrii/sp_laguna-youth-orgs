@@ -23,13 +23,18 @@ const UploadImage = ({ handleAddImages }: any) => {
 
         <CldUploadWidget
           uploadPreset="fb3chpuf"
-          options={{ sources: ["local", "camera", "google_drive", "url"] }}
-          onSuccess={(response) => {
-            alert("Upload successful");
+          options={{
+            sources: ["local", "camera", "google_drive", "url"],
+            maxFiles: 4,
+            folder: "events",
+          }}
+          onSuccess={async (response) => {
+            // alert("Upload successful");
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            const imageUrl = response.info.public_id;
+            const imageUrl = await response.info.path;
             handleAddImages(imageUrl);
+            console.log(response);
           }}
         >
           {({ open }) => (
@@ -43,6 +48,7 @@ const UploadImage = ({ handleAddImages }: any) => {
               >
                 Upload an Image
               </button>
+
               {/* Add a delete button that triggers a delete function */}
             </>
           )}
