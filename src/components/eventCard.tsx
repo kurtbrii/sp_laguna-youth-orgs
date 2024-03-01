@@ -22,6 +22,11 @@ import PlaceIcon from "@mui/icons-material/Place";
 //   };
 // };
 
+type EventCardProps = {
+  event: EventProps["event"];
+  searchText: string;
+};
+
 type EventProps = {
   event: {
     id: string;
@@ -41,16 +46,33 @@ type EventProps = {
   };
 };
 
-const EventCard = ({ event }: EventProps) => {
+const EventCard = ({ event, searchText }: EventCardProps) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  const { formattedDate, formattedTime } = getDate(event.date);
+  const highlightText = (text: string, query: string): React.ReactNode => {
+    if (!query) return text;
+
+    const regex = new RegExp(`(${query})`, "gi");
+    return (
+      <span
+        dangerouslySetInnerHTML={{
+          __html: text.replace(regex, '<span class="highlight">$1</span>'),
+        }}
+      />
+    );
+  };
 
   return (
     <Link
       href={`/homepage/event/${event.id}`}
-      className=" relative h-72 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
+      className="relative h-72 w-72 transform cursor-pointer flex-col overflow-hidden  rounded-md  object-fill  shadow-2xl  transition-transform  duration-300 hover:scale-105"
     >
+      <style jsx global>{`
+        .highlight {
+          color: #00bd6e;
+          font-weight: bold;
+        }
+      `}</style>
       <Image
         src={
           event.images.length === 0
@@ -63,11 +85,11 @@ const EventCard = ({ event }: EventProps) => {
         height={100}
       />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
-        <p className="text-gradient mb-3 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
-          {event.organizedBy.toLocaleUpperCase()}
+        <p className="text-gradient mb-2 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
+          {highlightText(event.organizedBy.toLocaleUpperCase(), searchText)}
         </p>
         <p className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap  text-sm font-bold">
-          {event.name}
+          {highlightText(event.name, searchText)}
         </p>
         <div className=" flex items-center gap-1">
           <EventIcon className="h-4 w-4" />
@@ -77,14 +99,17 @@ const EventCard = ({ event }: EventProps) => {
         </div>
         <div className=" flex items-center gap-1 overflow-hidden  overflow-ellipsis  whitespace-nowrap text-sm ">
           <PlaceIcon className="h-4 w-4" />
-          <p className=" italic" style={{ fontSize: "10px" }}>
-            {event.location.toLocaleString()}
+          <p
+            className="overflow-hidden text-ellipsis  whitespace-nowrap italic"
+            style={{ fontSize: "10px" }}
+          >
+            {highlightText(event.location, searchText)}
           </p>
         </div>
 
         <hr className="my-1 flex  w-full border-t-2 border-customBlack-75" />
         <p className=" mb-8  overflow-hidden  overflow-ellipsis  whitespace-nowrap text-sm ">
-          {event.details}
+          {highlightText(event.details, searchText)}
         </p>
       </div>
 
@@ -100,35 +125,3 @@ const EventCard = ({ event }: EventProps) => {
 };
 
 export default EventCard;
-
-function getDate(eventDate: Date) {
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const month = monthNames[eventDate.getMonth()];
-  const date = eventDate.getDate();
-  const year = eventDate.getFullYear();
-  const hours = eventDate.getHours();
-  const minutes = eventDate.getMinutes();
-
-  const time = eventDate.getTime();
-
-  console.log(hours);
-
-  const formattedDate = `${month} ${date} ${year}`;
-  const formattedTime = `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
-
-  return { formattedDate, formattedTime };
-}

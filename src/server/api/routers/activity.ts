@@ -32,13 +32,35 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getActivities: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional() }))
     .query(async ({ ctx, input }) => {
 
       // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.activity.findMany({
         where: {
-          organizationId: input.orgId
+          organizationId: input.orgId,
+          OR: [
+            {
+              name: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              location: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              organization: {
+                orgName: {
+                  contains: input.search,
+                  mode: 'insensitive',
+                },
+              }
+            }
+          ],
         },
         orderBy: {
           createdAt: "desc",

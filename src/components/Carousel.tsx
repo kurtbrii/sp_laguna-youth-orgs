@@ -1,5 +1,6 @@
 import * as React from "react";
 import Image from "next/image";
+import vol2 from "../../public/images/vol2.png";
 
 // Example component definition
 interface MyComponentProps {
@@ -35,7 +36,7 @@ const Carousel = ({ images }: MyComponentProps) => {
       ) : (
         <Image
           className="carousel-item rounded-2xl object-contain shadow-black"
-          src={defaultImage}
+          src={vol2}
           alt="Organization Image"
           height={300}
           width={800}

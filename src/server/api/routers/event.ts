@@ -39,17 +39,36 @@ export const eventRouter = createTRPCRouter({
     }),
 
   getEvents: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional() }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional() }))
     .query(async ({ ctx, input }) => {
       // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.event.findMany({
         where: {
-          organizationId: input.orgId
+          organizationId: input.orgId,
+          OR: [
+            {
+              name: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              location: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              organizedBy: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+          ],
         },
         orderBy: {
           createdAt: "desc",
         },
-        // where: whereCondition,
         select: {
           id: true,
           name: true,
