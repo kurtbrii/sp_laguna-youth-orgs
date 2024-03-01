@@ -171,7 +171,11 @@ const OrganizationPage = () => {
           </h1>
           <div className="flex gap-4 ">
             {events?.map((eventQuery) => (
-              <EventCard key={eventQuery.id} event={eventQuery} />
+              <EventCard
+                key={eventQuery.id}
+                event={eventQuery}
+                searchText={""}
+              />
             ))}
           </div>
         </div>
@@ -183,7 +187,11 @@ const OrganizationPage = () => {
           </h1>
           <div className="flex gap-4">
             {activities?.map((activityQuery) => (
-              <ActivitiesCard key={activityQuery.id} activity={activityQuery} />
+              <ActivitiesCard
+                key={activityQuery.id}
+                activity={activityQuery}
+                searchText={""}
+              />
             ))}
           </div>
         </div>
