@@ -11,6 +11,9 @@ import React, { useState } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
+import { CldImage } from "next-cloudinary";
+import Carousel from "~/components/Carousel";
+import vol2 from "~/../public/images/vol1.png";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -61,44 +64,18 @@ const EventPage = () => {
     void router.push("/homepage");
   };
 
+  // const handleCancel = () => {
+  //   // void router.back();
+  // };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   return (
     <div className="flex flex-col flex-wrap">
       <Navbar />
-      <div className="phone:flex-col phone:m-5 phone:gap-10  relative mx-16  my-10  flex justify-center gap-2 font-custom-lexend   text-customBlack-100">
-        {/* IMAGES OF EVENTS*/}
-        <div className="phone:w-full phone:flex-row mr-20 flex w-2/5 flex-col gap-1 ">
-          <Image
-            className="phone:w-1/3 flex w-full rounded-md"
-            src={event?.organization?.user.image ?? vol1}
-            alt="Organization Image"
-            height={300}
-            width={300}
-          />
 
-          <div className="phone:w-full flex gap-1">
-            <Image
-              className="phone:w-1/3 rounded-md"
-              src={event?.organization?.user.image ?? vol1}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-            <Image
-              className="phone:w-1/3 rounded-md"
-              src={event?.organization?.user.image ?? vol1}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-            <Image
-              className="phone:w-1/3 rounded-md"
-              src={event?.organization?.user.image ?? vol1}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-          </div>
-        </div>
+      <div className="relative mx-16 my-10  flex justify-center  gap-12  font-custom-lexend text-customBlack-100 phone:m-5 phone:flex-col   phone:gap-10">
+        <Carousel images={event?.images ?? [""]} />
 
         <div
           className="flex w-4/5 flex-col"
@@ -110,7 +87,7 @@ const EventPage = () => {
         >
           {/* EVENT NAME */}
           <section className="flex items-center justify-between">
-            <h1 className="text-gradient phone:text-3xl  font-custom-epilogue text-4xl  font-extrabold ">
+            <h1 className="text-gradient font-custom-epilogue  text-4xl font-extrabold  phone:text-3xl ">
               {event?.name}
             </h1>
             {sessionData?.user.id === event?.organization.user.id && (
@@ -131,7 +108,7 @@ const EventPage = () => {
               style={{ color: "var(--black100)" }}
             />
 
-            <p className="phone:text-sm text-md italic text-customBlack-50">
+            <p className="text-md italic text-customBlack-50 phone:text-sm">
               {event?.date.toLocaleString()}
             </p>
           </div>
@@ -142,13 +119,13 @@ const EventPage = () => {
               style={{ color: "var(--black100)" }}
             />
 
-            <p className=" phone:text-sm text-md mb-6 italic text-customBlack-50">
+            <p className=" text-md mb-6 italic text-customBlack-50 phone:text-sm">
               {event?.location}
             </p>
           </div>
 
           <p
-            className="text-md phone:text-sm text-customBlack-50"
+            className="text-md text-customBlack-50 phone:text-sm"
             style={{ fontSize: "12px" }}
           >
             Organized By:
@@ -170,7 +147,7 @@ const EventPage = () => {
             </>
           )}
 
-          <p className="overflow-wrap break-word mt-12 whitespace-pre-wrap">
+          <p className="overflow-wrap break-word mt-16 whitespace-pre-wrap">
             {event?.details}
           </p>
         </div>
@@ -191,7 +168,7 @@ const EventPage = () => {
               <button
                 className="rounded-mdpx-4 btn-outline mr-3 px-5 py-2"
                 style={{ color: "var(--red)", borderColor: "var(--red)" }}
-                onClick={handleDeleteButton}
+                onClick={() => handleToggleButton()}
               >
                 Cancel
               </button>

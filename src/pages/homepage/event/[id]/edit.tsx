@@ -7,6 +7,9 @@ import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import { CldUploadWidget } from "next-cloudinary";
+import UploadImage from "~/components/UploadImage";
+import Image from "next/image";
 
 interface EventProps {
   name: string;
@@ -16,6 +19,7 @@ interface EventProps {
   organizationId: string;
   date: string;
   partners: string[];
+  images: string[];
   organizedBy: string;
 }
 
@@ -48,6 +52,7 @@ const EditEvent = () => {
     organizationId: orgId,
     date: eventQueryData?.date?.toLocaleDateString() ?? "",
     partners: eventQueryData?.partners ?? [],
+    images: eventQueryData?.images ?? [],
   };
 
   const [partner, setPartner] = useState("");
@@ -61,13 +66,14 @@ const EditEvent = () => {
     organizationId: orgId,
     date: "",
     partners: [],
+    images: [],
   });
 
   useEffect(() => {
     if (eventQuery.data) {
       setEventData(eventQueryDataForm);
     }
-  }, [eventQuery.data]);
+  }, [eventQuery.data?.images]);
 
   useEffect(() => {
     setEventData((prevEventData) => ({
@@ -114,16 +120,13 @@ const EditEvent = () => {
       organizationId: orgId,
       date: eventData.date,
       partners: eventData.partners,
+      images: eventData.images,
     });
 
-    console.log("hello");
     window.location.replace("/homepage");
   };
 
   const handleAddPartner = () => {
-    // Get the partner input value
-
-    // Add the partner to the partners array
     setEventData((prevEventData) => ({
       ...prevEventData,
       partners: [...prevEventData.partners, partner],
@@ -142,6 +145,22 @@ const EditEvent = () => {
         partners: newPartners,
       };
     });
+  };
+
+  const handleAddImages = (newImageUrl: string) => {
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      images: [...prevEventData.images, newImageUrl],
+    }));
+  };
+
+  const handleRemoveImage = (imageNameToRemove: string) => {
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      images: prevEventData.images.filter(
+        (imageName) => imageName !== imageNameToRemove,
+      ),
+    }));
   };
 
   return (
@@ -217,6 +236,44 @@ const EditEvent = () => {
             ))}
           </div>
         </div>
+
+        <UploadImage string={"events"} handleAddImages={handleAddImages} />
+
+        <div className=" flex flex-wrap justify-center gap-4">
+          {eventData.images.map((data, index) => (
+            <div className="relative " key={index}>
+              <div className="absolute right-0 top-0">
+                <IconButton
+                  onClick={() => {
+                    handleRemoveImage(data);
+                  }}
+                  className="mdi mdi-close cursor-pointer hover:text-white"
+                >
+                  <ClearIcon />
+                </IconButton>
+              </div>
+
+              <div
+                style={{
+                  width: "240px", // Use 100% width for responsiveness
+                  height: "150px", // Set a fixed height for all images
+                  display: "flex",
+                }}
+              >
+                <Image
+                  title={data}
+                  className="rounded-md object-cover shadow-xl"
+                  src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                  alt={`Uploaded file ${index}`}
+                  width={240}
+                  height={150}
+                />
+              </div>
+
+              <button onClick={() => console.log(eventData)}>dsd</button>
+            </div>
+          ))}
+        </div>
       </form>
 
       <div className="my-20 flex justify-center">
@@ -240,8 +297,6 @@ const EditEvent = () => {
           </button>
         </div>
       </div>
-
-      {/* <button onClick={() }>dsd</button> */}
     </div>
   );
 };

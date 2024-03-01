@@ -3,6 +3,10 @@ import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import UploadImage from "~/components/UploadImage";
+import { IconButton } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import Image from "next/image";
 
 interface ActivityProps {
   name: string;
@@ -10,6 +14,7 @@ interface ActivityProps {
   date: string;
   createdAt: string;
   location: string;
+  images: string[];
 
   hasOrganizations: boolean;
   hasVolunteers: boolean;
@@ -35,12 +40,29 @@ const Add = () => {
     date: "",
     createdAt: "",
     location: "",
+    images: [],
 
     hasOrganizations: false,
     hasVolunteers: false,
     hasParticipants: false,
     organizationId: orgId,
   });
+
+  const handleAddImages = (newImageUrl: string) => {
+    setActivitiesData((prevActivityData) => ({
+      ...prevActivityData,
+      images: [...prevActivityData.images, newImageUrl],
+    }));
+  };
+
+  const handleRemoveImage = (imageNameToRemove: string) => {
+    setActivitiesData((prevActivityData) => ({
+      ...prevActivityData,
+      images: prevActivityData.images.filter(
+        (imageName) => imageName !== imageNameToRemove,
+      ),
+    }));
+  };
 
   useEffect(() => {
     setActivitiesData((prevActivityData) => ({
@@ -57,7 +79,7 @@ const Add = () => {
     return <div>Error loading user data</div>;
   }
 
-  const handleEventForm = (
+  const handleActivityForm = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>,
@@ -81,6 +103,7 @@ const Add = () => {
       hasVolunteers: activitiesData.hasVolunteers,
       hasParticipants: activitiesData.hasParticipants,
       organizationId: orgId,
+      images: activitiesData.images,
     });
 
     // alert(activitiesData.date);
@@ -111,7 +134,7 @@ const Add = () => {
           type="text"
           value={activitiesData.name}
           name="name"
-          onChange={handleEventForm}
+          onChange={handleActivityForm}
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Activity Name"
         />
@@ -120,7 +143,7 @@ const Add = () => {
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={activitiesData.details}
-          onChange={handleEventForm}
+          onChange={handleActivityForm}
           rows={10}
           placeholder="Details"
         />
@@ -130,7 +153,7 @@ const Add = () => {
             type=""
             value={activitiesData.location}
             name="location"
-            onChange={handleEventForm}
+            onChange={handleActivityForm}
             className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Location"
           />
@@ -138,7 +161,7 @@ const Add = () => {
             type="datetime-local"
             value={activitiesData.date}
             name="date"
-            onChange={handleEventForm}
+            onChange={handleActivityForm}
             className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"
           />
@@ -204,7 +227,43 @@ const Add = () => {
             <label htmlFor="partnership">Partnerships</label>
           </div>
         </div>
+
+        <UploadImage string={"activities"} handleAddImages={handleAddImages} />
       </form>
+
+      <div className="flex flex-wrap justify-center gap-4">
+        {activitiesData.images.map((data, index) => (
+          <div className="relative " key={index}>
+            <div className="absolute right-0 top-0">
+              <IconButton
+                onClick={() => {
+                  handleRemoveImage(data);
+                }}
+                className="mdi mdi-close cursor-pointer hover:text-white"
+              >
+                <ClearIcon />
+              </IconButton>
+            </div>
+
+            <div
+              style={{
+                width: "240px", // Use 100% width for responsiveness
+                height: "150px", // Set a fixed height for all images
+                display: "flex",
+              }}
+            >
+              <Image
+                title={data}
+                className="rounded-md object-cover shadow-xl"
+                src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                alt={`Uploaded file ${index}`}
+                width={240}
+                height={150}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="my-20 flex justify-center">
         <div className="flex gap-4">

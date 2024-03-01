@@ -37,6 +37,7 @@ type EventProps = {
       };
     };
     date: Date;
+    images: string[];
   };
 };
 
@@ -51,9 +52,15 @@ const EventCard = ({ event }: EventProps) => {
       className=" relative h-72 w-72  cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
     >
       <Image
-        src={vol1}
-        className="left-0 top-0 h-2/5 w-full object-cover"
+        src={
+          event.images.length === 0
+            ? vol1
+            : `https://res.cloudinary.com/dif5glv4a/image/upload/${event.images[0]}`
+        }
+        className="left-0 top-0 h-2/5 w-full object-cover blur-[1px]"
         alt="sunset "
+        width={100}
+        height={100}
       />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
         <p className="text-gradient mb-3 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">

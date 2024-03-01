@@ -57,9 +57,9 @@ const Index = () => {
           </h1>
         </div>
 
-        <div className=" phone:flex-col flex items-center justify-between">
+        <div className=" flex items-center justify-between phone:flex-col">
           {/* SEARCH FUNCTION */}
-          <div className="phone:w-full flex w-3/5 items-center ">
+          <div className="flex w-3/5 items-center phone:w-full ">
             <input
               type="text"
               value={searchText}
@@ -80,7 +80,7 @@ const Index = () => {
           {/* ADD EVENT */}
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
-              className="phone:w-full phone:mt-5 btn-active w-1/5 px-4 py-2"
+              className="btn-active w-1/5 px-4 py-2 phone:mt-5 phone:w-full"
               onClick={() => router.push("/homepage/event/add")}
             >
               Add Event

@@ -13,6 +13,7 @@ import { useState } from "react";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
 import EmailActivityCall from "~/components/EmailActivityCall";
+import Carousel from "~/components/Carousel";
 
 const ActivitiesPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -160,41 +161,9 @@ const ActivitiesPage = () => {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="mx-16 my-10  flex  justify-center gap-2 font-custom-lexend   text-customBlack-100">
+      <div className="mx-16 my-10  flex  justify-center gap-8 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
-        <div className="mr-24 flex w-2/5 flex-col gap-1">
-          <Image
-            className="flex w-full rounded-md"
-            src={activity?.organization?.user?.image ?? vol2}
-            alt="Organization Image"
-            height={300}
-            width={300}
-          />
-
-          <div className="flex gap-1">
-            <Image
-              className="rounded-md"
-              src={activity?.organization?.user?.image ?? vol2}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-            <Image
-              className="rounded-md"
-              src={activity?.organization?.user?.image ?? vol2}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-            <Image
-              className="rounded-md"
-              src={activity?.organization?.user?.image ?? vol2}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-          </div>
-        </div>
+        <Carousel images={activity?.images ?? [""]} />
 
         <div
           className="flex w-4/5 flex-col"

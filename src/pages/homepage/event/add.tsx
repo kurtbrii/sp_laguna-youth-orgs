@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
@@ -7,6 +8,8 @@ import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import UploadImage from "~/components/UploadImage";
+import Image from "next/image";
 
 interface EventProps {
   name: "";
@@ -17,6 +20,7 @@ interface EventProps {
   organizationId: string;
   date: string;
   partners: string[];
+  images: string[];
 }
 
 const Add = () => {
@@ -42,6 +46,7 @@ const Add = () => {
     organizationId: orgId,
     date: "",
     partners: [],
+    images: [],
   });
 
   useEffect(() => {
@@ -88,22 +93,18 @@ const Add = () => {
       organizationId: orgId,
       date: eventData.date,
       partners: eventData.partners,
+      images: eventData.images,
     });
 
-    console.log("hello");
     window.location.replace("/homepage");
   };
 
   const handleAddPartner = () => {
-    // Get the partner input value
-
-    // Add the partner to the partners array
     setEventData((prevEventData) => ({
       ...prevEventData,
       partners: [...prevEventData.partners, partner],
     }));
 
-    // Clear the partner input field
     setPartner("");
   };
 
@@ -118,6 +119,22 @@ const Add = () => {
     });
   };
 
+  const handleAddImages = (newImageUrl: string) => {
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      images: [...prevEventData.images, newImageUrl],
+    }));
+  };
+
+  const handleRemoveImage = (imageNameToRemove: string) => {
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      images: prevEventData.images.filter(
+        (imageName) => imageName !== imageNameToRemove,
+      ),
+    }));
+  };
+
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
@@ -129,7 +146,7 @@ const Add = () => {
       <form
         // onSubmit={() => submitEvent(eventData)}
         id="myForm"
-        className="phone:mx-5 mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
+        className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm phone:mx-5"
       >
         <input
           type="text"
@@ -191,14 +208,50 @@ const Add = () => {
             ))}
           </div>
         </div>
+
+        <UploadImage string={"events"} handleAddImages={handleAddImages} />
       </form>
 
+      <div className="flex flex-wrap justify-center gap-4">
+        {eventData.images.map((data, index) => (
+          <div className="relative " key={index}>
+            <div className="absolute right-0 top-0">
+              <IconButton
+                onClick={() => {
+                  handleRemoveImage(data);
+                }}
+                className="mdi mdi-close cursor-pointer hover:text-white"
+              >
+                <ClearIcon />
+              </IconButton>
+            </div>
+
+            <div
+              style={{
+                width: "240px", // Use 100% width for responsiveness
+                height: "150px", // Set a fixed height for all images
+                display: "flex",
+              }}
+            >
+              <Image
+                title={data}
+                className="rounded-md object-cover shadow-xl"
+                src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                alt={`Uploaded file ${index}`}
+                width={240}
+                height={150}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div className="my-20 flex justify-center ">
-        <div className="phone:flex-col flex gap-4">
+        <div className="flex gap-4 phone:flex-col">
           <button
             type="submit"
             className="btn-active px-20 py-3"
-            onClick={() => {
+            onClick={(e) => {
               submitEvent(eventData);
             }}
           >

@@ -23,7 +23,7 @@ const DeleteModal = ({
                 Cancel
               </button>
               <button
-                className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:border-blue-300 focus:outline-none focus:ring"
+                className="btn-active rounded-md px-4 py-2 text-white focus:outline-none focus:ring"
                 onClick={handleDeleteButton}
               >
                 Confirm

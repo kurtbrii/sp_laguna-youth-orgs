@@ -101,8 +101,6 @@ const EmailJoinOrSpon = ({
           Send Email
         </button>
       </form>
-
-      <button onClick={() => alert(role)}> sfd</button>
     </>
   );
 };

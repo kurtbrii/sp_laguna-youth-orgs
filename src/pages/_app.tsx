@@ -18,6 +18,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&family=Lexend:wght@100..900&family=Protest+Guerrilla&display=swap"
         rel="stylesheet"
       />
+
       <AuthRedirect />
       <Component {...pageProps} />
     </SessionProvider>

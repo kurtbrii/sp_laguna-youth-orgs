@@ -42,7 +42,7 @@
   */
   .btn-active,
   .btn-outline {
-    @apply transform rounded-lg text-center font-custom-lexend text-sm font-semibold transition-all duration-300;
+    @apply transform rounded-lg bg-white text-center font-custom-lexend text-sm font-semibold transition-all duration-300;
 
     background-size: 100% 100%;
     background-position: top right;

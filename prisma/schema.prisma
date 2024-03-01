@@ -149,6 +149,8 @@ model Event {
 
     organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     organizationId String
+
+    images String[]
 }
 
 model Activity {
@@ -158,6 +160,7 @@ model Activity {
     date      DateTime
     createdAt DateTime @default(now())
     location  String
+    images    String[]
 
     hasOrganizations Boolean
     hasVolunteers    Boolean

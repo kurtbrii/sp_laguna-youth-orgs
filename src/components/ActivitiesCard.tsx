@@ -17,6 +17,7 @@ type ActivityProps = {
     date: Date;
     createdAt: Date;
     location: string;
+    images: string[];
     organization: {
       orgName: string;
       user: {
@@ -46,7 +47,17 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
       className=" relative flex w-72 cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
       style={{ height: "26rem" }}
     >
-      <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
+      <Image
+        src={
+          activity.images.length === 0
+            ? vol2
+            : `https://res.cloudinary.com/dif5glv4a/image/upload/${activity.images[0]}`
+        }
+        className="h-2/5 w-full object-cover"
+        alt="sunset "
+        width={300}
+        height={300}
+      />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
         <p className="text-gradient mb-3 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
           {activity.organization.orgName.toLocaleUpperCase()}
