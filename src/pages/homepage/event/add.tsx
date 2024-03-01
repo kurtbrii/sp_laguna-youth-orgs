@@ -9,7 +9,6 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "~/components/UploadImage";
-import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 
 interface EventProps {
@@ -97,7 +96,7 @@ const Add = () => {
       images: eventData.images,
     });
 
-    // window.location.replace("/homepage");
+    window.location.replace("/homepage");
   };
 
   const handleAddPartner = () => {
@@ -210,10 +209,10 @@ const Add = () => {
           </div>
         </div>
 
-        <UploadImage handleAddImages={handleAddImages} />
+        <UploadImage string={"events"} handleAddImages={handleAddImages} />
       </form>
 
-      <div className=" flex justify-center gap-4">
+      <div className="flex flex-wrap justify-center gap-4">
         {eventData.images.map((data, index) => (
           <div className="relative " key={index}>
             <div className="absolute right-0 top-0">

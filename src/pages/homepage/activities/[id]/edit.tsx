@@ -7,6 +7,8 @@ import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import UploadImage from "~/components/UploadImage";
+import Image from "next/image";
 
 interface ActivityProps {
   name: string;
@@ -19,6 +21,7 @@ interface ActivityProps {
   hasVolunteers: boolean;
   hasParticipants: boolean;
   organizationId: string;
+  images: string[];
 }
 
 const EditActivity = () => {
@@ -49,6 +52,7 @@ const EditActivity = () => {
     createdAt: activityQueryData?.createdAt?.toLocaleString() ?? "",
     location: activityQueryData?.location ?? "",
     organizationId: orgId,
+    images: activityQueryData?.images ?? [],
 
     hasOrganizations: activityQueryData?.hasOrganizations ?? false,
     hasVolunteers: activityQueryData?.hasVolunteers ?? false,
@@ -61,6 +65,7 @@ const EditActivity = () => {
     date: "",
     createdAt: "",
     location: "",
+    images: [],
 
     hasOrganizations: false,
     hasVolunteers: false,
@@ -68,11 +73,27 @@ const EditActivity = () => {
     organizationId: orgId,
   });
 
+  const handleAddImages = (newImageUrl: string) => {
+    setActivitiesData((activitiesData) => ({
+      ...activitiesData,
+      images: [...activitiesData.images, newImageUrl],
+    }));
+  };
+
+  const handleRemoveImage = (imageNameToRemove: string) => {
+    setActivitiesData((activitiesData) => ({
+      ...activitiesData,
+      images: activitiesData.images.filter(
+        (imageName) => imageName !== imageNameToRemove,
+      ),
+    }));
+  };
+
   useEffect(() => {
     if (activityQueryData) {
       setActivitiesData(activityQueryDataForm);
     }
-  }, [activityQueryData]);
+  }, [activityQueryData?.images]);
 
   useEffect(() => {
     setActivitiesData((prevActivityData) => ({
@@ -110,6 +131,8 @@ const EditActivity = () => {
       details: activitiesData.details,
       date: activitiesData.date,
       location: activitiesData.location,
+      images: activitiesData.images,
+
       hasOrganizations: activitiesData.hasOrganizations,
       hasVolunteers: activitiesData.hasVolunteers,
       hasParticipants: activitiesData.hasParticipants,
@@ -146,15 +169,6 @@ const EditActivity = () => {
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Event Name"
         />
-
-        {/* <input
-          className=" w-full rounded border p-2 shadow "
-          name="details"
-          value={activitiesData.details}
-          onChange={handleEventForm}
-          // rows={10}
-          placeholder="Details"
-        /> */}
 
         <textarea
           className=" w-full rounded border p-2 shadow "
@@ -246,6 +260,42 @@ const EditActivity = () => {
             />
             <label htmlFor="partnership">Partnerships</label>
           </div>
+        </div>
+
+        <UploadImage string={"activities"} handleAddImages={handleAddImages} />
+
+        <div className=" flex flex-wrap justify-center gap-4">
+          {activitiesData.images.map((data, index) => (
+            <div className="relative " key={index}>
+              <div className="absolute right-0 top-0">
+                <IconButton
+                  onClick={() => {
+                    handleRemoveImage(data);
+                  }}
+                  className="mdi mdi-close cursor-pointer hover:text-white"
+                >
+                  <ClearIcon />
+                </IconButton>
+              </div>
+
+              <div
+                style={{
+                  width: "240px", // Use 100% width for responsiveness
+                  height: "150px", // Set a fixed height for all images
+                  display: "flex",
+                }}
+              >
+                <Image
+                  title={data}
+                  className="rounded-md object-cover shadow-xl"
+                  src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                  alt={`Uploaded file ${index}`}
+                  width={240}
+                  height={150}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </form>
 

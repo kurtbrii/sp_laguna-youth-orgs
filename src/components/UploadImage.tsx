@@ -2,7 +2,7 @@
 import { CldUploadWidget } from "next-cloudinary";
 import React from "react";
 
-const UploadImage = ({ handleAddImages }: any) => {
+const UploadImage = ({ handleAddImages, string }: any) => {
   return (
     <div className="flex w-full items-center justify-center">
       <label className="flex h-32 w-full cursor-pointer flex-col rounded-md border-2 border-dashed hover:border-gray-300 hover:bg-gray-100">
@@ -22,7 +22,13 @@ const UploadImage = ({ handleAddImages }: any) => {
         </div>
 
         <CldUploadWidget
-          uploadPreset="fb3chpuf"
+          uploadPreset={
+            string === "events"
+              ? "fb3chpuf"
+              : string === "activities"
+                ? "cuzmdy9w"
+                : ""
+          }
           options={{
             sources: ["local", "camera", "google_drive", "url"],
             maxFiles: 4,

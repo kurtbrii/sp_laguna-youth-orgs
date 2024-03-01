@@ -7,11 +7,12 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { triggerAsyncId } from "async_hooks";
+import { Input } from "postcss";
 
 
 export const activityRouter = createTRPCRouter({
   createActivity: protectedProcedure
-    .input(z.object({ name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string() }))
+    .input(z.object({ name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string(), images: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activity.create({
         data: {
@@ -20,6 +21,7 @@ export const activityRouter = createTRPCRouter({
           date: new Date(input.date),
           details: input.details,
           location: input.location,
+          images: input.images,
 
           hasOrganizations: input.hasOrganizations,
           hasVolunteers: input.hasVolunteers,
@@ -30,7 +32,7 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getActivities: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional() }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), }))
     .query(async ({ ctx, input }) => {
 
       // const whereCondition = input.id ? { id: input.id } : {};
@@ -48,6 +50,7 @@ export const activityRouter = createTRPCRouter({
           date: true,
           createdAt: true,
           location: true,
+          images: true,
           hasOrganizations: true,
           hasVolunteers: true,
           hasParticipants: true,
@@ -92,6 +95,7 @@ export const activityRouter = createTRPCRouter({
           date: true,
           createdAt: true,
           location: true,
+          images: true,
 
           hasOrganizations: true,
           hasVolunteers: true,
@@ -104,7 +108,7 @@ export const activityRouter = createTRPCRouter({
     }),
 
   updateActivity: protectedProcedure
-    .input(z.object({ id: z.string(), name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string() }))
+    .input(z.object({ id: z.string(), name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string(), images: z.array(z.string()).optional() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activity.update({
         where: { id: input.id },
@@ -114,6 +118,7 @@ export const activityRouter = createTRPCRouter({
           date: new Date(input.date),
           details: input.details,
           location: input.location,
+          images: input.images,
 
           hasOrganizations: input.hasOrganizations,
           hasVolunteers: input.hasVolunteers,

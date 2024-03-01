@@ -160,6 +160,7 @@ model Activity {
     date      DateTime
     createdAt DateTime @default(now())
     location  String
+    images    String[]
 
     hasOrganizations Boolean
     hasVolunteers    Boolean

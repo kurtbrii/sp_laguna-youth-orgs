@@ -73,7 +73,7 @@ const EditEvent = () => {
     if (eventQuery.data) {
       setEventData(eventQueryDataForm);
     }
-  }, [eventQuery.data]);
+  }, [eventQuery.data?.images]);
 
   useEffect(() => {
     setEventData((prevEventData) => ({
@@ -237,44 +237,44 @@ const EditEvent = () => {
           </div>
         </div>
 
-        <UploadImage handleAddImages={handleAddImages} />
-      </form>
+        <UploadImage string={"events"} handleAddImages={handleAddImages} />
 
-      <div className=" flex justify-center gap-4">
-        {eventData.images.map((data, index) => (
-          <div className="relative " key={index}>
-            <div className="absolute right-0 top-0">
-              <IconButton
-                onClick={() => {
-                  handleRemoveImage(data);
+        <div className=" flex flex-wrap justify-center gap-4">
+          {eventData.images.map((data, index) => (
+            <div className="relative " key={index}>
+              <div className="absolute right-0 top-0">
+                <IconButton
+                  onClick={() => {
+                    handleRemoveImage(data);
+                  }}
+                  className="mdi mdi-close cursor-pointer hover:text-white"
+                >
+                  <ClearIcon />
+                </IconButton>
+              </div>
+
+              <div
+                style={{
+                  width: "240px", // Use 100% width for responsiveness
+                  height: "150px", // Set a fixed height for all images
+                  display: "flex",
                 }}
-                className="mdi mdi-close cursor-pointer hover:text-white"
               >
-                <ClearIcon />
-              </IconButton>
-            </div>
+                <Image
+                  title={data}
+                  className="rounded-md object-cover shadow-xl"
+                  src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                  alt={`Uploaded file ${index}`}
+                  width={240}
+                  height={150}
+                />
+              </div>
 
-            <div
-              style={{
-                width: "240px", // Use 100% width for responsiveness
-                height: "150px", // Set a fixed height for all images
-                display: "flex",
-              }}
-            >
-              <Image
-                title={data}
-                className="rounded-md object-cover shadow-xl"
-                src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                alt={`Uploaded file ${index}`}
-                width={240}
-                height={150}
-              />
+              <button onClick={() => console.log(eventData)}>dsd</button>
             </div>
-
-            <button onClick={() => console.log(eventData)}>dsd</button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </form>
 
       <div className="my-20 flex justify-center">
         <div className="flex gap-4">

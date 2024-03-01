@@ -75,41 +75,6 @@ const EventPage = () => {
       <Navbar />
 
       <div className="relative mx-16 my-10  flex justify-center  gap-12  font-custom-lexend text-customBlack-100 phone:m-5 phone:flex-col   phone:gap-10">
-        {/* <Image
-          className="flex w-full rounded-md object-cover phone:w-1/3"
-          src={event?.images[0] ?? ""}
-          alt="Organization Image"
-          height={300}
-          width={300}
-        /> */}
-        {/* IMAGES OF EVENTS*/}
-        {/* <div className="mr-20 flex w-2/5 flex-col gap-1 phone:w-full phone:flex-row ">
-
-          <div className="flex gap-1 phone:w-full">
-            <Image
-              className="rounded-md phone:w-1/3"
-              src={event?.organization?.user.image ?? vol1}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-            <Image
-              className="rounded-md phone:w-1/3"
-              src={event?.organization?.user.image ?? vol1}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-            <Image
-              className="rounded-md phone:w-1/3"
-              src={event?.organization?.user.image ?? vol1}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-          </div>
-        </div> */}
-
         <Carousel images={event?.images ?? [""]} />
 
         <div
