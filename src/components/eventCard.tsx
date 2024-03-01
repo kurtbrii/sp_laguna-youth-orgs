@@ -7,21 +7,6 @@ import { Organization, type User } from "@prisma/client";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
 
-// type Organization = {
-//   id: string;
-//   orgName: string | null;
-//   phoneNumber: string | null;
-//   bio: string | null;
-//   mission: string | null;
-//   vision: string | null;
-//   objectives: string | null;
-//   userId: string;
-//   user: {
-//     image: string;
-
-//   };
-// };
-
 type EventCardProps = {
   event: EventProps["event"];
   searchText: string;
@@ -46,7 +31,7 @@ type EventProps = {
   };
 };
 
-const EventCard = ({ event, searchText }: EventCardProps) => {
+const EventCard: React.FC<EventCardProps> = ({ event, searchText }) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const highlightText = (text: string, query: string): React.ReactNode => {

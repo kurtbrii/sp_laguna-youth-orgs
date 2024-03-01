@@ -15,14 +15,6 @@ export const eventRouter = createTRPCRouter({
   createEvent: protectedProcedure
     .input(z.object({ name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string(), partners: z.array(z.string()), images: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // void cloudinaryUpload("~/../public/images/vol2.png")
-      // const url = await cloudinaryUpload(input.images);
-
-      // console.log("res: ", cloudinaryResponse)
-
       return ctx.db.event.create({
         data: {
           name: input.name,
@@ -88,9 +80,6 @@ export const eventRouter = createTRPCRouter({
           }
         },
         take: input.take
-        // include: {
-        //   organization: true,
-        // }
       });
     }),
 
@@ -128,9 +117,6 @@ export const eventRouter = createTRPCRouter({
   updateEvent: protectedProcedure
     .input(z.object({ id: z.string(), name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string(), partners: z.array(z.string()), images: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-
       return ctx.db.event.update({
         where: { id: input.id },
         data: {

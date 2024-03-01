@@ -111,7 +111,7 @@ const Index = () => {
 
       {/* EVENT CARD */}
       {/* TODO: FIX PREVIOUS: when added */}
-      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-3">
+      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
         {event?.data?.map((eventQuery) => (
           <EventCard
             key={eventQuery.id}
