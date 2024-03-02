@@ -9,6 +9,11 @@ import PlaceIcon from "@mui/icons-material/Place";
 import { router } from "@trpc/server";
 import { useRouter } from "next/router";
 
+type ActivitiesCardProps = {
+  activity: ActivityProps["activity"];
+  searchText: string;
+};
+
 type ActivityProps = {
   activity: {
     id: string;
@@ -32,7 +37,10 @@ type ActivityProps = {
   };
 };
 
-const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
+const ActivitiesCard: React.FC<ActivitiesCardProps> = ({
+  activity,
+  searchText,
+}) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const router = useRouter();
@@ -41,12 +49,31 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
     void router.push(`/homepage/activities/${activity.id}`);
   };
 
+  const highlightText = (text: string, query: string): React.ReactNode => {
+    if (!query) return text;
+
+    const regex = new RegExp(`(${query})`, "gi");
+    return (
+      <span
+        dangerouslySetInnerHTML={{
+          __html: text.replace(regex, '<span class="highlight">$1</span>'),
+        }}
+      />
+    );
+  };
+
   return (
     <div
       onClick={() => handleClick()}
-      className=" relative flex w-72 cursor-pointer  flex-col  overflow-hidden  rounded-md  object-fill shadow-2xl"
-      style={{ height: "26rem" }}
+      className=" relative z-10 flex w-72  transform  cursor-pointer  flex-col  overflow-hidden rounded-md object-fill shadow-2xl transition-transform duration-300 hover:scale-105"
+      style={{ height: "27rem" }}
     >
+      <style jsx global>{`
+        .highlight {
+          color: #00bd6e;
+          font-weight: bold;
+        }
+      `}</style>
       <Image
         src={
           activity.images.length === 0
@@ -59,11 +86,14 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
         height={300}
       />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
-        <p className="text-gradient mb-3 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
-          {activity.organization.orgName.toLocaleUpperCase()}
+        <p className="text-gradient mb-2 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
+          {highlightText(
+            activity.organization.orgName.toLocaleUpperCase(),
+            searchText,
+          )}
         </p>
         <p className="mb-2 overflow-hidden text-ellipsis  whitespace-nowrap  text-sm font-bold">
-          {activity.name}
+          {highlightText(activity.name.toLocaleUpperCase(), searchText)}
         </p>
         <div className=" flex items-center gap-1">
           <EventIcon className="h-4 w-4" />
@@ -73,8 +103,11 @@ const ActivitiesCard: React.FC<ActivityProps> = ({ activity }) => {
         </div>
         <div className=" flex items-center gap-1">
           <PlaceIcon className="h-4 w-4" />
-          <p className=" italic" style={{ fontSize: "10px" }}>
-            {activity.location.toLocaleString()}
+          <p
+            className="overflow-hidden text-ellipsis  whitespace-nowrap italic"
+            style={{ fontSize: "10px" }}
+          >
+            {highlightText(activity.location, searchText)}
           </p>
         </div>
         <hr className="my-1 flex  w-full border-t-2 border-customBlack-75" />

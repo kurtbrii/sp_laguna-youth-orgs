@@ -42,7 +42,11 @@ const OrgManageVolunteerRequests = () => {
         <div>
           <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
             {activity?.data?.map((queryActivity) => (
-              <ActivitiesCard key={queryActivity.id} activity={queryActivity} />
+              <ActivitiesCard
+                key={queryActivity.id}
+                activity={queryActivity}
+                searchText={""}
+              />
             ))}
           </div>
         </div>

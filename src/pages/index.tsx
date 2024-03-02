@@ -1,13 +1,9 @@
-// import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-// import Link from "next/link";
 import Image from "next/image";
 import Navbar from "~/components/navbar";
 
-// import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { db } from "~/server/db";
 import vol1 from "public/images/vol1.png";
 import OrgCard from "~/components/orgcard";
 import EventCard from "~/components/eventCard";
@@ -15,23 +11,27 @@ import ActivitiesCard from "~/components/ActivitiesCard";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { IconButton } from "@mui/material";
 import router from "next/router";
-import { Resend } from "resend";
-import emailjs from "@emailjs/browser";
+import { useState } from "react";
 
 export default function Home() {
   const { data: sessionData } = useSession();
 
-  const current = sessionData?.user.id; // Replace with the actual user ID
+  const current = sessionData?.user.id;
   const get = api.user.getUser.useQuery({ userId: current ?? "" });
 
   // ! Recent Events
-  const event = api.event.getEvents.useQuery({ take: 3 });
+  const event = api.event.getEvents.useQuery({ search: "", take: 3 });
 
   // ! Get Organizations
   const organizations = api.organization.getOrganizations.useQuery({ take: 3 });
 
   // ! Get Activities
   const activity = api.activity.getActivities.useQuery({ take: 3 });
+
+  if (event.isSuccess) {
+    console.log("Event Data:", event.data);
+    console.log("Event Data:", activity.data);
+  }
 
   return (
     <>
@@ -105,6 +105,31 @@ export default function Home() {
             </div>
           </div>
 
+          {/* EVENTS SECTION */}
+          <div className="custom-epilogue mx-10 mt-20 flex flex-col ">
+            <h1 className=" mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
+              All Events
+            </h1>
+
+            <div className="flex gap-4 phone:flex-col laptop:flex-col">
+              <div className="mt mb-5 flex flex-wrap justify-start gap-7 phone:justify-center ">
+                {event?.data?.map((queryEvent) => (
+                  <EventCard
+                    searchText={""}
+                    key={queryEvent.id}
+                    event={queryEvent}
+                  />
+                ))}
+              </div>
+              <IconButton
+                className="self-center"
+                onClick={() => router.push("/homepage")}
+              >
+                <ArrowForwardRoundedIcon fontSize="large" />
+              </IconButton>
+            </div>
+          </div>
+
           {/* ACTIVITIES SECTION */}
           <div className="custom-epilogue mx-10 mt-20 flex flex-col ">
             <h1 className="mb-4 h-full bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-extrabold text-transparent ">
@@ -115,6 +140,7 @@ export default function Home() {
               <div className="mb-5  flex flex-wrap justify-start gap-7 phone:justify-center ">
                 {activity?.data?.map((queryActivity) => (
                   <ActivitiesCard
+                    searchText={""}
                     key={queryActivity.id}
                     activity={queryActivity}
                   />
@@ -128,8 +154,6 @@ export default function Home() {
               </IconButton>
             </div>
           </div>
-
-          <div className="mb-96"></div>
         </header>
 
         {/* <button onClick={() => handleButton()}>helloo</button> */}
@@ -137,50 +161,3 @@ export default function Home() {
     </>
   );
 }
-
-// function AuthShowcase() {
-//   const { data: sessionData } = useSession();
-
-//   return (
-//     <div className="flex flex-col items-center justify-center gap-4">
-//       <p className="text-center text-2xl text-white">
-//         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-//       </p>
-
-//       {sessionData ? (
-//         <>
-//           <div className="text-white">{sessionData.user.name}</div>
-//           <div className="text-white">{sessionData.user.email}</div>
-
-//           <Image
-//             src={sessionData.user.image ?? ""}
-//             width={30}
-//             height={30}
-//             alt="User Profile"
-//           />
-//           <button
-//             className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-//             onClick={() => void signOut()}
-//           >
-//             Logout
-//           </button>
-//         </>
-//       ) : (
-//         <>
-//           <button
-//             className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-//             onClick={() => void signIn("google", {})}
-//           >
-//             Google
-//           </button>
-//           <button
-//             className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-//             onClick={() => void signIn("discord", {})}
-//           >
-//             Discord
-//           </button>
-//         </>
-//       )}
-//     </div>
-//   );
-// }

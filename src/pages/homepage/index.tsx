@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import Navbar from "~/components/navbar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -16,12 +16,6 @@ import { Profile } from "next-auth";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
-
-  const event = api.event.getEvents.useQuery({});
-
-  const handleFetchEvents = () => {
-    console.log(event.data);
-  };
 
   type EventProps = {
     id: string;
@@ -42,8 +36,15 @@ const Index = () => {
   const router = useRouter();
 
   const [searchText, setSearchText] = useState("");
+  const event = api.event.getEvents.useQuery({ search: searchText });
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
+  };
+
+  const [toggleFilter, setToggleFilter] = useState(false);
+  const handleToggleFilter = () => {
+    setToggleFilter(!toggleFilter);
   };
 
   return (
@@ -59,22 +60,27 @@ const Index = () => {
 
         <div className=" flex items-center justify-between phone:flex-col">
           {/* SEARCH FUNCTION */}
-          <div className="flex w-3/5 items-center phone:w-full ">
+          <div className="flex w-2/5 items-center phone:w-full">
             <input
               type="text"
               value={searchText}
               name="search"
               onChange={handleSearchChange}
-              className="flex-1 rounded-l p-2  shadow-lg"
+              className="flex-1 rounded-l p-2 shadow-inner"
               placeholder="Search"
             />
-            <button className="bg-gradient mr-7 flex rounded-r border-gray-300 p-2 shadow-lg ">
-              <SearchIcon style={{ color: "white" }} />
-            </button>
 
-            <IconButton className="flex">
-              <TuneIcon />
-            </IconButton>
+            <div
+              className={`ml-12 rounded-t-md ${toggleFilter && "bg-gradient "}`}
+            >
+              <IconButton
+                className="flex"
+                onClick={handleToggleFilter}
+                style={toggleFilter ? { color: "white" } : {}}
+              >
+                <TuneIcon />
+              </IconButton>
+            </div>
           </div>
 
           {/* ADD EVENT */}
@@ -91,11 +97,27 @@ const Index = () => {
         {/* <button onClick={() }>button</button> */}
       </div>
 
+      {toggleFilter && (
+        <div className="bg-gradient mx-10 rounded-md  px-10 py-5 ">
+          <p className="text-white">ihg</p>
+          <p>ihg</p>
+          <p>ih</p>
+          <p>ih</p>
+          <p>ih</p>
+          <p>ih</p>
+          <p>ih</p>
+        </div>
+      )}
+
       {/* EVENT CARD */}
       {/* TODO: FIX PREVIOUS: when added */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
         {event?.data?.map((eventQuery) => (
-          <EventCard key={eventQuery.id} event={eventQuery} />
+          <EventCard
+            key={eventQuery.id}
+            event={eventQuery}
+            searchText={searchText}
+          />
         ))}
       </div>
     </div>

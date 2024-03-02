@@ -126,24 +126,6 @@ const ActivitiesPage = () => {
   };
 
   // ! VOLUNTEER/ORGANIZATION JOINING/PARTNERING LOGIC
-  // const handleVolunteerCall = () => {
-  //   addOrgOrVol.mutate({
-  //     activityId: id as string,
-  //     volId: volunteer?.id,
-  //   });
-
-  //   alert("Request Successful");
-  // };
-
-  // const handleOrganizationCall = () => {
-  //   addOrgOrVol.mutate({
-  //     activityId: id as string,
-  //     orgId: organization?.id,
-  //   });
-
-  //   alert("Request Successful");
-  // };
-
   const handleDeleteOrgOrVolActivity = () => {
     deleteOrgOrVol.mutate({
       activityId: id as string,
