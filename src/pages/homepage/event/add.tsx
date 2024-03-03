@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -36,6 +35,8 @@ const Add = () => {
   const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
   const [partner, setPartner] = useState("");
+
+  const [validationErrors, setValidationErrors] = useState({});
 
   const [eventData, setEventData] = useState<EventProps>({
     name: "",
@@ -96,7 +97,7 @@ const Add = () => {
       images: eventData.images,
     });
 
-    window.location.replace("/homepage");
+    void router.push("/homepage");
   };
 
   const handleAddPartner = () => {
@@ -144,11 +145,12 @@ const Add = () => {
         </p>
       </section>
       <form
-        // onSubmit={() => submitEvent(eventData)}
+        onSubmit={() => submitEvent(eventData)}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm phone:mx-5"
       >
         <input
+          required
           type="text"
           value={eventData.name}
           name="name"
@@ -158,6 +160,7 @@ const Add = () => {
         />
 
         <textarea
+          required
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={eventData.details}
@@ -168,6 +171,7 @@ const Add = () => {
 
         <div className="flex gap-2">
           <input
+            required
             type=""
             value={eventData.location}
             name="location"
@@ -176,6 +180,7 @@ const Add = () => {
             placeholder="Location"
           />
           <input
+            required
             type="datetime-local"
             value={eventData.date}
             name="date"
@@ -210,64 +215,58 @@ const Add = () => {
         </div>
 
         <UploadImage string={"events"} handleAddImages={handleAddImages} />
-      </form>
 
-      <div className="flex flex-wrap justify-center gap-4">
-        {eventData.images.map((data, index) => (
-          <div className="relative " key={index}>
-            <div className="absolute right-0 top-0">
-              <IconButton
-                onClick={() => {
-                  handleRemoveImage(data);
+        <div className="flex flex-wrap justify-center gap-4">
+          {eventData.images.map((data, index) => (
+            <div className="relative " key={index}>
+              <div className="absolute right-0 top-0">
+                <IconButton
+                  onClick={() => {
+                    handleRemoveImage(data);
+                  }}
+                  className="mdi mdi-close cursor-pointer hover:text-white"
+                >
+                  <ClearIcon />
+                </IconButton>
+              </div>
+
+              <div
+                style={{
+                  width: "240px", // Use 100% width for responsiveness
+                  height: "150px", // Set a fixed height for all images
+                  display: "flex",
                 }}
-                className="mdi mdi-close cursor-pointer hover:text-white"
               >
-                <ClearIcon />
-              </IconButton>
+                <Image
+                  title={data}
+                  className="rounded-md object-cover shadow-xl"
+                  src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                  alt={`Uploaded file ${index}`}
+                  width={240}
+                  height={150}
+                />
+              </div>
             </div>
-
-            <div
-              style={{
-                width: "240px", // Use 100% width for responsiveness
-                height: "150px", // Set a fixed height for all images
-                display: "flex",
-              }}
-            >
-              <Image
-                title={data}
-                className="rounded-md object-cover shadow-xl"
-                src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                alt={`Uploaded file ${index}`}
-                width={240}
-                height={150}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="my-20 flex justify-center ">
-        <div className="flex gap-4 phone:flex-col">
-          <button
-            type="submit"
-            className="btn-active px-20 py-3"
-            onClick={(e) => {
-              submitEvent(eventData);
-            }}
-          >
-            Create Event
-          </button>
-
-          <button
-            onClick={() => window.location.replace("/homepage")}
-            type="reset"
-            className="btn-outline   px-20 py-3"
-            style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
-          >
-            Discard
-          </button>
+          ))}
         </div>
-      </div>
+
+        <div className="my-20 flex justify-center ">
+          <div className="flex gap-4 phone:flex-col">
+            <button type="submit" className="btn-active px-20 py-3">
+              Create Event
+            </button>
+
+            <button
+              onClick={() => window.location.replace("/homepage")}
+              type="reset"
+              className="btn-outline   px-20 py-3"
+              style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
+            >
+              Discard
+            </button>
+          </div>
+        </div>
+      </form>
 
       {/* <button onClick={() }>dsd</button> */}
     </div>
