@@ -36,6 +36,8 @@ const Add = () => {
 
   const [partner, setPartner] = useState("");
 
+  const [validationErrors, setValidationErrors] = useState({});
+
   const [eventData, setEventData] = useState<EventProps>({
     name: "",
     organized_by: "",

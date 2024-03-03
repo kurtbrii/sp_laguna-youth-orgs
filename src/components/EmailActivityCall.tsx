@@ -66,13 +66,13 @@ const EmailActivityCall = ({
     console.log(guestData);
   };
 
-  const handleSubmitOrgOrVol = () => {
+  const handleSubmitOrgOrVol = async () => {
     if (role === "ORGANIZATION") {
       addOrgOrVol.mutate({
         activityId: activity?.id,
         orgId: organization?.id,
         subject: authenticatedUserData.subject,
-        body: authenticatedUserData.subject,
+        body: authenticatedUserData.body,
         label: "partnership",
       });
     } else {
@@ -80,12 +80,12 @@ const EmailActivityCall = ({
         activityId: activity?.id,
         volId: volunteer?.id,
         subject: authenticatedUserData.subject,
-        body: authenticatedUserData.subject,
+        body: authenticatedUserData.body,
         label: "volunteer",
       });
     }
 
-    void emailjs.send(
+    await emailjs.send(
       "service_sb8pzif",
       "template_g280rll",
       {
