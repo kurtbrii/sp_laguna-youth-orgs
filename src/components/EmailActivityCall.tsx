@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import emailjs from "@emailjs/browser";
 import React, { useState } from "react";
-import { cn } from "~/lib/utils";
+
 import { api } from "~/utils/api";
 
 interface EmailProps {

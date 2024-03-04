@@ -48,10 +48,9 @@ const Index = () => {
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
-      {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
-        <div className=" my-4 flex h-12 flex-col justify-between  ">
-          <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
+        <div className=" my-4 flex h-12">
+          <h1 className="text-gradient  mb-6 font-custom-epilogue text-2xl font-extrabold">
             Get Involved
           </h1>
         </div>
@@ -85,9 +84,9 @@ const Index = () => {
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
               className="btn-active w-1/5 px-4 py-2 phone:mt-5 phone:w-full"
-              onClick={() => router.push("/homepage/event/add")}
+              onClick={() => router.push("/homepage/activities/add")}
             >
-              Add Event
+              Promote an Activity
             </button>
           )}
         </div>

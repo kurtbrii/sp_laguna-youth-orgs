@@ -10,9 +10,6 @@ import Router, { useRouter } from "next/router";
 import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { Organization } from "@prisma/client";
-
-import { Profile } from "next-auth";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -53,9 +50,11 @@ const Index = () => {
       {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
-          <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
-            Recent Events
-          </h1>
+          <div className="flex">
+            <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
+              Recent Events
+            </h1>
+          </div>
         </div>
 
         <div className=" flex items-center justify-between phone:flex-col">

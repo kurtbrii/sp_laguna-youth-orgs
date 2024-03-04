@@ -48,14 +48,27 @@ export const orgRouter = createTRPCRouter({
     }),
 
   getOrganizations: publicProcedure
-    .input(z.object({ id: z.string().optional(), take: z.number().optional() }))
+    .input(z.object({ id: z.string().optional(), take: z.number().optional(), search: z.string().optional() }))
     .query(async ({ ctx, input }) => {
-      const whereCondition = {
-        id: input.id,
-      }
 
       return ctx.db.organization.findMany({
-        where: whereCondition,
+        where: {
+          id: input.id,
+          OR: [
+            {
+              email: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              orgName: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+          ]
+        },
         select: {
           id: true,
           orgName: true,

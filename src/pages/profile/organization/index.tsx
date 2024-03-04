@@ -107,9 +107,11 @@ const OrganizationPage = () => {
           </div>
 
           <div className="flex-start  ml-16 flex flex-col">
-            <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
-              {organization?.orgName}
-            </h1>
+            <div className="flex">
+              <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
+                {organization?.orgName}
+              </h1>
+            </div>
 
             <p className="mb-6 mr-20 text-sm">{organization?.bio}</p>
 

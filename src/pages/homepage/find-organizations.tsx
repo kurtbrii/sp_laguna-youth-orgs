@@ -1,58 +1,82 @@
 import Navbar from "~/components/navbar";
-import { signIn, signOut, useSession } from "next-auth/react";
 import OrgCard from "~/components/orgcard";
 import { api } from "~/utils/api";
-import Link from "next/link";
 import { NextPage } from "next";
+import { IconButton } from "@mui/material";
+import TuneIcon from "@mui/icons-material/Tune";
+import { useState } from "react";
 
 const FindOrganizations: NextPage = () => {
-  const { data: sessionData, status: sessionStatus } = useSession();
+  const [searchText, setSearchText] = useState("");
 
-  const organizations = api.organization.getOrganizations.useQuery({});
+  const organizations = api.organization.getOrganizations.useQuery({
+    search: searchText,
+  });
 
-  const handleFetchOrganizations = () => {
-    console.log(organizations.data);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
   };
 
-  // interface OrgProps {
-  //   id: string;
-  //   orgName: string;
-  //   phoneNumber: string;
-  //   bio: string;
-  //   userId: string;
-  //   mission: string;
-  //   vision: string;
-  //   objectives: string;
-  //   user: {
-  //     id: string;
-  //     image: string | null;
-  //     role: string;
-  //     email: string | null; // Update this line to handle null
-  //   };
-  //   event: {
-  //     id: string;
-  //     name: string;
-  //     organizedBy: string;
-  //     details: string;
-  //     location: string;
-  //     date: Date; // Update this line to Date
-  //     partners: string[];
-  //   }[];
-  // }
+  const [toggleFilter, setToggleFilter] = useState(false);
+  const handleToggleFilter = () => {
+    setToggleFilter(!toggleFilter);
+  };
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
-      <div className="mx-10 my-4 flex h-12 flex-col justify-between font-custom-lexend ">
-        <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
+      <div className="mx-10 my-4 flex h-12 font-custom-lexend ">
+        <h1 className="text-gradient mb-2 h-full  font-custom-epilogue text-2xl font-extrabold   ">
           Find Organizations
         </h1>
       </div>
-      <div className=" mx-4 mb-5 flex flex-wrap justify-center gap-5">
+
+      {/* SEARCH FUNCTION */}
+      <div className="mx-10 flex w-2/5 items-center phone:w-full">
+        <input
+          type="text"
+          value={searchText}
+          name="search"
+          onChange={handleSearchChange}
+          className="flex-1 rounded-l p-2 shadow-inner"
+          placeholder="Search"
+        />
+
+        <div
+          className={`ml-12  rounded-t-md ${toggleFilter && "bg-gradient "}`}
+        >
+          <IconButton
+            className="flex"
+            onClick={handleToggleFilter}
+            style={toggleFilter ? { color: "white" } : {}}
+          >
+            <TuneIcon />
+          </IconButton>
+        </div>
+      </div>
+
+      {toggleFilter && (
+        <div className="bg-gradient mx-10 rounded-md  px-10 py-5 ">
+          <p className="text-white">ihg</p>
+          <p>ihg</p>
+          <p>ih</p>
+          <p>ih</p>
+          <p>ih</p>
+          <p>ih</p>
+          <p>ih</p>
+        </div>
+      )}
+
+      <div className="mx-4 mb-5 mt-10 flex flex-wrap justify-center gap-5">
         {organizations?.data?.map((organization) => (
-          <OrgCard key={organization.id} organization={organization} />
+          <OrgCard
+            key={organization.id}
+            searchText={searchText}
+            organization={organization}
+          />
         ))}
       </div>
+
       {/* <button onClick={() => handleFetchOrganizations()}>button</button> */}
     </div>
   );

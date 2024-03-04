@@ -23,7 +23,10 @@ export default function Home() {
   const event = api.event.getEvents.useQuery({ search: "", take: 3 });
 
   // ! Get Organizations
-  const organizations = api.organization.getOrganizations.useQuery({ take: 3 });
+  const organizations = api.organization.getOrganizations.useQuery({
+    search: "",
+    take: 3,
+  });
 
   // ! Get Activities
   const activity = api.activity.getActivities.useQuery({ take: 3 });
@@ -92,7 +95,11 @@ export default function Home() {
             <div className="flex gap-4 phone:flex-col tablet:flex-col">
               <div className=" mb-5  flex flex-wrap justify-start gap-7 phone:justify-center">
                 {organizations?.data?.map((organization) => (
-                  <OrgCard key={organization.id} organization={organization} />
+                  <OrgCard
+                    searchText={""}
+                    key={organization.id}
+                    organization={organization}
+                  />
                 ))}
               </div>
 

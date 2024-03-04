@@ -65,11 +65,11 @@ const Navbar = () => {
     // navbar
     <>
       {/* MOBILE VIEW */}
-      <div className="tablet:hidden desktop:hidden laptop:hidden">
+      <div className="tablet:hidden laptop:hidden desktop:hidden">
         <div className=" z-10 m-4 flex items-center justify-between">
-          <p className=" text-gradient font-custom-epilogue text-xs font-bold">
-            Laguna Youth Organizations Hub
-          </p>
+          <div className="font-custom-pilogue flex text-xs font-bold">
+            <p className="text-gradient">Laguna Youth Organizations Hub</p>
+          </div>
           {sessionData ? (
             <IconButton onClick={() => setIsNavOpen(!isNavOpen)}>
               <MenuIcon />
@@ -214,12 +214,16 @@ const Navbar = () => {
       </div>
 
       {/* NON-MOBILE VIEW */}
-      <div className="phone:hidden mt-2 flex flex-col flex-wrap gap-2">
+      <div className="mt-2 flex flex-col flex-wrap gap-2 phone:hidden">
         <nav className=" flex h-12 items-center justify-between px-10 py-3 font-custom-lexend  text-xs text-primary  ">
           {/* left navbar */}
-          <ul className=" phone:text-sm  flex flex-grow cursor-pointer">
-            <li className="item-center custom-epilogue flex flex-grow cursor-pointer bg-gradient-to-r from-primary to-secondary bg-clip-text text-sm font-black text-transparent">
-              <Link href="/homepage" onClick={() => handleLinkClick("home")}>
+          <ul className=" flex  flex-grow cursor-pointer phone:text-sm">
+            <li className="item-center custom-epilogue flex flex-grow cursor-pointer text-sm font-black">
+              <Link
+                href="/homepage"
+                onClick={() => handleLinkClick("home")}
+                className="text-gradient"
+              >
                 Laguna Youth Organizations Hub
               </Link>
             </li>
