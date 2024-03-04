@@ -71,7 +71,7 @@ const ActivitiesCard: React.FC<ActivitiesCardProps> = ({
       <style jsx global>{`
         .highlight {
           color: #00bd6e;
-          font-weight: bold;
+          font-weight: black;
         }
       `}</style>
       <Image
@@ -86,14 +86,14 @@ const ActivitiesCard: React.FC<ActivitiesCardProps> = ({
         height={300}
       />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
-        <p className="text-gradient mb-2 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
+        <p className="mb-2 overflow-hidden text-ellipsis  whitespace-nowrap font-custom-epilogue text-sm font-black text-primary">
           {highlightText(
             activity.organization.orgName.toLocaleUpperCase(),
             searchText,
           )}
         </p>
         <p className="mb-2 overflow-hidden text-ellipsis  whitespace-nowrap  text-sm font-bold">
-          {highlightText(activity.name.toLocaleUpperCase(), searchText)}
+          {highlightText(activity.name, searchText)}
         </p>
         <div className=" flex items-center gap-1">
           <EventIcon className="h-4 w-4" />

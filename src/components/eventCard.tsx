@@ -1,9 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import vol1 from "public/images/vol2.png";
-import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { Organization, type User } from "@prisma/client";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
 
@@ -32,8 +30,6 @@ type EventProps = {
 };
 
 const EventCard: React.FC<EventCardProps> = ({ event, searchText }) => {
-  const { data: sessionData, status: sessionStatus } = useSession();
-
   const highlightText = (text: string, query: string): React.ReactNode => {
     if (!query) return text;
 
@@ -55,7 +51,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, searchText }) => {
       <style jsx global>{`
         .highlight {
           color: #00bd6e;
-          font-weight: bold;
+          font-weight: black;
         }
       `}</style>
       <Image
@@ -70,9 +66,11 @@ const EventCard: React.FC<EventCardProps> = ({ event, searchText }) => {
         height={100}
       />
       <div className="mx-4 mt-7 h-3/5 max-w-[300px] font-custom-lexend text-customBlack-100">
-        <p className="text-gradient mb-2 overflow-hidden  text-ellipsis whitespace-nowrap font-custom-epilogue text-sm font-bold">
-          {highlightText(event.organizedBy.toLocaleUpperCase(), searchText)}
-        </p>
+        <div className="flex">
+          <p className="mb-2 overflow-hidden text-ellipsis  whitespace-nowrap font-custom-epilogue text-sm font-black text-primary">
+            {highlightText(event.organizedBy.toLocaleUpperCase(), searchText)}
+          </p>
+        </div>
         <p className="mb-2 overflow-hidden text-ellipsis whitespace-nowrap  text-sm font-bold">
           {highlightText(event.name, searchText)}
         </p>

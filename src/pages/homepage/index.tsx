@@ -10,9 +10,6 @@ import Router, { useRouter } from "next/router";
 import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { Organization } from "@prisma/client";
-
-import { Profile } from "next-auth";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
