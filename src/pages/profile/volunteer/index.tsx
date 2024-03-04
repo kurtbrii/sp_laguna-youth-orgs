@@ -79,10 +79,12 @@ const VolunteerPage = () => {
           </div>
 
           <div className="flex-start  ml-16 flex flex-col">
-            <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
-              {volunteer?.firstName} {volunteer?.middleInitial}{" "}
-              {volunteer?.lastName} {volunteer?.suffix}
-            </h1>
+            <div className="flex">
+              <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
+                {volunteer?.firstName} {volunteer?.middleInitial}{" "}
+                {volunteer?.lastName} {volunteer?.suffix}
+              </h1>
+            </div>
 
             <p className="mb-6 mr-20 text-sm">{volunteer?.bio}</p>
 

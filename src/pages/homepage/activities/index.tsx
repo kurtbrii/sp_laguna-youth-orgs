@@ -50,8 +50,8 @@ const Index = () => {
       <Navbar />
       {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
-        <div className=" my-4 flex h-12 flex-col justify-between  ">
-          <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
+        <div className=" my-4 flex h-12">
+          <h1 className="text-gradient  mb-6 font-custom-epilogue text-2xl font-extrabold">
             Get Involved
           </h1>
         </div>

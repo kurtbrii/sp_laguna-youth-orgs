@@ -44,11 +44,14 @@ const OrgCard = ({ organization }: OrgProps) => {
       {/* <div className="h-2/5 bg-slate-600"> */}
       <Image src={vol2} className="h-2/5 w-full object-cover" alt="sunset " />
       <div className=" mx-4 mt-6 h-3/5">
-        <p className="mb-3 overflow-hidden text-ellipsis  whitespace-nowrap font-custom-epilogue  text-sm font-bold">
-          {organization.orgName}
-        </p>
+        <div className="flex">
+          <div className=" text-gradient mb-3 overflow-hidden text-ellipsis whitespace-nowrap  font-custom-epilogue text-sm  font-black">
+            {organization.orgName}
+          </div>
+        </div>
+        <p className="text-sm">{organization?.user?.email}</p>
         <p className="text-sm">{organization.phoneNumber}</p>
-        <p className="text-sm">Role: {organization?.user?.role}</p>
+        {/* <p className="text-sm">Role: {organization?.user?.role}</p> */}
       </div>
       <Image
         className="absolute left-4 top-16 rounded-md"

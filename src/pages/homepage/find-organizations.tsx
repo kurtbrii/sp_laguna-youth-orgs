@@ -43,8 +43,8 @@ const FindOrganizations: NextPage = () => {
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
-      <div className="mx-10 my-4 flex h-12 flex-col justify-between font-custom-lexend ">
-        <h1 className="mb-2 h-full w-1/2 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
+      <div className="mx-10 my-4 flex h-12 font-custom-lexend ">
+        <h1 className="text-gradient mb-2 h-full  font-custom-epilogue text-2xl font-extrabold   ">
           Find Organizations
         </h1>
       </div>
