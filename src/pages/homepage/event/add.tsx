@@ -96,7 +96,7 @@ const Add = () => {
       images: eventData.images,
     });
 
-    // void router.push("/homepage");
+    void router.push("/homepage");
   };
 
   const handleAddPartner = () => {

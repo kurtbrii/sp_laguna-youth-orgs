@@ -10,7 +10,7 @@ import Router, { useRouter } from "next/router";
 import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import Test from "~/components/Test";
+import ViewLocationModal from "~/components/ViewLocationModal";
 
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -120,8 +120,6 @@ const Index = () => {
           />
         ))}
       </div>
-
-      <Test />
     </div>
   );
 };

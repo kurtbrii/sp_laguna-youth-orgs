@@ -36,7 +36,6 @@ const SearchPlaces: React.FC<SearchPlacesProps> = ({
         handleLocationChange(selectedPlace);
       }}
       options={{
-        types: ["(regions)"],
         componentRestrictions: { country: "PH" },
       }}
     >
