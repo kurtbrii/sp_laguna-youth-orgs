@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import Image from "next/image";
-import vol2 from "public/images/vol2.png";
-
+import Modal from "react-modal";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -14,6 +12,7 @@ import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
 import EmailActivityCall from "~/components/EmailActivityCall";
 import Carousel from "~/components/Carousel";
+import ViewLocationModal from "~/components/ViewLocationModal";
 
 const ActivitiesPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -62,6 +61,12 @@ const ActivitiesPage = () => {
   const [toggleVolunteerNow, setToggleVolunteerNow] = useState(false);
   const [togglePartnership, setTogglePartnership] = useState(false);
   const [toggleJoinActivity, setToggleJoinActivity] = useState(false);
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const showMap = () => {
+    setModalIsOpen(!modalIsOpen);
+  };
 
   if (!id) {
     return <div>No organization ID provided</div>;
@@ -185,15 +190,39 @@ const ActivitiesPage = () => {
                 </p>
               </div>
 
-              <div className="flex items-stretch gap-1">
+              <div className="flex gap-1">
                 <PlaceIcon
                   className="h-4 w-4 opacity-75"
                   style={{ color: "var(--black100)" }}
                 />
 
-                <p className="text-md mb-6 italic text-customBlack-50">
+                <p
+                  onClick={showMap}
+                  className="text-md hover:text-gradient mb-6 cursor-pointer italic text-customBlack-50 phone:text-sm"
+                >
                   {activity?.location}
                 </p>
+
+                <Modal
+                  isOpen={modalIsOpen}
+                  onRequestClose={showMap}
+                  contentLabel="Location Modal"
+                  style={{
+                    overlay: {
+                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      zIndex: 1000,
+                    },
+                    content: {
+                      borderRadius: "15px",
+                      width: "80%",
+                      height: "90%",
+                      margin: "auto",
+                      padding: "0",
+                    },
+                  }}
+                >
+                  <ViewLocationModal location={activity?.location ?? ""} />
+                </Modal>
               </div>
             </div>
 
