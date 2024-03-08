@@ -7,9 +7,9 @@ import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import { CldUploadWidget } from "next-cloudinary";
 import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
+import LocationForm from "~/components/LocationForm";
 
 interface EventProps {
   name: string;
@@ -195,14 +195,23 @@ const EditEvent = () => {
         />
 
         <div className="flex gap-2">
-          <input
+          <LocationForm
+            handleChange={(value) =>
+              setEventData((prevEventData) => ({
+                ...prevEventData,
+                location: value,
+              }))
+            }
+            string={eventData.location}
+          />
+          {/* <input
             type=""
             value={eventData.location}
             name="location"
             onChange={handleEventForm}
             className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Location"
-          />
+          /> */}
           <input
             type="datetime-local"
             value={eventData.date}

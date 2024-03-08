@@ -9,6 +9,7 @@ import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
+import LocationForm from "~/components/LocationForm";
 
 interface ActivityProps {
   name: string;
@@ -110,7 +111,7 @@ const EditActivity = () => {
     return <div>Error loading user data</div>;
   }
 
-  const handleEventForm = (
+  const handleActivityForm = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>,
@@ -165,7 +166,7 @@ const EditActivity = () => {
           type="text"
           value={activitiesData.name}
           name="name"
-          onChange={handleEventForm}
+          onChange={handleActivityForm}
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Event Name"
         />
@@ -174,25 +175,36 @@ const EditActivity = () => {
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={activitiesData.details}
-          onChange={handleEventForm}
+          onChange={handleActivityForm}
           rows={10}
           placeholder="Details"
         />
 
         <div className="flex gap-2">
-          <input
+          {/* <input
             type=""
             value={activitiesData.location}
             name="location"
             onChange={handleEventForm}
             className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Location"
+          /> */}
+
+          <LocationForm
+            handleChange={(value) =>
+              setActivitiesData((prevActivityData) => ({
+                ...prevActivityData,
+                location: value,
+              }))
+            }
+            string={activitiesData.location}
           />
+
           <input
             type="datetime-local"
             value={activitiesData.date}
             name="date"
-            onChange={handleEventForm}
+            onChange={handleActivityForm}
             className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"
           />

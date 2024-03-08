@@ -6,14 +6,13 @@ import { useSession } from "next-auth/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import vol1 from "public/images/vol1.png";
 import React, { useState } from "react";
 import DeleteModal from "~/components/DeleteModal";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
-import { CldImage } from "next-cloudinary";
 import Carousel from "~/components/Carousel";
-import vol2 from "~/../public/images/vol1.png";
+import Modal from "react-modal";
+import ViewLocationModal from "~/components/ViewLocationModal";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -30,6 +29,12 @@ const EventPage = () => {
   const event = eventQuery.data;
 
   const deleteEvent = api.event.deleteEvent.useMutation();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const showMap = () => {
+    setModalIsOpen(!modalIsOpen);
+  };
 
   if (!id) {
     return <div>No organization ID provided</div>;
@@ -119,9 +124,33 @@ const EventPage = () => {
               style={{ color: "var(--black100)" }}
             />
 
-            <p className=" text-md mb-6 italic text-customBlack-50 phone:text-sm">
+            <p
+              onClick={showMap}
+              className="text-md hover:text-gradient mb-6 cursor-pointer italic text-customBlack-50 phone:text-sm"
+            >
               {event?.location}
             </p>
+
+            <Modal
+              isOpen={modalIsOpen}
+              onRequestClose={showMap}
+              contentLabel="Location Modal"
+              style={{
+                overlay: {
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  zIndex: 1000,
+                },
+                content: {
+                  borderRadius: "15px",
+                  width: "80%",
+                  height: "90%",
+                  margin: "auto",
+                  padding: "0",
+                },
+              }}
+            >
+              <ViewLocationModal location={event?.location ?? ""} />
+            </Modal>
           </div>
 
           <p
@@ -159,31 +188,6 @@ const EventPage = () => {
         handleDeleteButton={handleDeleteButton}
         string={"event"}
       />
-
-      {/* {toggleModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-80">
-          <div className="rounded-md bg-white p-12">
-            <p className="mb-6 font-bold">Do you want to delete this event?</p>
-            <div className=" flex justify-center">
-              <button
-                className="rounded-mdpx-4 btn-outline mr-3 px-5 py-2"
-                style={{ color: "var(--red)", borderColor: "var(--red)" }}
-                onClick={() => handleToggleButton()}
-              >
-                Cancel
-              </button>
-              <button
-                className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:border-blue-300 focus:outline-none focus:ring"
-                onClick={handleDeleteButton}
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-
-      {/* <handleDeleteButton /> */}
     </div>
   );
 };

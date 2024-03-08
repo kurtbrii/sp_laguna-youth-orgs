@@ -9,6 +9,7 @@ import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
+import LocationForm from "~/components/LocationForm";
 
 interface EventProps {
   name: "";
@@ -35,8 +36,6 @@ const Add = () => {
   const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
   const [partner, setPartner] = useState("");
-
-  const [validationErrors, setValidationErrors] = useState({});
 
   const [eventData, setEventData] = useState<EventProps>({
     name: "",
@@ -145,7 +144,10 @@ const Add = () => {
         </p>
       </section>
       <form
-        onSubmit={() => submitEvent(eventData)}
+        onSubmit={(e) => {
+          // e.preventDefault();
+          submitEvent(eventData);
+        }}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm phone:mx-5"
       >
@@ -170,7 +172,16 @@ const Add = () => {
         />
 
         <div className="flex gap-2">
-          <input
+          <LocationForm
+            handleChange={(value) =>
+              setEventData((prevEventData) => ({
+                ...prevEventData,
+                location: value,
+              }))
+            }
+            string={eventData.location}
+          />
+          {/* <input
             required
             type=""
             value={eventData.location}
@@ -178,7 +189,7 @@ const Add = () => {
             onChange={handleEventForm}
             className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Location"
-          />
+          /> */}
           <input
             required
             type="datetime-local"
@@ -266,6 +277,8 @@ const Add = () => {
             </button>
           </div>
         </div>
+
+        {/* <LocationForm /> */}
       </form>
 
       {/* <button onClick={() }>dsd</button> */}

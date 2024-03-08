@@ -162,8 +162,6 @@ export default function Home() {
             </div>
           </div>
         </header>
-
-        {/* <button onClick={() => handleButton()}>helloo</button> */}
       </main>
     </>
   );
