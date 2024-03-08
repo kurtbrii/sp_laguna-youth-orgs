@@ -163,7 +163,6 @@ export const eventRouter = createTRPCRouter({
           id: input.id
         }
       })
-    })
-
+    }),
 
 });
