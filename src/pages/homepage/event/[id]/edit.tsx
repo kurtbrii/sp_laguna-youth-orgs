@@ -11,18 +11,11 @@ import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
 import LocationForm from "~/components/LocationForm";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { updateEventSchema } from "~/utils/schemaValidation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-interface EventProps {
-  name: string;
-  createdAt: string;
-  details: string;
-  location: string;
-  organizationId: string;
-  date: string;
-  partners: string[];
-  images: string[];
-  organizedBy: string;
-}
+type UpdateEventFields = z.infer<typeof updateEventSchema>;
 
 const EditEvent = () => {
   const updateEvent = api.event.updateEvent.useMutation();
@@ -57,24 +50,37 @@ const EditEvent = () => {
   };
 
   // ! REACT USEFORM
-  const { register, handleSubmit, setValue, getValues, watch, reset } =
-    useForm<EventProps>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    watch,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateEventFields>({
+    defaultValues: {
+      organizedBy: user?.data?.organization?.orgName ?? "",
+      organizationId: orgId,
+    },
+    resolver: zodResolver(updateEventSchema),
+  });
 
   const formData = watch();
 
-  const onSubmit: SubmitHandler<EventProps> = (data) => {
+  const onSubmit: SubmitHandler<UpdateEventFields> = (data) => {
     console.log("Data", data);
 
     updateEvent.mutate({
-      id: id as string,
-      name: formData.name,
+      name: getValues("name"),
       organizedBy: user?.data?.organization?.orgName ?? "",
-      details: formData.details,
-      location: formData.location,
+      details: getValues("details"),
+      location: getValues("location"),
       organizationId: orgId,
-      date: formData.date,
-      partners: formData.partners,
-      images: formData.images,
+      date: getValues("date"),
+      partners: getValues("partners"),
+      images: getValues("images"),
+      id: id as string,
     });
 
     window.location.replace("/homepage");
@@ -84,6 +90,7 @@ const EditEvent = () => {
 
   useEffect(() => {
     if (eventQuery.data) {
+      reset(formData);
       reset(eventQueryDataForm);
     }
   }, []);
@@ -103,7 +110,7 @@ const EditEvent = () => {
   };
 
   const handleAddPartner = () => {
-    const currentArray = formData.partners || [];
+    const currentArray = formData.partners ?? [];
     setValue("partners", [...currentArray, partner]);
     setPartner("");
 
@@ -111,18 +118,18 @@ const EditEvent = () => {
   };
 
   const handleRemovePartner = (index: number) => {
-    const updatedPartners = [...getValues("partners")];
+    const updatedPartners = [...(getValues("partners") ?? [])];
     updatedPartners.splice(index, 1);
     setValue("partners", updatedPartners);
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = getValues("images") || [];
+    const currentArray = getValues("images") ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = [...getValues("images")];
+    const updatedImages = [...(getValues("images") ?? [])];
     updatedImages.splice(index, 1);
     setValue("images", updatedImages);
   };
@@ -146,6 +153,7 @@ const EditEvent = () => {
           className="h-12 w-full rounded border p-2 shadow"
           placeholder="Event Name"
         />
+        {errors.name && <p className="text-customRed">{errors.name.message}</p>}
 
         <textarea
           {...register("details")}
@@ -156,13 +164,15 @@ const EditEvent = () => {
           rows={10}
           placeholder="Details"
         />
+        {errors.details && (
+          <p className="text-customRed">{errors.details.message}</p>
+        )}
 
         <div className="flex gap-2">
-          <LocationForm
-            register={register}
-            // handleChange={...setValue("location")}
-            string={formData.location}
-          />
+          <LocationForm register={register} />
+          {errors.location && (
+            <p className="text-customRed">{errors.location.message}</p>
+          )}
 
           <input
             {...register("date")}
@@ -173,71 +183,81 @@ const EditEvent = () => {
             className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"
           />
+          {errors.date && (
+            <p className="text-customRed">{errors.date.message}</p>
+          )}
         </div>
+
+        {errors.id && <p className="text-customRed">{errors.id.message}</p>}
 
         <div>
           <input
-            {...register("partners")}
+            // {...register("partners")}
             type="text"
             name="partners"
-            value={partner}
             className=" h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Partner"
             onChange={handlePartner}
+            value={partner}
           />
           <IconButton className="h-12 w-12" onClick={handleAddPartner}>
             <AddBoxIcon />
           </IconButton>
           <div className="mt-2 flex flex-col">
-            {getValues("partners") &&
-              getValues("partners").length > 0 &&
-              getValues("partners").map((partner: string, index: number) => (
-                <div key={index} className="flex">
-                  <p className="w-1/2 text-sm">{partner}</p>
-                  <IconButton onClick={() => handleRemovePartner(index)}>
-                    <ClearIcon />
-                  </IconButton>
-                </div>
-              ))}
+            {getValues("partners")?.length
+              ? getValues("partners")?.map((partner: string, index: number) => (
+                  <div key={index} className="flex">
+                    <p className="w-1/2 text-sm">{partner}</p>
+                    <IconButton onClick={() => handleRemovePartner(index)}>
+                      <ClearIcon />
+                    </IconButton>
+                  </div>
+                ))
+              : null}
           </div>
+
+          <input
+            {...register("id")}
+            type="hidden" // or the appropriate type for your use case
+          />
         </div>
 
         <UploadImage string={"events"} handleAddImages={handleAddImages} />
 
         <div className="flex flex-wrap justify-center gap-4">
-          {getValues("images") &&
-            getValues("images").length > 0 &&
-            getValues("images").map((data, index) => (
-              <div className="relative " key={index}>
-                <div className="absolute right-0 top-0">
-                  <IconButton
-                    onClick={() => {
-                      handleRemoveImage(index);
-                    }}
-                    className="mdi mdi-close cursor-pointer hover:text-white"
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </div>
+          {getValues("images")?.length
+            ? getValues("images")?.map((data, index) => (
+                <div className="relative " key={index}>
+                  <div className="absolute right-0 top-0">
+                    <IconButton
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="mdi mdi-close cursor-pointer hover:text-white"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </div>
 
-                <div
-                  style={{
-                    width: "240px", // Use 100% width for responsiveness
-                    height: "150px", // Set a fixed height for all images
-                    display: "flex",
-                  }}
-                >
-                  <Image
-                    title={data}
-                    className="rounded-md object-cover shadow-xl"
-                    src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                    alt={`Uploaded file ${index}`}
-                    width={240}
-                    height={150}
-                  />
+                  <div
+                    style={{
+                      width: "240px", // Use 100% width for responsiveness
+                      height: "150px", // Set a fixed height for all images
+                      display: "flex",
+                    }}
+                  >
+                    <Image
+                      title={data}
+                      className="rounded-md object-cover shadow-xl"
+                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                      alt={`Uploaded file ${index}`}
+                      width={240}
+                      height={150}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            : null}
         </div>
 
         <div className="my-20 flex justify-center">

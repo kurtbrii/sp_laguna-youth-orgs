@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { useSession } from "next-auth/react";
 import vol2 from '~/../public/images/vol2.png'
-import { createEventSchema } from "~/utils/schemaValidation";
+import { createEventSchema, updateEventSchema } from "~/utils/schemaValidation";
 
 import {
   createTRPCRouter,
@@ -115,7 +115,7 @@ export const eventRouter = createTRPCRouter({
     }),
 
   updateEvent: protectedProcedure
-    .input(z.object({ id: z.string(), name: z.string(), organizedBy: z.string(), details: z.string(), location: z.string(), organizationId: z.string(), date: z.string(), partners: z.array(z.string()), images: z.array(z.string()) }))
+    .input(updateEventSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.event.update({
         where: { id: input.id },

@@ -15,23 +15,6 @@ import { createEventSchema } from "~/utils/schemaValidation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// const createEventSchema = z.object({
-//   name: z
-//     .string()
-//     .max(20, { message: "Event name must be at most 20 characters" })
-//     .min(5, { message: "Event name must be at least 5 characters" }),
-//   organizedBy: z.string().optional(),
-//   details: z
-//     .string()
-//     .max(500, { message: "Event details must be at most 500 characters" })
-//     .min(20, { message: "Event details must be at least 20 characters" }),
-//   location: z.string(),
-//   // organizationId: z.string(),
-//   date: z.string(),
-//   partners: z.array(z.string()).optional(),
-//   images: z.array(z.string()).optional(),
-// });
-
 interface EventProps {
   name: string;
   createdAt: string;
@@ -55,7 +38,7 @@ const Add = () => {
     userId: sessionData?.user.id ?? "",
   });
 
-  const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
+  const orgId = user.data?.organization?.id ?? "";
 
   const [partner, setPartner] = useState("");
 
@@ -66,8 +49,8 @@ const Add = () => {
     handleSubmit,
     setValue,
     getValues,
-    watch,
     setError,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<EventFields>({
     defaultValues: {
@@ -123,7 +106,7 @@ const Add = () => {
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = getValues("images") ?? [];
+    const currentArray = formData.images ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
 
@@ -168,11 +151,7 @@ const Add = () => {
 
         <div className="flex gap-2">
           <div className="flex w-1/2 flex-col">
-            <LocationForm
-              register={register}
-              // handleChange={...setValue("location")}
-              string={formData.location ?? ""}
-            />
+            <LocationForm register={register} />
             {errors.location && (
               <p className="text-customRed">{errors.location.message}</p>
             )}

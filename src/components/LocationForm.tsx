@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { UseFormRegister } from "react-hook-form";
-import { createEventSchema } from "~/utils/schemaValidation";
+import {
+  type createEventSchema,
+  type updateEventSchema,
+} from "~/utils/schemaValidation";
 import { z } from "zod";
 
 // const createEventSchema = z.object({
@@ -22,28 +26,18 @@ import { z } from "zod";
 //   images: z.array(z.string()).optional(),
 // });
 
-type EventSchema = z.infer<typeof createEventSchema>;
-
-interface EventProps {
-  name: string;
-  createdAt: string;
-  details: string;
-  location: string;
-  organizationId: string;
-  date: string;
-  partners: string[];
-  images: string[];
-  organizedBy: string;
-}
+type CreateEventSchema = z.infer<typeof createEventSchema>;
+type UpdateEventSchema = z.infer<typeof updateEventSchema>;
 
 interface SearchPlacesProps {
-  string: string;
-  register: UseFormRegister<EventSchema>;
+  register: any;
+  // | UseFormRegister<CreateEventSchema>
+  // | UseFormRegister<UpdateEventSchema>;
 }
 
 const libraries = ["places"];
 
-const SearchPlaces: React.FC<SearchPlacesProps> = ({ string, register }) => {
+const SearchPlaces: React.FC<SearchPlacesProps> = ({ register }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
     libraries: ["places"],
@@ -69,7 +63,7 @@ const SearchPlaces: React.FC<SearchPlacesProps> = ({ string, register }) => {
         id="autocomplete"
         type="text"
         placeholder="Search for places"
-        value={string}
+        // value={string}
       />
     </Autocomplete>
   );
