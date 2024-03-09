@@ -8,9 +8,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { triggerAsyncId } from "async_hooks";
-import cloudinaryUpload from "../cloudinary";
-import { error } from "console";
 
 
 export const eventRouter = createTRPCRouter({

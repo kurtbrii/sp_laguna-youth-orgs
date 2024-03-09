@@ -13,8 +13,7 @@ import LocationForm from "~/components/LocationForm";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 interface EventProps {
-  name: "";
-  organized_by: string;
+  name: string;
   createdAt: string;
   details: string;
   location: string;
@@ -22,6 +21,7 @@ interface EventProps {
   date: string;
   partners: string[];
   images: string[];
+  organizedBy: string;
 }
 
 const Add = () => {
@@ -41,21 +41,23 @@ const Add = () => {
   const { register, handleSubmit, setValue, getValues, watch } =
     useForm<EventProps>();
 
-  const eventData = watch();
+  const formData = watch();
 
   const onSubmit: SubmitHandler<EventProps> = (data) => {
     console.log("Data", data);
 
     createEvent.mutate({
-      name: eventData.name,
+      name: formData.name,
       organizedBy: user?.data?.organization?.orgName ?? "",
-      details: eventData.details,
-      location: eventData.location,
+      details: formData.details,
+      location: formData.location,
       organizationId: orgId,
-      date: eventData.date,
-      partners: eventData.partners,
-      images: eventData.images,
+      date: formData.date,
+      partners: formData.partners,
+      images: formData.images,
     });
+
+    window.location.replace("/homepage");
   };
 
   if (user.isLoading) {
@@ -72,7 +74,7 @@ const Add = () => {
   };
 
   const handleAddPartner = () => {
-    const currentArray = eventData.partners || [];
+    const currentArray = formData.partners || [];
     setValue("partners", [...currentArray, partner]);
     setPartner("");
 
@@ -113,7 +115,7 @@ const Add = () => {
           {...register("name")}
           // required
           type="text"
-          value={eventData.name}
+          value={formData.name}
           name="name"
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Event Name"
@@ -124,7 +126,7 @@ const Add = () => {
           // required
           className=" w-full rounded border p-2 shadow "
           name="details"
-          value={eventData.details}
+          value={formData.details}
           rows={10}
           placeholder="Details"
         />
@@ -133,14 +135,14 @@ const Add = () => {
           <LocationForm
             register={register}
             // handleChange={...setValue("location")}
-            string={eventData.location}
+            string={formData.location}
           />
 
           <input
             {...register("date")}
             // required
             type="datetime-local"
-            value={eventData.date}
+            value={formData.date}
             name="date"
             className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"

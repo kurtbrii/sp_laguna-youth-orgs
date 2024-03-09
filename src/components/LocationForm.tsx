@@ -3,8 +3,7 @@ import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { UseFormRegister } from "react-hook-form";
 
 interface EventProps {
-  name: "";
-  organized_by: string;
+  name: string;
   createdAt: string;
   details: string;
   location: string;
@@ -12,6 +11,7 @@ interface EventProps {
   date: string;
   partners: string[];
   images: string[];
+  organizedBy: string;
 }
 interface SearchPlacesProps {
   string: string;

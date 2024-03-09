@@ -10,6 +10,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
 import LocationForm from "~/components/LocationForm";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface EventProps {
   name: string;
@@ -55,32 +56,37 @@ const EditEvent = () => {
     images: eventQueryData?.images ?? [],
   };
 
-  const [partner, setPartner] = useState("");
+  // ! REACT USEFORM
+  const { register, handleSubmit, setValue, getValues, watch, reset } =
+    useForm<EventProps>();
 
-  const [eventData, setEventData] = useState<EventProps>({
-    name: "",
-    createdAt: "",
-    details: "",
-    location: "",
-    organizedBy: "",
-    organizationId: orgId,
-    date: "",
-    partners: [],
-    images: [],
-  });
+  const formData = watch();
+
+  const onSubmit: SubmitHandler<EventProps> = (data) => {
+    console.log("Data", data);
+
+    updateEvent.mutate({
+      id: id as string,
+      name: formData.name,
+      organizedBy: user?.data?.organization?.orgName ?? "",
+      details: formData.details,
+      location: formData.location,
+      organizationId: orgId,
+      date: formData.date,
+      partners: formData.partners,
+      images: formData.images,
+    });
+
+    window.location.replace("/homepage");
+  };
+
+  const [partner, setPartner] = useState("");
 
   useEffect(() => {
     if (eventQuery.data) {
-      setEventData(eventQueryDataForm);
+      reset(eventQueryDataForm);
     }
-  }, [eventQuery.data?.images]);
-
-  useEffect(() => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      organizationId: orgId,
-    }));
-  }, [orgId]);
+  }, []);
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -96,71 +102,29 @@ const EditEvent = () => {
     console.log(partner);
   };
 
-  const handleEventForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
-
-    console.log(eventData);
-  };
-
-  const submitEvent = (eventData: EventProps) => {
-    updateEvent.mutate({
-      id: id as string,
-      name: eventData.name,
-      organizedBy: user?.data?.organization?.orgName ?? "",
-      details: eventData.details,
-      location: eventData.location,
-      organizationId: orgId,
-      date: eventData.date,
-      partners: eventData.partners,
-      images: eventData.images,
-    });
-
-    window.location.replace("/homepage");
-  };
-
   const handleAddPartner = () => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      partners: [...prevEventData.partners, partner],
-    }));
-
-    // Clear the partner input field
+    const currentArray = formData.partners || [];
+    setValue("partners", [...currentArray, partner]);
     setPartner("");
+
+    console.log("partners", getValues("partners"));
   };
 
   const handleRemovePartner = (index: number) => {
-    setEventData((prevEventData) => {
-      const newPartners = [...prevEventData.partners];
-      newPartners.splice(index, 1);
-      return {
-        ...prevEventData,
-        partners: newPartners,
-      };
-    });
+    const updatedPartners = [...getValues("partners")];
+    updatedPartners.splice(index, 1);
+    setValue("partners", updatedPartners);
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      images: [...prevEventData.images, newImageUrl],
-    }));
+    const currentArray = getValues("images") || [];
+    setValue("images", [...currentArray, newImageUrl]);
   };
 
-  const handleRemoveImage = (imageNameToRemove: string) => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      images: prevEventData.images.filter(
-        (imageName) => imageName !== imageNameToRemove,
-      ),
-    }));
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = [...getValues("images")];
+    updatedImages.splice(index, 1);
+    setValue("images", updatedImages);
   };
 
   return (
@@ -172,51 +136,40 @@ const EditEvent = () => {
         </p>
       </section>
       <form
-        // onSubmit={() => submitEvent(eventData)}
+        onSubmit={handleSubmit(onSubmit)}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
       >
         <input
+          {...register("name")}
           type="text"
-          value={eventData.name}
-          name="name"
-          onChange={handleEventForm}
-          className="h-12 w-full rounded border  p-2 shadow"
+          className="h-12 w-full rounded border p-2 shadow"
           placeholder="Event Name"
         />
 
         <textarea
+          {...register("details")}
           className=" w-full rounded border p-2 shadow "
           name="details"
-          value={eventData.details}
-          onChange={handleEventForm}
+          value={formData.details}
+          // onChange={handleEventForm}
           rows={10}
           placeholder="Details"
         />
 
         <div className="flex gap-2">
           <LocationForm
-            handleChange={(value) =>
-              setEventData((prevEventData) => ({
-                ...prevEventData,
-                location: value,
-              }))
-            }
-            string={eventData.location}
+            register={register}
+            // handleChange={...setValue("location")}
+            string={formData.location}
           />
-          {/* <input
-            type=""
-            value={eventData.location}
-            name="location"
-            onChange={handleEventForm}
-            className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Location"
-          /> */}
+
           <input
+            {...register("date")}
             type="datetime-local"
-            value={eventData.date}
+            value={formData.date}
             name="date"
-            onChange={handleEventForm}
+            // onChange={handleEventForm}
             className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"
           />
@@ -224,8 +177,9 @@ const EditEvent = () => {
 
         <div>
           <input
+            {...register("partners")}
             type="text"
-            name="partner"
+            name="partners"
             value={partner}
             className=" h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Partner"
@@ -235,77 +189,73 @@ const EditEvent = () => {
             <AddBoxIcon />
           </IconButton>
           <div className="mt-2 flex flex-col">
-            {eventData?.partners?.map((partner: string, index: number) => (
-              <div key={index} className="flex">
-                <p className="w-1/2 text-sm">{partner}</p>
-                <IconButton onClick={() => handleRemovePartner(index)}>
-                  <ClearIcon />
-                </IconButton>
-              </div>
-            ))}
+            {getValues("partners") &&
+              getValues("partners").length > 0 &&
+              getValues("partners").map((partner: string, index: number) => (
+                <div key={index} className="flex">
+                  <p className="w-1/2 text-sm">{partner}</p>
+                  <IconButton onClick={() => handleRemovePartner(index)}>
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+              ))}
           </div>
         </div>
 
         <UploadImage string={"events"} handleAddImages={handleAddImages} />
 
-        <div className=" flex flex-wrap justify-center gap-4">
-          {eventData.images.map((data, index) => (
-            <div className="relative " key={index}>
-              <div className="absolute right-0 top-0">
-                <IconButton
-                  onClick={() => {
-                    handleRemoveImage(data);
+        <div className="flex flex-wrap justify-center gap-4">
+          {getValues("images") &&
+            getValues("images").length > 0 &&
+            getValues("images").map((data, index) => (
+              <div className="relative " key={index}>
+                <div className="absolute right-0 top-0">
+                  <IconButton
+                    onClick={() => {
+                      handleRemoveImage(index);
+                    }}
+                    className="mdi mdi-close cursor-pointer hover:text-white"
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+
+                <div
+                  style={{
+                    width: "240px", // Use 100% width for responsiveness
+                    height: "150px", // Set a fixed height for all images
+                    display: "flex",
                   }}
-                  className="mdi mdi-close cursor-pointer hover:text-white"
                 >
-                  <ClearIcon />
-                </IconButton>
+                  <Image
+                    title={data}
+                    className="rounded-md object-cover shadow-xl"
+                    src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                    alt={`Uploaded file ${index}`}
+                    width={240}
+                    height={150}
+                  />
+                </div>
               </div>
+            ))}
+        </div>
 
-              <div
-                style={{
-                  width: "240px", // Use 100% width for responsiveness
-                  height: "150px", // Set a fixed height for all images
-                  display: "flex",
-                }}
-              >
-                <Image
-                  title={data}
-                  className="rounded-md object-cover shadow-xl"
-                  src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                  alt={`Uploaded file ${index}`}
-                  width={240}
-                  height={150}
-                />
-              </div>
-
-              <button onClick={() => console.log(eventData)}>dsd</button>
-            </div>
-          ))}
+        <div className="my-20 flex justify-center">
+          <div className="flex gap-4">
+            <button type="submit" className="btn-active px-20 py-3">
+              Edit Event
+            </button>
+            <button
+              onClick={() => window.location.replace("/homepage")}
+              type="reset"
+              className="btn-outline   px-20 py-3"
+              style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
+            >
+              Discard
+            </button>
+          </div>
         </div>
       </form>
-
-      <div className="my-20 flex justify-center">
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            className="btn-active px-20 py-3"
-            onClick={() => {
-              submitEvent(eventData);
-            }}
-          >
-            Edit Event
-          </button>
-          <button
-            onClick={() => window.location.replace("/homepage")}
-            type="reset"
-            className="btn-outline   px-20 py-3"
-            style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
-          >
-            Discard
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
