@@ -22,8 +22,8 @@ export const eventRouter = createTRPCRouter({
       location: z.string(),
       organizationId: z.string(),
       date: z.string(),
-      partners: z.array(z.string()),
-      images: z.array(z.string())
+      partners: z.array(z.string()).optional(),
+      images: z.array(z.string()).optional()
     }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.event.create({

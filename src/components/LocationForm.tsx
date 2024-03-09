@@ -14,20 +14,11 @@ interface EventProps {
   images: string[];
 }
 interface SearchPlacesProps {
-  handleChange: (value: string) => void;
   string: string;
   register: UseFormRegister<EventProps>;
 }
 
-const SearchPlaces: React.FC<SearchPlacesProps> = ({
-  handleChange,
-  string,
-  register,
-}) => {
-  const handleLocationChange = (value: string) => {
-    handleChange(value);
-  };
-
+const SearchPlaces: React.FC<SearchPlacesProps> = ({ string, register }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
     libraries: ["places"],
@@ -43,12 +34,6 @@ const SearchPlaces: React.FC<SearchPlacesProps> = ({
       onLoad={(autocomplete) => {
         console.log("Autocomplete loaded:", autocomplete);
       }}
-      onPlaceChanged={() => {
-        const selectedPlace = (
-          document.getElementById("autocomplete") as HTMLInputElement
-        ).value;
-        handleLocationChange(selectedPlace);
-      }}
       options={{
         componentRestrictions: { country: "PH" },
       }}
@@ -60,7 +45,6 @@ const SearchPlaces: React.FC<SearchPlacesProps> = ({
         type="text"
         placeholder="Search for places"
         value={string}
-        onChange={(e) => handleLocationChange(e.target.value)}
       />
     </Autocomplete>
   );

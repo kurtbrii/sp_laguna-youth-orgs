@@ -10,7 +10,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
 import LocationForm from "~/components/LocationForm";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
 interface EventProps {
   name: "";
@@ -27,7 +27,6 @@ interface EventProps {
 const Add = () => {
   const createEvent = api.event.createEvent.useMutation();
 
-  const router = useRouter();
   const { data: sessionData } = useSession();
 
   const user = api.user.getUser.useQuery({
@@ -38,36 +37,26 @@ const Add = () => {
 
   const [partner, setPartner] = useState("");
 
-  const [eventData, setEventData] = useState<EventProps>({
-    name: "",
-    organized_by: "",
-    createdAt: "",
-    details: "",
-    location: "",
-    organizationId: orgId,
-    date: "",
-    partners: [],
-    images: [],
-  });
-
   // ! REACT USEFORM
   const { register, handleSubmit, setValue, getValues, watch } =
     useForm<EventProps>();
 
-  const formData = watch();
+  const eventData = watch();
 
   const onSubmit: SubmitHandler<EventProps> = (data) => {
     console.log("Data", data);
-    // setValue("organized_by", "hello");
-    // console.log("Images", data.images);
-  };
 
-  useEffect(() => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
+    createEvent.mutate({
+      name: eventData.name,
+      organizedBy: user?.data?.organization?.orgName ?? "",
+      details: eventData.details,
+      location: eventData.location,
       organizationId: orgId,
-    }));
-  }, [orgId]);
+      date: eventData.date,
+      partners: eventData.partners,
+      images: eventData.images,
+    });
+  };
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -82,35 +71,8 @@ const Add = () => {
     console.log(partner);
   };
 
-  const handleEventForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
-
-    console.log(eventData);
-  };
-
-  const submitEvent = (eventData: EventProps) => {
-    createEvent.mutate({
-      name: eventData.name,
-      organizedBy: user?.data?.organization?.orgName ?? "",
-      details: eventData.details,
-      location: eventData.location,
-      organizationId: orgId,
-      date: eventData.date,
-      partners: eventData.partners,
-      images: eventData.images,
-    });
-  };
-
   const handleAddPartner = () => {
-    const currentArray = formData.partners || [];
+    const currentArray = eventData.partners || [];
     setValue("partners", [...currentArray, partner]);
     setPartner("");
 
@@ -153,7 +115,6 @@ const Add = () => {
           type="text"
           value={eventData.name}
           name="name"
-          onChange={handleEventForm}
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Event Name"
         />
@@ -164,7 +125,6 @@ const Add = () => {
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={eventData.details}
-          onChange={handleEventForm}
           rows={10}
           placeholder="Details"
         />
@@ -172,12 +132,7 @@ const Add = () => {
         <div className="flex gap-2">
           <LocationForm
             register={register}
-            handleChange={(value) =>
-              setEventData((prevEventData) => ({
-                ...prevEventData,
-                location: value,
-              }))
-            }
+            // handleChange={...setValue("location")}
             string={eventData.location}
           />
 
@@ -187,7 +142,6 @@ const Add = () => {
             type="datetime-local"
             value={eventData.date}
             name="date"
-            onChange={handleEventForm}
             className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"
           />
