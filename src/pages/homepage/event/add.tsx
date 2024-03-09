@@ -13,6 +13,24 @@ import LocationForm from "~/components/LocationForm";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { createEventSchema } from "~/utils/schemaValidation";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// const createEventSchema = z.object({
+//   name: z
+//     .string()
+//     .max(20, { message: "Event name must be at most 20 characters" })
+//     .min(5, { message: "Event name must be at least 5 characters" }),
+//   organizedBy: z.string().optional(),
+//   details: z
+//     .string()
+//     .max(500, { message: "Event details must be at most 500 characters" })
+//     .min(20, { message: "Event details must be at least 20 characters" }),
+//   location: z.string(),
+//   // organizationId: z.string(),
+//   date: z.string(),
+//   partners: z.array(z.string()).optional(),
+//   images: z.array(z.string()).optional(),
+// });
 
 interface EventProps {
   name: string;
@@ -25,6 +43,8 @@ interface EventProps {
   images: string[];
   organizedBy: string;
 }
+
+type EventFields = z.infer<typeof createEventSchema>;
 
 const Add = () => {
   const createEvent = api.event.createEvent.useMutation();
@@ -40,7 +60,6 @@ const Add = () => {
   const [partner, setPartner] = useState("");
 
   // ! REACT USEFORM
-  type EventSchema = z.infer<typeof createEventSchema>;
 
   const {
     register,
@@ -50,27 +69,34 @@ const Add = () => {
     watch,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<EventSchema>();
+  } = useForm<EventFields>({
+    defaultValues: {
+      organizedBy: user?.data?.organization?.orgName ?? "",
+      organizationId: orgId,
+    },
+    resolver: zodResolver(createEventSchema),
+  });
 
   const formData = watch();
 
-  const onSubmit: SubmitHandler<EventSchema> = (data) => {
+  const onSubmit: SubmitHandler<EventFields> = (data) => {
     console.log("Data", data);
 
     createEvent.mutate({
-      name: formData.name,
+      name: getValues("name"),
       organizedBy: user?.data?.organization?.orgName ?? "",
-      details: formData.details,
-      location: formData.location,
+      details: getValues("details"),
+      location: getValues("location"),
       organizationId: orgId,
-      date: formData.date,
-      partners: formData.partners,
-      images: formData.images,
+      date: getValues("date"),
+      partners: getValues("partners"),
+      images: getValues("images"),
     });
 
     window.location.replace("/homepage");
   };
 
+  // ! LOADING
   if (user.isLoading) {
     return <div>Loading...</div>;
   }
@@ -88,8 +114,6 @@ const Add = () => {
     const currentArray = formData.partners ?? [];
     setValue("partners", [...currentArray, partner]);
     setPartner("");
-
-    console.log("partners", getValues("partners"));
   };
 
   const handleRemovePartner = (index: number) => {
@@ -124,52 +148,61 @@ const Add = () => {
       >
         <input
           {...register("name")}
-          // required
           type="text"
-          value={formData.name}
           name="name"
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Event Name"
         />
+        {errors.name && <p className="text-customRed">{errors.name.message}</p>}
 
         <textarea
           {...register("details")}
-          // required
           className=" w-full rounded border p-2 shadow "
           name="details"
-          value={formData.details}
           rows={10}
           placeholder="Details"
         />
+        {errors.details && (
+          <p className="text-customRed">{errors.details.message}</p>
+        )}
 
         <div className="flex gap-2">
-          <LocationForm
-            register={register}
-            // handleChange={...setValue("location")}
-            string={formData.location}
-          />
+          <div className="flex w-1/2 flex-col">
+            <LocationForm
+              register={register}
+              // handleChange={...setValue("location")}
+              string={formData.location ?? ""}
+            />
+            {errors.location && (
+              <p className="text-customRed">{errors.location.message}</p>
+            )}
+          </div>
 
-          <input
-            {...register("date")}
-            // required
-            type="datetime-local"
-            value={formData.date}
-            name="date"
-            className="h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Input Date"
-          />
+          <div className="flex w-1/2 flex-col">
+            <input
+              {...register("date")}
+              type="datetime-local"
+              name="date"
+              className="h-12 w-full rounded border p-2 shadow"
+              placeholder="Input Date"
+            />
+            {errors.date && (
+              <p className="text-customRed">{errors.date.message}</p>
+            )}
+          </div>
         </div>
 
         <div>
           <input
-            {...register("partners")}
+            // {...register("partners")}
             type="text"
             name="partners"
-            value={partner}
             className=" h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Partner"
             onChange={handlePartner}
+            value={partner}
           />
+
           <IconButton className="h-12 w-12" onClick={handleAddPartner}>
             <AddBoxIcon />
           </IconButton>
@@ -226,11 +259,11 @@ const Add = () => {
         <div className="my-20 flex justify-center ">
           <div className="flex gap-4 phone:flex-col">
             <button
-              disabled={isSubmitting}
               type="submit"
+              // onClick={() => alert("hi")}
               className="btn-active px-20 py-3"
             >
-              {isSubmitting ? "Loading..." : "Create Event"}
+              Create Event
             </button>
 
             <button
