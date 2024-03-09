@@ -1,6 +1,10 @@
 import React from "react";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { UseFormRegister } from "react-hook-form";
+import { createEventSchema } from "~/utils/schemaValidation";
+import { z } from "zod";
+
+type EventSchema = z.infer<typeof createEventSchema>;
 
 interface EventProps {
   name: string;
@@ -15,7 +19,7 @@ interface EventProps {
 }
 interface SearchPlacesProps {
   string: string;
-  register: UseFormRegister<EventProps>;
+  register: UseFormRegister<EventSchema>;
 }
 
 const SearchPlaces: React.FC<SearchPlacesProps> = ({ string, register }) => {

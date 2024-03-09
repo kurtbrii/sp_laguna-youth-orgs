@@ -11,6 +11,8 @@ import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
 import LocationForm from "~/components/LocationForm";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { createEventSchema } from "~/utils/schemaValidation";
+import { z } from "zod";
 
 interface EventProps {
   name: string;
@@ -38,12 +40,21 @@ const Add = () => {
   const [partner, setPartner] = useState("");
 
   // ! REACT USEFORM
-  const { register, handleSubmit, setValue, getValues, watch } =
-    useForm<EventProps>();
+  type EventSchema = z.infer<typeof createEventSchema>;
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    watch,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<EventSchema>();
 
   const formData = watch();
 
-  const onSubmit: SubmitHandler<EventProps> = (data) => {
+  const onSubmit: SubmitHandler<EventSchema> = (data) => {
     console.log("Data", data);
 
     createEvent.mutate({
@@ -74,7 +85,7 @@ const Add = () => {
   };
 
   const handleAddPartner = () => {
-    const currentArray = formData.partners || [];
+    const currentArray = formData.partners ?? [];
     setValue("partners", [...currentArray, partner]);
     setPartner("");
 
@@ -82,18 +93,18 @@ const Add = () => {
   };
 
   const handleRemovePartner = (index: number) => {
-    const updatedPartners = [...getValues("partners")];
+    const updatedPartners = [...(getValues("partners") ?? [])];
     updatedPartners.splice(index, 1);
     setValue("partners", updatedPartners);
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = getValues("images") || [];
+    const currentArray = getValues("images") ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = [...getValues("images")];
+    const updatedImages = [...(getValues("images") ?? [])];
     updatedImages.splice(index, 1);
     setValue("images", updatedImages);
   };
@@ -162,62 +173,64 @@ const Add = () => {
           <IconButton className="h-12 w-12" onClick={handleAddPartner}>
             <AddBoxIcon />
           </IconButton>
-          <div className="mt-2 flex flex-col">
-            {getValues("partners") &&
-              getValues("partners").length > 0 &&
-              getValues("partners").map((partner: string, index: number) => (
+          {getValues("partners")?.length
+            ? getValues("partners")?.map((partner: string, index: number) => (
                 <div key={index} className="flex">
                   <p className="w-1/2 text-sm">{partner}</p>
                   <IconButton onClick={() => handleRemovePartner(index)}>
                     <ClearIcon />
                   </IconButton>
                 </div>
-              ))}
-          </div>
+              ))
+            : null}
         </div>
 
         <UploadImage string={"events"} handleAddImages={handleAddImages} />
 
         <div className="flex flex-wrap justify-center gap-4">
-          {getValues("images") &&
-            getValues("images").length > 0 &&
-            getValues("images").map((data, index) => (
-              <div className="relative " key={index}>
-                <div className="absolute right-0 top-0">
-                  <IconButton
-                    onClick={() => {
-                      handleRemoveImage(index);
-                    }}
-                    className="mdi mdi-close cursor-pointer hover:text-white"
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </div>
+          {getValues("images")?.length
+            ? getValues("images")?.map((data, index) => (
+                <div className="relative " key={index}>
+                  <div className="absolute right-0 top-0">
+                    <IconButton
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="mdi mdi-close cursor-pointer hover:text-white"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </div>
 
-                <div
-                  style={{
-                    width: "240px", // Use 100% width for responsiveness
-                    height: "150px", // Set a fixed height for all images
-                    display: "flex",
-                  }}
-                >
-                  <Image
-                    title={data}
-                    className="rounded-md object-cover shadow-xl"
-                    src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                    alt={`Uploaded file ${index}`}
-                    width={240}
-                    height={150}
-                  />
+                  <div
+                    style={{
+                      width: "240px", // Use 100% width for responsiveness
+                      height: "150px", // Set a fixed height for all images
+                      display: "flex",
+                    }}
+                  >
+                    <Image
+                      title={data}
+                      className="rounded-md object-cover shadow-xl"
+                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                      alt={`Uploaded file ${index}`}
+                      width={240}
+                      height={150}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            : null}
         </div>
 
         <div className="my-20 flex justify-center ">
           <div className="flex gap-4 phone:flex-col">
-            <button type="submit" className="btn-active px-20 py-3">
-              Create Event
+            <button
+              disabled={isSubmitting}
+              type="submit"
+              className="btn-active px-20 py-3"
+            >
+              {isSubmitting ? "Loading..." : "Create Event"}
             </button>
 
             <button

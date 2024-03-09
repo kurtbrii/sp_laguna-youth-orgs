@@ -2,6 +2,7 @@
 import { z } from "zod";
 import { useSession } from "next-auth/react";
 import vol2 from '~/../public/images/vol2.png'
+import { createEventSchema } from "~/utils/schemaValidation";
 
 import {
   createTRPCRouter,
@@ -12,16 +13,7 @@ import {
 
 export const eventRouter = createTRPCRouter({
   createEvent: protectedProcedure
-    .input(z.object({
-      name: z.string().max(30).min(5, { message: "Event name must be at least 5 characters!" }),
-      organizedBy: z.string(),
-      details: z.string(),
-      location: z.string(),
-      organizationId: z.string(),
-      date: z.string(),
-      partners: z.array(z.string()).optional(),
-      images: z.array(z.string()).optional()
-    }))
+    .input(createEventSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.event.create({
         data: {
@@ -36,10 +28,6 @@ export const eventRouter = createTRPCRouter({
           images: input.images
         },
       })
-
-
-
-
     }),
 
   getEvents: publicProcedure
