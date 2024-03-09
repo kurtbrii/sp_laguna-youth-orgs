@@ -58,6 +58,8 @@ const Add = () => {
 
   const onSubmit: SubmitHandler<EventProps> = (data) => {
     console.log("Data", data);
+    // setValue("organized_by", "hello");
+    // console.log("Images", data.images);
   };
 
   useEffect(() => {
@@ -105,8 +107,6 @@ const Add = () => {
       partners: eventData.partners,
       images: eventData.images,
     });
-
-    // void router.push("/homepage");
   };
 
   const handleAddPartner = () => {
@@ -124,19 +124,14 @@ const Add = () => {
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      images: [...prevEventData.images, newImageUrl],
-    }));
+    const currentArray = getValues("images") || [];
+    setValue("images", [...currentArray, newImageUrl]);
   };
 
-  const handleRemoveImage = (imageNameToRemove: string) => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      images: prevEventData.images.filter(
-        (imageName) => imageName !== imageNameToRemove,
-      ),
-    }));
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = [...getValues("images")];
+    updatedImages.splice(index, 1);
+    setValue("images", updatedImages);
   };
 
   return (
@@ -154,7 +149,7 @@ const Add = () => {
       >
         <input
           {...register("name")}
-          required
+          // required
           type="text"
           value={eventData.name}
           name="name"
@@ -165,7 +160,7 @@ const Add = () => {
 
         <textarea
           {...register("details")}
-          required
+          // required
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={eventData.details}
@@ -188,7 +183,7 @@ const Add = () => {
 
           <input
             {...register("date")}
-            required
+            // required
             type="datetime-local"
             value={eventData.date}
             name="date"
@@ -228,37 +223,39 @@ const Add = () => {
         <UploadImage string={"events"} handleAddImages={handleAddImages} />
 
         <div className="flex flex-wrap justify-center gap-4">
-          {eventData.images.map((data, index) => (
-            <div className="relative " key={index}>
-              <div className="absolute right-0 top-0">
-                <IconButton
-                  onClick={() => {
-                    handleRemoveImage(data);
-                  }}
-                  className="mdi mdi-close cursor-pointer hover:text-white"
-                >
-                  <ClearIcon />
-                </IconButton>
-              </div>
+          {getValues("images") &&
+            getValues("images").length > 0 &&
+            getValues("images").map((data, index) => (
+              <div className="relative " key={index}>
+                <div className="absolute right-0 top-0">
+                  <IconButton
+                    onClick={() => {
+                      handleRemoveImage(index);
+                    }}
+                    className="mdi mdi-close cursor-pointer hover:text-white"
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </div>
 
-              <div
-                style={{
-                  width: "240px", // Use 100% width for responsiveness
-                  height: "150px", // Set a fixed height for all images
-                  display: "flex",
-                }}
-              >
-                <Image
-                  title={data}
-                  className="rounded-md object-cover shadow-xl"
-                  src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                  alt={`Uploaded file ${index}`}
-                  width={240}
-                  height={150}
-                />
+                <div
+                  style={{
+                    width: "240px", // Use 100% width for responsiveness
+                    height: "150px", // Set a fixed height for all images
+                    display: "flex",
+                  }}
+                >
+                  <Image
+                    title={data}
+                    className="rounded-md object-cover shadow-xl"
+                    src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                    alt={`Uploaded file ${index}`}
+                    width={240}
+                    height={150}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         <div className="my-20 flex justify-center ">
