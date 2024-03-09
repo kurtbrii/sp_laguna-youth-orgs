@@ -1,14 +1,28 @@
 import React from "react";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import { UseFormRegister } from "react-hook-form";
 
+interface EventProps {
+  name: "";
+  organized_by: string;
+  createdAt: string;
+  details: string;
+  location: string;
+  organizationId: string;
+  date: string;
+  partners: string[];
+  images: string[];
+}
 interface SearchPlacesProps {
   handleChange: (value: string) => void;
   string: string;
+  register: UseFormRegister<EventProps>;
 }
 
 const SearchPlaces: React.FC<SearchPlacesProps> = ({
   handleChange,
   string,
+  register,
 }) => {
   const handleLocationChange = (value: string) => {
     handleChange(value);
@@ -40,6 +54,7 @@ const SearchPlaces: React.FC<SearchPlacesProps> = ({
       }}
     >
       <input
+        {...register("location")}
         className="h-full w-full p-2"
         id="autocomplete"
         type="text"

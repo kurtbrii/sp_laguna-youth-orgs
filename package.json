@@ -47,6 +47,7 @@
     "nodemailer": "^6.9.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.51.0",
     "react-modal": "^3.16.1",
     "react-native-text-gradient": "^0.1.7",
     "react-places-autocomplete": "^7.3.0",

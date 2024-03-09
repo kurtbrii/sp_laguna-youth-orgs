@@ -10,6 +10,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
 import LocationForm from "~/components/LocationForm";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 
 interface EventProps {
   name: "";
@@ -49,6 +50,16 @@ const Add = () => {
     images: [],
   });
 
+  // ! REACT USEFORM
+  const { register, handleSubmit, setValue, getValues, watch } =
+    useForm<EventProps>();
+
+  const formData = watch();
+
+  const onSubmit: SubmitHandler<EventProps> = (data) => {
+    console.log("Data", data);
+  };
+
   useEffect(() => {
     setEventData((prevEventData) => ({
       ...prevEventData,
@@ -66,7 +77,6 @@ const Add = () => {
 
   const handlePartner = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPartner(e.target.value);
-
     console.log(partner);
   };
 
@@ -96,27 +106,21 @@ const Add = () => {
       images: eventData.images,
     });
 
-    void router.push("/homepage");
+    // void router.push("/homepage");
   };
 
   const handleAddPartner = () => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      partners: [...prevEventData.partners, partner],
-    }));
-
+    const currentArray = formData.partners || [];
+    setValue("partners", [...currentArray, partner]);
     setPartner("");
+
+    console.log("partners", getValues("partners"));
   };
 
   const handleRemovePartner = (index: number) => {
-    setEventData((prevEventData) => {
-      const newPartners = [...prevEventData.partners];
-      newPartners.splice(index, 1);
-      return {
-        ...prevEventData,
-        partners: newPartners,
-      };
-    });
+    const updatedPartners = [...getValues("partners")];
+    updatedPartners.splice(index, 1);
+    setValue("partners", updatedPartners);
   };
 
   const handleAddImages = (newImageUrl: string) => {
@@ -144,14 +148,12 @@ const Add = () => {
         </p>
       </section>
       <form
-        onSubmit={(e) => {
-          // e.preventDefault();
-          submitEvent(eventData);
-        }}
+        onSubmit={handleSubmit(onSubmit)}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm phone:mx-5"
       >
         <input
+          {...register("name")}
           required
           type="text"
           value={eventData.name}
@@ -162,6 +164,7 @@ const Add = () => {
         />
 
         <textarea
+          {...register("details")}
           required
           className=" w-full rounded border p-2 shadow "
           name="details"
@@ -173,6 +176,7 @@ const Add = () => {
 
         <div className="flex gap-2">
           <LocationForm
+            register={register}
             handleChange={(value) =>
               setEventData((prevEventData) => ({
                 ...prevEventData,
@@ -181,16 +185,9 @@ const Add = () => {
             }
             string={eventData.location}
           />
-          {/* <input
-            required
-            type=""
-            value={eventData.location}
-            name="location"
-            onChange={handleEventForm}
-            className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Location"
-          /> */}
+
           <input
+            {...register("date")}
             required
             type="datetime-local"
             value={eventData.date}
@@ -203,8 +200,9 @@ const Add = () => {
 
         <div>
           <input
+            {...register("partners")}
             type="text"
-            name="partner"
+            name="partners"
             value={partner}
             className=" h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Partner"
@@ -214,14 +212,16 @@ const Add = () => {
             <AddBoxIcon />
           </IconButton>
           <div className="mt-2 flex flex-col">
-            {eventData?.partners?.map((partner: string, index: number) => (
-              <div key={index} className="flex">
-                <p className="w-1/2 text-sm">{partner}</p>
-                <IconButton onClick={() => handleRemovePartner(index)}>
-                  <ClearIcon />
-                </IconButton>
-              </div>
-            ))}
+            {getValues("partners") &&
+              getValues("partners").length > 0 &&
+              getValues("partners").map((partner: string, index: number) => (
+                <div key={index} className="flex">
+                  <p className="w-1/2 text-sm">{partner}</p>
+                  <IconButton onClick={() => handleRemovePartner(index)}>
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+              ))}
           </div>
         </div>
 
