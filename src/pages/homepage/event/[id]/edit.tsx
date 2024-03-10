@@ -62,11 +62,16 @@ const EditEvent = () => {
     defaultValues: {
       organizedBy: user?.data?.organization?.orgName ?? "",
       organizationId: orgId,
+      id: id as string,
     },
     resolver: zodResolver(updateEventSchema),
   });
 
   const formData = watch();
+
+  useEffect(() => {
+    setValue("id", id as string);
+  });
 
   const onSubmit: SubmitHandler<UpdateEventFields> = (data) => {
     console.log("Data", data);
@@ -215,11 +220,6 @@ const EditEvent = () => {
                 ))
               : null}
           </div>
-
-          <input
-            {...register("id")}
-            type="hidden" // or the appropriate type for your use case
-          />
         </div>
 
         <UploadImage string={"events"} handleAddImages={handleAddImages} />
@@ -262,8 +262,12 @@ const EditEvent = () => {
 
         <div className="my-20 flex justify-center">
           <div className="flex gap-4">
-            <button type="submit" className="btn-active px-20 py-3">
-              Edit Event
+            <button
+              disabled={isSubmitting}
+              type="submit"
+              className="btn-active px-20 py-3"
+            >
+              {isSubmitting ? "Loading..." : "Edit Event"}
             </button>
             <button
               onClick={() => window.location.replace("/homepage")}

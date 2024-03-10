@@ -8,11 +8,11 @@ import {
 } from "~/server/api/trpc";
 import { triggerAsyncId } from "async_hooks";
 import { Input } from "postcss";
-
+import { createActivitySchema } from "~/utils/schemaValidation";
 
 export const activityRouter = createTRPCRouter({
   createActivity: protectedProcedure
-    .input(z.object({ name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string(), images: z.array(z.string()) }))
+    .input(createActivitySchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activity.create({
         data: {

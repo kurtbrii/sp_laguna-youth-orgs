@@ -50,7 +50,6 @@ const Add = () => {
     setValue,
     getValues,
     setError,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<EventFields>({
     defaultValues: {
@@ -59,8 +58,6 @@ const Add = () => {
     },
     resolver: zodResolver(createEventSchema),
   });
-
-  const formData = watch();
 
   const onSubmit: SubmitHandler<EventFields> = (data) => {
     console.log("Data", data);
@@ -94,7 +91,7 @@ const Add = () => {
   };
 
   const handleAddPartner = () => {
-    const currentArray = formData.partners ?? [];
+    const currentArray = getValues("partners") ?? [];
     setValue("partners", [...currentArray, partner]);
     setPartner("");
   };
@@ -106,10 +103,9 @@ const Add = () => {
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = formData.images ?? [];
+    const currentArray = getValues("images") ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
-
   const handleRemoveImage = (index: number) => {
     const updatedImages = [...(getValues("images") ?? [])];
     updatedImages.splice(index, 1);
@@ -239,10 +235,11 @@ const Add = () => {
           <div className="flex gap-4 phone:flex-col">
             <button
               type="submit"
+              disabled={isSubmitting}
               // onClick={() => alert("hi")}
               className="btn-active px-20 py-3"
             >
-              Create Event
+              {isSubmitting ? "Loading..." : "Add Event"}
             </button>
 
             <button
