@@ -13,32 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import LocationForm from "~/components/LocationForm";
 
-// const createActivitySchema = z.object({
-//   name: z.string(),
-//   date: z.string(),
-//   details: z.string(),
-//   hasOrganizations: z.boolean(),
-//   hasVolunteers: z.boolean(),
-//   hasParticipants: z.boolean(),
-//   location: z.string(),
-//   organizationId: z.string(),
-//   images: z.array(z.string()).optional(),
-// });
-
-interface ActivityProps {
-  name: string;
-  details: string;
-  date: string;
-  createdAt: string;
-  location: string;
-  images: string[];
-
-  hasOrganizations: boolean;
-  hasVolunteers: boolean;
-  hasParticipants: boolean;
-  organizationId: string;
-}
-
 type CreateActivityFields = z.infer<typeof createActivitySchema>;
 
 const Add = () => {
@@ -179,6 +153,7 @@ const Add = () => {
             Type of Activity
           </p>
         </section>
+
         <div className="mb-6 flex items-center  justify-center gap-10">
           {/* CALL FOR PARTICIPANTS */}
           <div className="flex items-center  justify-center gap-2">

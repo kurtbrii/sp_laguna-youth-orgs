@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -182,7 +181,6 @@ const EditEvent = () => {
           <input
             {...register("date")}
             type="datetime-local"
-            value={formData.date}
             name="date"
             // onChange={handleEventForm}
             className="h-12 w-1/2 rounded border p-2 shadow"
