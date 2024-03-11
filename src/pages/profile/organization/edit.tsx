@@ -90,32 +90,12 @@ const EditOrganization = () => {
   };
 
   useEffect(() => {
-    if (organizationQueryDataForm) {
-      reset(organizationQueryDataForm);
-    }
+    reset(organizationQueryDataForm);
   }, []);
 
   useEffect(() => {
     setValue("id", org?.id ?? "");
   }, [orgId, org?.id, setValue, getValues]);
-
-  const [orgData, setOrgData] = useState({
-    phoneNumber: org?.phoneNumber,
-    bio: org?.bio,
-    mission: org?.mission,
-    vision: org?.vision,
-    objectives: org?.objectives,
-    health: participation?.health,
-    education: participation?.education,
-    economicEmpowerment: participation?.economicEmpowerment,
-    socialInclusion: participation?.socialInclusion,
-    peaceBuilding: participation?.peaceBuilding,
-    governance: participation?.governance,
-    activeCitizenship: participation?.activeCitizenship,
-    environment: participation?.environment,
-    globalMobility: participation?.globalMobility,
-    agriculture: participation?.agriculture,
-  });
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -124,20 +104,6 @@ const EditOrganization = () => {
   if (user.error ?? !user.data?.organization) {
     return <div>Error loading user data</div>;
   }
-
-  const handleEventForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setOrgData({
-      ...orgData,
-      [name]: value,
-    });
-
-    console.log(orgData);
-  };
 
   const centersData = [
     "health",
@@ -166,16 +132,16 @@ const EditOrganization = () => {
   ];
 
   const centersDataOrg = [
-    orgData.health,
-    orgData.education,
-    orgData.economicEmpowerment,
-    orgData.socialInclusion,
-    orgData.peaceBuilding,
-    orgData.governance,
-    orgData.activeCitizenship,
-    orgData.environment,
-    orgData.globalMobility,
-    orgData.agriculture,
+    getValues("health"),
+    getValues("education"),
+    getValues("economicEmpowerment"),
+    getValues("socialInclusion"),
+    getValues("peaceBuilding"),
+    getValues("governance"),
+    getValues("activeCitizenship"),
+    getValues("environment"),
+    getValues("globalMobility"),
+    getValues("agriculture"),
   ];
 
   const errorMessage = [
@@ -209,6 +175,7 @@ const EditOrganization = () => {
             More Information
           </p>
         </section>
+
         <input
           {...register("phoneNumber")}
           type="text"
@@ -222,7 +189,6 @@ const EditOrganization = () => {
         <textarea
           {...register("bio")}
           className=" w-full rounded border p-2 shadow "
-          onChange={handleEventForm}
           rows={10}
           placeholder="Bio"
         />
@@ -289,7 +255,6 @@ const EditOrganization = () => {
               centersDataOrg={centersDataOrg}
               centerCapitalize={centerCapitalize}
               index={index}
-              handleEventForm={handleEventForm}
             />
           </div>
         ))}

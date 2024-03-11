@@ -6,7 +6,6 @@ const EditProfile = ({
   centersDataOrg,
   centerCapitalize,
   index,
-  handleEventForm,
   errors,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }: any) => {

@@ -72,4 +72,12 @@ const updateOrganizationSchema = z.object({
 })
 
 
-export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema }
+const updateVolunteerSchema = z.object({
+  id: z.string(),
+  phoneNumber: z.string().length(11, { message: "Phone number should be written in the prescribed format" }),
+  bio: z.string().refine((data) => data.trim().length > 0, { message: 'Bio is required', }),
+  sex: z.string().refine((data) => data.trim().length > 0, { message: 'Sex is required', }),
+  age: z.coerce.number().refine((data) => data > 0, { message: 'Age is required', }),
+})
+
+export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema }

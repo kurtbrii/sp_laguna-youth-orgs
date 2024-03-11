@@ -1,15 +1,11 @@
 import { z } from "zod";
-import { useSession } from "next-auth/react";
-
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-
-
+import { updateVolunteerSchema } from "~/utils/schemaValidation";
 
 export const volunteerRouter = createTRPCRouter({
 
@@ -18,7 +14,6 @@ export const volunteerRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
-
       return ctx.db.volunteer.create({
         data: {
           firstName: input.firstName,
@@ -76,7 +71,7 @@ export const volunteerRouter = createTRPCRouter({
     }),
 
   updateVolunteer: protectedProcedure
-    .input(z.object({ id: z.string(), phoneNumber: z.string(), bio: z.string(), sex: z.string(), age: z.number() }))
+    .input(updateVolunteerSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.volunteer.update({
         where: { id: input.id },
