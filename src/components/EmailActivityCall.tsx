@@ -8,8 +8,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
+import { createGuestSchema } from "~/utils/schemaValidation";
 
 type UpdateOrganizationFields = z.infer<typeof createJoinActivitySchema>;
+type UpdateGuestFields = z.infer<typeof createGuestSchema>;
 
 interface EmailProps {
   subject: string;
@@ -47,20 +49,56 @@ const EmailActivityCall = ({
   });
 
   // ! REACT USEFORM
+  const useFormSetup = (defaultValues: any, resolver: any) => {
+    const {
+      register,
+      handleSubmit,
+      setValue,
+      getValues,
+      formState: { errors, isSubmitting },
+    } = useForm({
+      defaultValues,
+      resolver,
+    });
+
+    return {
+      register,
+      handleSubmit,
+      setValue,
+      getValues,
+      errors,
+      isSubmitting,
+    };
+  };
+
   const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<UpdateOrganizationFields>({
-    defaultValues: {
+    register: orgVolRegister,
+    handleSubmit: orgVolHandleSubmit,
+    setValue: orgVolSetValue,
+    getValues: orgVolGetValues,
+    errors: orgVolErrors,
+    isSubmitting: orgVolIsSubmitting,
+  } = useFormSetup(
+    {
       orgId: "",
       volId: "",
     },
-    resolver: zodResolver(createJoinActivitySchema),
-  });
+    zodResolver(createJoinActivitySchema),
+  );
+
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   setValue,
+  //   getValues,
+  //   formState: { errors, isSubmitting },
+  // } = useForm<UpdateOrganizationFields>({
+  //   defaultValues: {
+  //     orgId: "",
+  //     volId: "",
+  //   },
+  //   resolver: zodResolver(createJoinActivitySchema),
+  // });
 
   const orgVolOnSubmit: SubmitHandler<UpdateOrganizationFields> = async (
     data,
@@ -72,16 +110,16 @@ const EmailActivityCall = ({
       addOrgOrVol.mutate({
         activityId: activity?.id,
         orgId: organization?.id,
-        subject: getValues("subject"),
-        body: getValues("body"),
+        subject: orgVolGetValues("subject"),
+        body: orgVolGetValues("body"),
         label: "partnership",
       });
     } else {
       addOrgOrVol.mutate({
         activityId: activity?.id,
         volId: volunteer?.id,
-        subject: getValues("subject"),
-        body: getValues("body"),
+        subject: orgVolGetValues("subject"),
+        body: orgVolGetValues("body"),
         label: "volunteer",
       });
     }
@@ -118,6 +156,22 @@ const EmailActivityCall = ({
     alert("Request Successul");
 
     router.reload();
+  };
+
+  const {
+    register: guestRegister,
+    handleSubmit: guestHandleSubmit,
+    setValue: guestSetValue,
+    getValues: guestGetValues,
+    errors: guestErrors,
+    isSubmitting: guestIsSubmitting,
+  } = useFormSetup({}, zodResolver(createGuestSchema));
+
+  const guestSubmit: SubmitHandler<UpdateGuestFields> = async (data) => {
+    console.log("Data", data);
+    // alert(volunteer?.id);
+
+    // router.reload();
   };
 
   const handleCallActivityForm = (
@@ -186,35 +240,36 @@ const EmailActivityCall = ({
   };
 
   useEffect(() => {
-    setValue("orgId", organization?.id),
-      setValue("volId", volunteer?.id),
-      setValue("activityId", activity?.id),
-      setValue("guestID", ""),
-      setValue("label", "");
-  }, [setValue]);
+    orgVolSetValue("orgId", organization?.id),
+      orgVolSetValue("volId", volunteer?.id),
+      orgVolSetValue("activityId", activity?.id),
+      orgVolSetValue("guestID", ""),
+      orgVolSetValue("label", "");
+  }, [orgVolSetValue]);
 
   return (
     <>
       {role === "VOLUNTEER" || role === "ORGANIZATION" ? (
         <>
           <form
-            onSubmit={handleSubmit(orgVolOnSubmit)}
+            onSubmit={orgVolHandleSubmit(orgVolOnSubmit)}
             className="mx-40 mb-5 mt-5 flex flex-col gap-4 font-custom-lexend  text-sm text-customBlack-100"
           >
             <input
-              {...register("subject")}
+              {...orgVolRegister("subject")}
               type="text"
               name="subject"
               onChange={handleCallActivityForm}
               className="h-12 w-full rounded border  p-2 shadow"
               placeholder="Subject"
             />
-            {errors.subject && (
-              <p className="text-customRed">{errors.subject.message}</p>
-            )}
+            {orgVolErrors.subject &&
+              typeof orgVolErrors.subject.message === "string" && (
+                <p className="text-customRed">{orgVolErrors.subject.message}</p>
+              )}
 
             <textarea
-              {...register("body")}
+              {...orgVolRegister("body")}
               className=" w-full rounded border p-2 shadow "
               name="body"
               value={authenticatedUserData.body}
@@ -222,16 +277,17 @@ const EmailActivityCall = ({
               rows={10}
               placeholder="Body"
             />
-            {errors.body && (
-              <p className="text-customRed">{errors.body.message}</p>
-            )}
+            {orgVolErrors.body &&
+              typeof orgVolErrors.body.message === "string" && (
+                <p className="text-customRed">{orgVolErrors.body.message}</p>
+              )}
 
             <button
-              disabled={isSubmitting}
+              disabled={orgVolIsSubmitting}
               type="submit"
-              className={`btn-active px-20 py-3 ${isSubmitting && "opacity-50"}`}
+              className={`btn-active px-20 py-3 ${orgVolIsSubmitting && "opacity-50"}`}
             >
-              {isSubmitting ? "Sending Email..." : "Send Email"}
+              {orgVolIsSubmitting ? "Sending Email..." : "Send Email"}
             </button>
           </form>
           {/* <button>sfd</button> */}
@@ -239,7 +295,7 @@ const EmailActivityCall = ({
       ) : (
         <>
           <form
-            onSubmit={(e) => handleSubmitGuest(e)}
+            onSubmit={orgVolHandleSubmit(guestSubmit)}
             className="mx-40 mb-5 mt-5 flex flex-col gap-4 font-custom-lexend text-sm text-customBlack-100"
           >
             <p className="font-bold italic text-primary">Participant Details</p>
@@ -293,7 +349,7 @@ const EmailActivityCall = ({
                 name="phoneNumber"
                 onChange={handleGuestForm}
                 className="h-12 w-1/2  rounded border p-2 shadow"
-                placeholder="Phone Number"
+                placeholder="Phone Number (09xxxxxxxxx)"
               />
             </div>
 

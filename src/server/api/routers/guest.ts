@@ -1,20 +1,17 @@
 import { z } from "zod";
-import { useSession } from "next-auth/react";
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { Input } from "postcss";
-import emailjs from "@emailjs/browser";
-
+import { createGuestSchema } from "~/utils/schemaValidation";
 
 
 export const guestRouter = createTRPCRouter({
 
   createGuest: publicProcedure
-    .input(z.object({ activityId: z.string(), name: z.string(), sex: z.string(), age: z.number(), phoneNumber: z.string(), email: z.string(), subject: z.string(), body: z.string() }))
+    .input(createGuestSchema)
     .mutation(async ({ ctx, input }) => {
       const createGuest = await ctx.db.guest.create({
         data: {

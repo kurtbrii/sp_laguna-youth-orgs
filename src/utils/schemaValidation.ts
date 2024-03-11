@@ -93,4 +93,15 @@ const createJoinActivitySchema = z.object({
   label: z.string()
 })
 
-export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema }
+const createGuestSchema = z.object({
+  activityId: z.string(),
+  name: z.string().min(5, { message: "Name must be at least 5 characters" }),
+  sex: z.string().refine((data) => data.trim().length > 0, { message: 'Sex is required', }),
+  age: z.coerce.number().refine((data) => data > 0, { message: 'Age is required', }),
+  phoneNumber: z.string().length(11, { message: "Phone number should be written in the prescribed format" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  subject: z.string().max(30, { message: "Subject must be at most 30 characters" }).min(5, { message: "Subject must be at least 5 characters" }),
+  body: z.string().max(200, { message: "Body must be at most 200 characters" }).min(10, { message: "Body must be at least 10 characters" }),
+})
+
+export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema }
