@@ -1,17 +1,16 @@
 import { z } from "zod";
-import { useSession } from "next-auth/react";
+import { createJoinActivitySchema } from "~/utils/schemaValidation";
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { triggerAsyncId } from "async_hooks";
 
 
 export const activityCallRouter = createTRPCRouter({
   createJoinActivity: publicProcedure
-    .input(z.object({ activityId: z.string(), orgId: z.string().optional(), volId: z.string().optional(), guestID: z.string().optional(), subject: z.string(), body: z.string(), label: z.string() }))
+    .input(createJoinActivitySchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activityCall.create({
         data: {

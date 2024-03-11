@@ -42,25 +42,25 @@ export const guestRouter = createTRPCRouter({
       return { createGuest, createActivityCall }
     }),
 
-  getOne: publicProcedure
-    .input(z.object({ email: z.string() }))
-    .query(async ({ input: { email }, ctx }) => {
-      const data = await ctx.db.guest.findUnique({
-        where: {
-          email
-        },
-        select: {
-          name: true,
-          sex: true,
-          age: true,
-          phoneNumber: true,
-          email: true,
-        }
-      })
+  // getOne: publicProcedure
+  //   .input(z.object({ email: z.string() }))
+  //   .query(async ({ input, ctx }) => {
+  //     const data = await ctx.db.guest.findUnique({
+  //       where: {
+  //         email: input.email
+  //       },
+  //       select: {
+  //         name: true,
+  //         sex: true,
+  //         age: true,
+  //         phoneNumber: true,
+  //         email: true,
+  //       }
+  //     })
 
 
-      return data;
-    }),
+  //     return data;
+  //   }),
 
   // ! TODO: NOT YET SURE
   getGuests: publicProcedure

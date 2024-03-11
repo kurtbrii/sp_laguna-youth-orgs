@@ -80,4 +80,17 @@ const updateVolunteerSchema = z.object({
   age: z.coerce.number().refine((data) => data > 0, { message: 'Age is required', }),
 })
 
-export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema }
+
+// ! JOIN ACTIVITY
+
+const createJoinActivitySchema = z.object({
+  activityId: z.string(),
+  orgId: z.string().optional(),
+  volId: z.string().optional(),
+  guestID: z.string().optional(),
+  subject: z.string().max(30, { message: "Subject must be at most 30 characters" }).min(5, { message: "Subject must be at least 5 characters" }),
+  body: z.string().max(200, { message: "Body must be at most 200 characters" }).min(10, { message: "Body must be at least 10 characters" }),
+  label: z.string()
+})
+
+export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema }

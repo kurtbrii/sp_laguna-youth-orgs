@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import emailjs from "@emailjs/browser";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { api } from "~/utils/api";
+import { createJoinActivitySchema } from "~/utils/schemaValidation";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
+
+type UpdateOrganizationFields = z.infer<typeof createJoinActivitySchema>;
 
 interface EmailProps {
   subject: string;
@@ -16,6 +23,8 @@ const EmailActivityCall = ({
   volunteer,
   organization,
 }: any) => {
+  const router = useRouter();
+
   const addOrgOrVol = api.activityCall.createJoinActivity.useMutation();
 
   const createGuest = api.guest.createGuest.useMutation();
@@ -37,50 +46,42 @@ const EmailActivityCall = ({
     body: "",
   });
 
-  const handleCallActivityForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+  // ! REACT USEFORM
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateOrganizationFields>({
+    defaultValues: {
+      orgId: "",
+      volId: "",
+    },
+    resolver: zodResolver(createJoinActivitySchema),
+  });
+
+  const orgVolOnSubmit: SubmitHandler<UpdateOrganizationFields> = async (
+    data,
   ) => {
-    const { name, value } = e.target;
-    setAuthenticatedUserData({
-      ...authenticatedUserData,
-      [name]: value,
-    });
+    console.log("Data", data);
+    // alert(volunteer?.id);
 
-    console.log(authenticatedUserData);
-  };
-
-  const handleGuestForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setGuestData({
-      ...guestData,
-      [name]: value,
-    });
-
-    console.log(guestData);
-  };
-
-  const handleSubmitOrgOrVol = async () => {
     if (role === "ORGANIZATION") {
       addOrgOrVol.mutate({
         activityId: activity?.id,
         orgId: organization?.id,
-        subject: authenticatedUserData.subject,
-        body: authenticatedUserData.body,
+        subject: getValues("subject"),
+        body: getValues("body"),
         label: "partnership",
       });
     } else {
       addOrgOrVol.mutate({
         activityId: activity?.id,
         volId: volunteer?.id,
-        subject: authenticatedUserData.subject,
-        body: authenticatedUserData.body,
+        subject: getValues("subject"),
+        body: getValues("body"),
         label: "volunteer",
       });
     }
@@ -115,6 +116,37 @@ const EmailActivityCall = ({
     );
 
     alert("Request Successul");
+
+    router.reload();
+  };
+
+  const handleCallActivityForm = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setAuthenticatedUserData({
+      ...authenticatedUserData,
+      [name]: value,
+    });
+
+    console.log(authenticatedUserData);
+  };
+
+  const handleGuestForm = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setGuestData({
+      ...guestData,
+      [name]: value,
+    });
+
+    console.log(guestData);
   };
 
   const handleSubmitGuest = (e: React.FormEvent<HTMLFormElement>) => {
@@ -142,7 +174,7 @@ const EmailActivityCall = ({
         activity_name: activity?.name,
         activity_loc: activity?.location,
         activity_date: activity?.date,
-        role: "Geuest",
+        role: "Guest",
         user_email: guestData.email,
         user_phone_number: guestData.phoneNumber,
       },
@@ -150,26 +182,39 @@ const EmailActivityCall = ({
     );
 
     alert("Request Successul");
-    // e.preventDefault();
+    e.preventDefault();
   };
+
+  useEffect(() => {
+    setValue("orgId", organization?.id),
+      setValue("volId", volunteer?.id),
+      setValue("activityId", activity?.id),
+      setValue("guestID", ""),
+      setValue("label", "");
+  }, [setValue]);
 
   return (
     <>
       {role === "VOLUNTEER" || role === "ORGANIZATION" ? (
         <>
           <form
-            onSubmit={() => handleSubmitOrgOrVol()}
+            onSubmit={handleSubmit(orgVolOnSubmit)}
             className="mx-40 mb-5 mt-5 flex flex-col gap-4 font-custom-lexend  text-sm text-customBlack-100"
           >
             <input
+              {...register("subject")}
               type="text"
-              value={authenticatedUserData.subject}
               name="subject"
               onChange={handleCallActivityForm}
               className="h-12 w-full rounded border  p-2 shadow"
               placeholder="Subject"
             />
+            {errors.subject && (
+              <p className="text-customRed">{errors.subject.message}</p>
+            )}
+
             <textarea
+              {...register("body")}
               className=" w-full rounded border p-2 shadow "
               name="body"
               value={authenticatedUserData.body}
@@ -177,8 +222,16 @@ const EmailActivityCall = ({
               rows={10}
               placeholder="Body"
             />
-            <button type="submit" className="btn-active px-20 py-3">
-              Send Email
+            {errors.body && (
+              <p className="text-customRed">{errors.body.message}</p>
+            )}
+
+            <button
+              disabled={isSubmitting}
+              type="submit"
+              className={`btn-active px-20 py-3 ${isSubmitting && "opacity-50"}`}
+            >
+              {isSubmitting ? "Sending Email..." : "Send Email"}
             </button>
           </form>
           {/* <button>sfd</button> */}
