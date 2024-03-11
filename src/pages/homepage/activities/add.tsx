@@ -7,20 +7,13 @@ import UploadImage from "~/components/UploadImage";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import Image from "next/image";
+import { createActivitySchema } from "~/utils/schemaValidation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import LocationForm from "~/components/LocationForm";
 
-interface ActivityProps {
-  name: string;
-  details: string;
-  date: string;
-  createdAt: string;
-  location: string;
-  images: string[];
-
-  hasOrganizations: boolean;
-  hasVolunteers: boolean;
-  hasParticipants: boolean;
-  organizationId: string;
-}
+type CreateActivityFields = z.infer<typeof createActivitySchema>;
 
 const Add = () => {
   const createActivity = api.activity.createActivity.useMutation();
@@ -34,42 +27,49 @@ const Add = () => {
 
   const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
-  const [activitiesData, setActivitiesData] = useState<ActivityProps>({
-    name: "",
-    details: "",
-    date: "",
-    createdAt: "",
-    location: "",
-    images: [],
-
-    hasOrganizations: false,
-    hasVolunteers: false,
-    hasParticipants: false,
-    organizationId: orgId,
+  // ! REACT USEFORM
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<CreateActivityFields>({
+    defaultValues: {
+      name: "",
+      details: "",
+      date: "",
+      location: "",
+      hasOrganizations: false,
+      hasVolunteers: false,
+      hasParticipants: false,
+      organizationId: orgId,
+    },
+    resolver: zodResolver(createActivitySchema),
   });
 
-  const handleAddImages = (newImageUrl: string) => {
-    setActivitiesData((prevActivityData) => ({
-      ...prevActivityData,
-      images: [...prevActivityData.images, newImageUrl],
-    }));
-  };
-
-  const handleRemoveImage = (imageNameToRemove: string) => {
-    setActivitiesData((prevActivityData) => ({
-      ...prevActivityData,
-      images: prevActivityData.images.filter(
-        (imageName) => imageName !== imageNameToRemove,
-      ),
-    }));
-  };
-
   useEffect(() => {
-    setActivitiesData((prevActivityData) => ({
-      ...prevActivityData,
+    setValue("organizationId", orgId);
+  });
+
+  const onSubmit: SubmitHandler<CreateActivityFields> = (data) => {
+    console.log(data);
+
+    createActivity.mutate({
+      name: getValues("name"),
+      details: getValues("details"),
+      date: getValues("date"),
+      location: getValues("location"),
+      hasOrganizations: getValues("hasOrganizations"),
+      hasVolunteers: getValues("hasVolunteers"),
+      hasParticipants: getValues("hasParticipants"),
       organizationId: orgId,
-    }));
-  }, [orgId]);
+      images: getValues("images") ?? [],
+    });
+
+    // void router.push("/homepage/activities");
+  };
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -79,36 +79,14 @@ const Add = () => {
     return <div>Error loading user data</div>;
   }
 
-  const handleActivityForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setActivitiesData({
-      ...activitiesData,
-      [name]: value,
-    });
-
-    console.log(activitiesData);
+  const handleAddImages = (newImageUrl: string) => {
+    const currentArray = getValues("images") ?? [];
+    setValue("images", [...currentArray, newImageUrl]);
   };
-
-  const submitActivity = () => {
-    createActivity.mutate({
-      name: activitiesData.name,
-      details: activitiesData.details,
-      date: activitiesData.date,
-      location: activitiesData.location,
-      hasOrganizations: activitiesData.hasOrganizations,
-      hasVolunteers: activitiesData.hasVolunteers,
-      hasParticipants: activitiesData.hasParticipants,
-      organizationId: orgId,
-      images: activitiesData.images,
-    });
-
-    // alert(activitiesData.date);
-
-    void router.push("/homepage/activities");
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = [...(getValues("images") ?? [])];
+    updatedImages.splice(index, 1);
+    setValue("images", updatedImages);
   };
 
   return (
@@ -120,7 +98,7 @@ const Add = () => {
         </p>
       </section>
       <form
-        // onSubmit={() => submitEvent(eventData)}
+        onSubmit={handleSubmit(onSubmit)}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
       >
@@ -131,40 +109,43 @@ const Add = () => {
         </section>
 
         <input
+          {...register("name")}
           type="text"
-          value={activitiesData.name}
-          name="name"
-          onChange={handleActivityForm}
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Activity Name"
         />
+        {errors.name && <p className="text-customRed">{errors.name.message}</p>}
 
         <textarea
+          {...register("details")}
           className=" w-full rounded border p-2 shadow "
-          name="details"
-          value={activitiesData.details}
-          onChange={handleActivityForm}
           rows={10}
           placeholder="Details"
         />
+        {errors.details && (
+          <p className="text-customRed">{errors.details.message}</p>
+        )}
 
         <div className="flex gap-2">
-          <input
-            type=""
-            value={activitiesData.location}
-            name="location"
-            onChange={handleActivityForm}
-            className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Location"
-          />
-          <input
-            type="datetime-local"
-            value={activitiesData.date}
-            name="date"
-            onChange={handleActivityForm}
-            className="h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Input Date"
-          />
+          <div className="flex w-1/2 flex-col">
+            <LocationForm register={register} />
+            {errors.location && (
+              <p className="text-customRed">{errors.location.message}</p>
+            )}
+          </div>
+
+          <div className="flex w-1/2 flex-col">
+            <input
+              {...register("date")}
+              type="datetime-local"
+              name="date"
+              className="h-12 w-full rounded border p-2 shadow"
+              placeholder="Input Date"
+            />
+            {errors.date && (
+              <p className="text-customRed">{errors.date.message}</p>
+            )}
+          </div>
         </div>
 
         <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
@@ -172,22 +153,16 @@ const Add = () => {
             Type of Activity
           </p>
         </section>
-        <div className="flex items-center  justify-center gap-10">
+
+        <div className="mb-6 flex items-center  justify-center gap-10">
           {/* CALL FOR PARTICIPANTS */}
           <div className="flex items-center  justify-center gap-2">
             <input
+              {...register("hasParticipants")}
               type="checkbox"
-              name="participants"
               id="participants"
               onClick={() => {
-                setActivitiesData((prevState) => ({
-                  ...prevState,
-                  hasParticipants: !prevState.hasParticipants,
-                }));
-                console.log(
-                  "call for participants: ",
-                  activitiesData.hasParticipants,
-                );
+                setValue("hasParticipants", !getValues("hasParticipants"));
               }}
             />
             <label htmlFor="participants">Call for Participants</label>
@@ -200,28 +175,19 @@ const Add = () => {
               name="volunteers"
               id="volunteers"
               onClick={() => {
-                setActivitiesData((prevState) => ({
-                  ...prevState,
-                  hasVolunteers: !prevState.hasVolunteers,
-                }));
-                console.log(activitiesData.hasVolunteers);
+                setValue("hasVolunteers", !getValues("hasVolunteers"));
               }}
             />
             <label htmlFor="volunteers">Call for Volunteers</label>
           </div>
 
           {/* Partnership */}
-          <div className="flex items-center justify-center gap-2">
+          <div className=" flex items-center justify-center gap-2">
             <input
               type="checkbox"
-              name="partnership"
               id="partnership"
               onClick={() => {
-                setActivitiesData((prevState) => ({
-                  ...prevState,
-                  hasOrganizations: !prevState.hasOrganizations,
-                }));
-                console.log(activitiesData.hasOrganizations);
+                setValue("hasOrganizations", !getValues("hasOrganizations"));
               }}
             />
             <label htmlFor="partnership">Partnerships</label>
@@ -229,63 +195,59 @@ const Add = () => {
         </div>
 
         <UploadImage string={"activities"} handleAddImages={handleAddImages} />
-      </form>
 
-      <div className="flex flex-wrap justify-center gap-4">
-        {activitiesData.images.map((data, index) => (
-          <div className="relative " key={index}>
-            <div className="absolute right-0 top-0">
-              <IconButton
-                onClick={() => {
-                  handleRemoveImage(data);
-                }}
-                className="mdi mdi-close cursor-pointer hover:text-white"
-              >
-                <ClearIcon />
-              </IconButton>
-            </div>
+        <div className="flex flex-wrap justify-center gap-4">
+          {getValues("images")?.length
+            ? getValues("images")?.map((data, index) => (
+                <div className="relative " key={index}>
+                  <div className="absolute right-0 top-0">
+                    <IconButton
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="mdi mdi-close cursor-pointer hover:text-white"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </div>
 
-            <div
-              style={{
-                width: "240px", // Use 100% width for responsiveness
-                height: "150px", // Set a fixed height for all images
-                display: "flex",
-              }}
-            >
-              <Image
-                title={data}
-                className="rounded-md object-cover shadow-xl"
-                src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                alt={`Uploaded file ${index}`}
-                width={240}
-                height={150}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="my-20 flex justify-center">
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            className="btn-active px-20 py-3"
-            onClick={() => {
-              submitActivity();
-            }}
-          >
-            Create Activity
-          </button>
-          <button
-            onClick={() => window.location.replace("/homepage/activities")}
-            type="reset"
-            className="btn-outline   px-20 py-3"
-            style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
-          >
-            Discard
-          </button>
+                  <div
+                    style={{
+                      width: "240px", // Use 100% width for responsiveness
+                      height: "150px", // Set a fixed height for all images
+                      display: "flex",
+                    }}
+                  >
+                    <Image
+                      title={data}
+                      className="rounded-md object-cover shadow-xl"
+                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                      alt={`Uploaded file ${index}`}
+                      width={240}
+                      height={150}
+                    />
+                  </div>
+                </div>
+              ))
+            : null}
         </div>
-      </div>
+
+        <div className="my-20 flex justify-center">
+          <div className="flex gap-4">
+            <button type="submit" className="btn-active px-20 py-3">
+              Create Activity
+            </button>
+            <button
+              onClick={() => window.location.replace("/homepage/activities")}
+              type="reset"
+              className="btn-outline   px-20 py-3"
+              style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
+            >
+              Discard
+            </button>
+          </div>
+        </div>
+      </form>
 
       {/* <button onClick={() }>dsd</button> */}
     </div>

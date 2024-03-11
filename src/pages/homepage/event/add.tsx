@@ -10,10 +10,13 @@ import ClearIcon from "@mui/icons-material/Clear";
 import UploadImage from "~/components/UploadImage";
 import Image from "next/image";
 import LocationForm from "~/components/LocationForm";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { createEventSchema } from "~/utils/schemaValidation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface EventProps {
-  name: "";
-  organized_by: string;
+  name: string;
   createdAt: string;
   details: string;
   location: string;
@@ -21,41 +24,59 @@ interface EventProps {
   date: string;
   partners: string[];
   images: string[];
+  organizedBy: string;
 }
+
+type EventFields = z.infer<typeof createEventSchema>;
 
 const Add = () => {
   const createEvent = api.event.createEvent.useMutation();
 
-  const router = useRouter();
   const { data: sessionData } = useSession();
 
   const user = api.user.getUser.useQuery({
     userId: sessionData?.user.id ?? "",
   });
 
-  const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
+  const orgId = user.data?.organization?.id ?? "";
 
   const [partner, setPartner] = useState("");
 
-  const [eventData, setEventData] = useState<EventProps>({
-    name: "",
-    organized_by: "",
-    createdAt: "",
-    details: "",
-    location: "",
-    organizationId: orgId,
-    date: "",
-    partners: [],
-    images: [],
+  // ! REACT USEFORM
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<EventFields>({
+    defaultValues: {
+      organizedBy: user?.data?.organization?.orgName ?? "",
+      organizationId: orgId,
+    },
+    resolver: zodResolver(createEventSchema),
   });
 
-  useEffect(() => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      organizationId: orgId,
-    }));
-  }, [orgId]);
+  const onSubmit: SubmitHandler<EventFields> = (data) => {
+    console.log("Data", data);
 
+    createEvent.mutate({
+      name: getValues("name"),
+      organizedBy: user?.data?.organization?.orgName ?? "",
+      details: getValues("details"),
+      location: getValues("location"),
+      organizationId: orgId,
+      date: getValues("date"),
+      partners: getValues("partners"),
+      images: getValues("images"),
+    });
+
+    window.location.replace("/homepage");
+  };
+
+  // ! LOADING
   if (user.isLoading) {
     return <div>Loading...</div>;
   }
@@ -66,73 +87,29 @@ const Add = () => {
 
   const handlePartner = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPartner(e.target.value);
-
     console.log(partner);
   };
 
-  const handleEventForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
-
-    console.log(eventData);
-  };
-
-  const submitEvent = (eventData: EventProps) => {
-    createEvent.mutate({
-      name: eventData.name,
-      organizedBy: user?.data?.organization?.orgName ?? "",
-      details: eventData.details,
-      location: eventData.location,
-      organizationId: orgId,
-      date: eventData.date,
-      partners: eventData.partners,
-      images: eventData.images,
-    });
-
-    void router.push("/homepage");
-  };
-
   const handleAddPartner = () => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      partners: [...prevEventData.partners, partner],
-    }));
-
+    const currentArray = getValues("partners") ?? [];
+    setValue("partners", [...currentArray, partner]);
     setPartner("");
   };
 
   const handleRemovePartner = (index: number) => {
-    setEventData((prevEventData) => {
-      const newPartners = [...prevEventData.partners];
-      newPartners.splice(index, 1);
-      return {
-        ...prevEventData,
-        partners: newPartners,
-      };
-    });
+    const updatedPartners = [...(getValues("partners") ?? [])];
+    updatedPartners.splice(index, 1);
+    setValue("partners", updatedPartners);
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      images: [...prevEventData.images, newImageUrl],
-    }));
+    const currentArray = getValues("images") ?? [];
+    setValue("images", [...currentArray, newImageUrl]);
   };
-
-  const handleRemoveImage = (imageNameToRemove: string) => {
-    setEventData((prevEventData) => ({
-      ...prevEventData,
-      images: prevEventData.images.filter(
-        (imageName) => imageName !== imageNameToRemove,
-      ),
-    }));
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = [...(getValues("images") ?? [])];
+    updatedImages.splice(index, 1);
+    setValue("images", updatedImages);
   };
 
   return (
@@ -144,127 +121,125 @@ const Add = () => {
         </p>
       </section>
       <form
-        onSubmit={(e) => {
-          // e.preventDefault();
-          submitEvent(eventData);
-        }}
+        onSubmit={handleSubmit(onSubmit)}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm phone:mx-5"
       >
         <input
-          required
+          {...register("name")}
           type="text"
-          value={eventData.name}
           name="name"
-          onChange={handleEventForm}
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Event Name"
         />
+        {errors.name && <p className="text-customRed">{errors.name.message}</p>}
 
         <textarea
-          required
+          {...register("details")}
           className=" w-full rounded border p-2 shadow "
           name="details"
-          value={eventData.details}
-          onChange={handleEventForm}
           rows={10}
           placeholder="Details"
         />
+        {errors.details && (
+          <p className="text-customRed">{errors.details.message}</p>
+        )}
 
         <div className="flex gap-2">
-          <LocationForm
-            handleChange={(value) =>
-              setEventData((prevEventData) => ({
-                ...prevEventData,
-                location: value,
-              }))
-            }
-            string={eventData.location}
-          />
-          {/* <input
-            required
-            type=""
-            value={eventData.location}
-            name="location"
-            onChange={handleEventForm}
-            className="mb-10 h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Location"
-          /> */}
-          <input
-            required
-            type="datetime-local"
-            value={eventData.date}
-            name="date"
-            onChange={handleEventForm}
-            className="h-12 w-1/2 rounded border p-2 shadow"
-            placeholder="Input Date"
-          />
+          <div className="flex w-1/2 flex-col">
+            <LocationForm register={register} />
+            {errors.location && (
+              <p className="text-customRed">{errors.location.message}</p>
+            )}
+          </div>
+
+          <div className="flex w-1/2 flex-col">
+            <input
+              {...register("date")}
+              type="datetime-local"
+              name="date"
+              className="h-12 w-full rounded border p-2 shadow"
+              placeholder="Input Date"
+            />
+            {errors.date && (
+              <p className="text-customRed">{errors.date.message}</p>
+            )}
+          </div>
         </div>
 
         <div>
           <input
+            // {...register("partners")}
             type="text"
-            name="partner"
-            value={partner}
+            name="partners"
             className=" h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Partner"
             onChange={handlePartner}
+            value={partner}
           />
+
           <IconButton className="h-12 w-12" onClick={handleAddPartner}>
             <AddBoxIcon />
           </IconButton>
-          <div className="mt-2 flex flex-col">
-            {eventData?.partners?.map((partner: string, index: number) => (
-              <div key={index} className="flex">
-                <p className="w-1/2 text-sm">{partner}</p>
-                <IconButton onClick={() => handleRemovePartner(index)}>
-                  <ClearIcon />
-                </IconButton>
-              </div>
-            ))}
-          </div>
+          {getValues("partners")?.length
+            ? getValues("partners")?.map((partner: string, index: number) => (
+                <div key={index} className="flex">
+                  <p className="w-1/2 text-sm">{partner}</p>
+                  <IconButton onClick={() => handleRemovePartner(index)}>
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+              ))
+            : null}
         </div>
 
         <UploadImage string={"events"} handleAddImages={handleAddImages} />
 
         <div className="flex flex-wrap justify-center gap-4">
-          {eventData.images.map((data, index) => (
-            <div className="relative " key={index}>
-              <div className="absolute right-0 top-0">
-                <IconButton
-                  onClick={() => {
-                    handleRemoveImage(data);
-                  }}
-                  className="mdi mdi-close cursor-pointer hover:text-white"
-                >
-                  <ClearIcon />
-                </IconButton>
-              </div>
+          {getValues("images")?.length
+            ? getValues("images")?.map((data, index) => (
+                <div className="relative " key={index}>
+                  <div className="absolute right-0 top-0">
+                    <IconButton
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="mdi mdi-close cursor-pointer hover:text-white"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </div>
 
-              <div
-                style={{
-                  width: "240px", // Use 100% width for responsiveness
-                  height: "150px", // Set a fixed height for all images
-                  display: "flex",
-                }}
-              >
-                <Image
-                  title={data}
-                  className="rounded-md object-cover shadow-xl"
-                  src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                  alt={`Uploaded file ${index}`}
-                  width={240}
-                  height={150}
-                />
-              </div>
-            </div>
-          ))}
+                  <div
+                    style={{
+                      width: "240px", // Use 100% width for responsiveness
+                      height: "150px", // Set a fixed height for all images
+                      display: "flex",
+                    }}
+                  >
+                    <Image
+                      title={data}
+                      className="rounded-md object-cover shadow-xl"
+                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                      alt={`Uploaded file ${index}`}
+                      width={240}
+                      height={150}
+                    />
+                  </div>
+                </div>
+              ))
+            : null}
         </div>
 
         <div className="my-20 flex justify-center ">
           <div className="flex gap-4 phone:flex-col">
-            <button type="submit" className="btn-active px-20 py-3">
-              Create Event
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              // onClick={() => alert("hi")}
+              className="btn-active px-20 py-3"
+            >
+              {isSubmitting ? "Loading..." : "Add Event"}
             </button>
 
             <button

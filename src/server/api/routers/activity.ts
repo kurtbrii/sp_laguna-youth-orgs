@@ -1,20 +1,37 @@
 import { z } from "zod";
-import { useSession } from "next-auth/react";
-
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { triggerAsyncId } from "async_hooks";
-import { Input } from "postcss";
-
+import { createActivitySchema, updateActivitySchema } from "~/utils/schemaValidation";
 
 export const activityRouter = createTRPCRouter({
   createActivity: protectedProcedure
-    .input(z.object({ name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string(), images: z.array(z.string()) }))
+    .input(createActivitySchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.activity.create({
+        data: {
+          name: input.name,
+          createdAt: new Date(),
+          date: new Date(input.date),
+          details: input.details,
+          location: input.location,
+          images: input.images,
+
+          hasOrganizations: input.hasOrganizations,
+          hasVolunteers: input.hasVolunteers,
+          hasParticipants: input.hasParticipants,
+          organizationId: input.organizationId
+        }
+      });
+    }),
+
+  updateActivity: protectedProcedure
+    .input(updateActivitySchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.activity.update({
+        where: { id: input.id },
         data: {
           name: input.name,
           createdAt: new Date(),
@@ -129,26 +146,7 @@ export const activityRouter = createTRPCRouter({
       return data;
     }),
 
-  updateActivity: protectedProcedure
-    .input(z.object({ id: z.string(), name: z.string(), date: z.string(), details: z.string(), hasOrganizations: z.boolean(), hasVolunteers: z.boolean(), hasParticipants: z.boolean(), location: z.string(), organizationId: z.string(), images: z.array(z.string()).optional() }))
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.activity.update({
-        where: { id: input.id },
-        data: {
-          name: input.name,
-          createdAt: new Date(),
-          date: new Date(input.date),
-          details: input.details,
-          location: input.location,
-          images: input.images,
 
-          hasOrganizations: input.hasOrganizations,
-          hasVolunteers: input.hasVolunteers,
-          hasParticipants: input.hasParticipants,
-          organizationId: input.organizationId
-        }
-      });
-    }),
 
   deleteActivity: protectedProcedure
     .input(z.object({ id: z.string() }))
