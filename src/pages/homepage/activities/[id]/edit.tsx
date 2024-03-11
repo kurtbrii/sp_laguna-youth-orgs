@@ -116,7 +116,7 @@ const EditActivity = () => {
       organizationId: orgId,
     });
 
-    // window.location.replace("/homepage/activities");
+    window.location.replace("/homepage/activities");
   };
 
   // useEffect(() => {
