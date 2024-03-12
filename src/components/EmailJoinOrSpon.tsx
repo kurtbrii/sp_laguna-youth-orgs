@@ -10,11 +10,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 type FormFields = z.infer<typeof formSchema>;
 
-interface EmailProps {
-  subject: string;
-  body: string;
-}
-
 const EmailJoinOrSpon = ({
   orgId,
   organizationEmail,
@@ -23,11 +18,6 @@ const EmailJoinOrSpon = ({
   sessionEmail,
   role,
 }: any) => {
-  const [eventData, setEventData] = useState<EmailProps>({
-    subject: "",
-    body: "",
-  });
-
   const router = useRouter();
 
   const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
@@ -43,20 +33,6 @@ const EmailJoinOrSpon = ({
   } = useForm<FormFields>({
     resolver: zodResolver(formSchema),
   });
-
-  const handleEventForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setEventData({
-      ...eventData,
-      [name]: value,
-    });
-
-    console.log(eventData);
-  };
 
   const orgVolOnSubmit: SubmitHandler<FormFields> = (data) => {
     console.log(data);
