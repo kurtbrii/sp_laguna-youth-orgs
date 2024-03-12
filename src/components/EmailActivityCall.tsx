@@ -86,20 +86,6 @@ const EmailActivityCall = ({
     zodResolver(createJoinActivitySchema),
   );
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   setValue,
-  //   getValues,
-  //   formState: { errors, isSubmitting },
-  // } = useForm<UpdateOrganizationFields>({
-  //   defaultValues: {
-  //     orgId: "",
-  //     volId: "",
-  //   },
-  //   resolver: zodResolver(createJoinActivitySchema),
-  // });
-
   const orgVolOnSubmit: SubmitHandler<UpdateOrganizationFields> = async (
     data,
   ) => {
@@ -169,7 +155,39 @@ const EmailActivityCall = ({
 
   const guestSubmit: SubmitHandler<UpdateGuestFields> = async (data) => {
     console.log("Data", data);
-    // alert(volunteer?.id);
+
+    createGuest.mutate({
+      name: guestGetValues("name"),
+      age: parseInt(guestGetValues("age")),
+      email: guestGetValues("email"),
+      phoneNumber: guestGetValues("phoneNumber"),
+      sex: guestGetValues("sex"),
+      subject: guestGetValues("subject"),
+      body: guestGetValues("body"),
+      activityId: activity?.id,
+    });
+
+    void emailjs.send(
+      "service_sb8pzif",
+      "template_g280rll",
+      {
+        user_name: guestGetValues("name"),
+        subject: guestGetValues("subject"),
+        body: guestGetValues("body"),
+        from_email: guestGetValues("email"),
+        to_email: activity?.organization?.user?.email,
+        action: "wants to participate in your activity",
+        activity_name: activity?.name,
+        activity_loc: activity?.location,
+        activity_date: activity?.date,
+        role: "Guest",
+        user_email: guestGetValues("email"),
+        user_phone_number: guestGetValues("phoneNumber"),
+      },
+      "AxPqfUq-9Oy9tdLJv",
+    );
+
+    alert("Request Successul");
 
     // router.reload();
   };
@@ -188,63 +206,20 @@ const EmailActivityCall = ({
     console.log(authenticatedUserData);
   };
 
-  const handleGuestForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setGuestData({
-      ...guestData,
-      [name]: value,
-    });
-
-    console.log(guestData);
-  };
-
   const handleSubmitGuest = (e: React.FormEvent<HTMLFormElement>) => {
-    createGuest.mutate({
-      name: guestData.name,
-      age: parseInt(guestData.age),
-      email: guestData.email,
-      phoneNumber: guestData.phoneNumber,
-      sex: guestData.sex,
-      subject: guestData.subject,
-      body: guestData.body,
-      activityId: activity?.id,
-    });
-
-    void emailjs.send(
-      "service_sb8pzif",
-      "template_g280rll",
-      {
-        user_name: guestData.name,
-        subject: guestData.subject,
-        body: guestData.body,
-        from_email: guestData.email,
-        to_email: activity?.organization?.user?.email,
-        action: "wants to participate in your activity",
-        activity_name: activity?.name,
-        activity_loc: activity?.location,
-        activity_date: activity?.date,
-        role: "Guest",
-        user_email: guestData.email,
-        user_phone_number: guestData.phoneNumber,
-      },
-      "AxPqfUq-9Oy9tdLJv",
-    );
-
-    alert("Request Successul");
     e.preventDefault();
   };
 
   useEffect(() => {
-    orgVolSetValue("orgId", organization?.id),
-      orgVolSetValue("volId", volunteer?.id),
-      orgVolSetValue("activityId", activity?.id),
-      orgVolSetValue("guestID", ""),
-      orgVolSetValue("label", "");
+    // ! for volunteers and organizations
+    orgVolSetValue("orgId", organization?.id);
+    orgVolSetValue("volId", volunteer?.id);
+    orgVolSetValue("activityId", activity?.id);
+    orgVolSetValue("guestID", "");
+    orgVolSetValue("label", "");
+
+    // ! for guests
+    guestSetValue("activityId", activity?.id);
   }, [orgVolSetValue]);
 
   return (
@@ -295,82 +270,113 @@ const EmailActivityCall = ({
       ) : (
         <>
           <form
-            onSubmit={orgVolHandleSubmit(guestSubmit)}
+            onSubmit={guestHandleSubmit(guestSubmit)}
             className="mx-40 mb-5 mt-5 flex flex-col gap-4 font-custom-lexend text-sm text-customBlack-100"
           >
             <p className="font-bold italic text-primary">Participant Details</p>
             <input
               type="text"
-              value={guestData.name}
-              name="name"
-              onChange={handleGuestForm}
+              {...guestRegister("name")}
               className="h-12 w-full rounded border  p-2 shadow"
               placeholder="Name"
             />
+            {guestErrors.name &&
+              typeof guestErrors.name.message === "string" && (
+                <p className="text-customRed">{guestErrors.name.message}</p>
+              )}
 
             <div className="flex gap-2">
-              <select
-                defaultValue={"Male"}
-                id="example-dropdown"
-                name="sex"
-                value={guestData.sex}
-                className=" w-1/2 rounded border p-2 shadow "
-                onChange={handleGuestForm}
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
+              <div className="flex h-12 w-1/2 flex-col items-center justify-center  rounded border p-2 shadow">
+                <select
+                  {...guestRegister("sex")}
+                  defaultValue={"Male"}
+                  id="example-dropdown"
+                  className=" w-full  "
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+                <div>
+                  {guestErrors.sex &&
+                    typeof guestErrors.sex.message === "string" && (
+                      <p className="text-customRed">
+                        {guestErrors.sex.message}
+                      </p>
+                    )}
+                </div>
+              </div>
 
-              <input
-                type="number"
-                value={guestData.age}
-                name="age"
-                min={10}
-                max={30}
-                onChange={handleGuestForm}
-                className="h-12 w-1/2  rounded border p-2 shadow"
-                placeholder="Age"
-              />
+              <div className="h-full w-1/2">
+                <input
+                  {...guestRegister("age")}
+                  type="number"
+                  min={10}
+                  max={30}
+                  className="h-12 w-full  rounded border p-2 shadow"
+                  placeholder="Age"
+                />
+                {guestErrors.age &&
+                  typeof guestErrors.age.message === "string" && (
+                    <p className="text-customRed">{guestErrors.age.message}</p>
+                  )}
+              </div>
             </div>
 
             <div className="flex gap-2">
-              <input
-                type="text"
-                value={guestData.email}
-                name="email"
-                onChange={handleGuestForm}
-                className="h-12 w-1/2  rounded border p-2 shadow"
-                placeholder="Email"
-              />
+              <div className="h-12 w-1/2">
+                <input
+                  {...guestRegister("email")}
+                  type="text"
+                  className="h-12 w-full  rounded border p-2 shadow"
+                  placeholder="Email"
+                />
+                {guestErrors.email &&
+                  typeof guestErrors.email.message === "string" && (
+                    <p className="text-customRed">
+                      {guestErrors.email.message}
+                    </p>
+                  )}
+              </div>
 
-              <input
-                type="text"
-                value={guestData.phoneNumber}
-                name="phoneNumber"
-                onChange={handleGuestForm}
-                className="h-12 w-1/2  rounded border p-2 shadow"
-                placeholder="Phone Number (09xxxxxxxxx)"
-              />
+              <div className="h-12 w-1/2">
+                <input
+                  {...guestRegister("phoneNumber")}
+                  type="text"
+                  className="h-12 w-full  rounded border p-2 shadow"
+                  placeholder="Phone Number (09xxxxxxxxx)"
+                />
+                {guestErrors.phoneNumber &&
+                  typeof guestErrors.phoneNumber.message === "string" && (
+                    <p className="text-customRed">
+                      {guestErrors.phoneNumber.message}
+                    </p>
+                  )}
+              </div>
             </div>
 
             <p className="mt-12 font-bold italic text-primary">Email Content</p>
 
             <input
+              {...guestRegister("subject")}
               type="text"
-              value={guestData.subject}
-              name="subject"
-              onChange={handleGuestForm}
               className=" h-12 w-full rounded border  p-2 shadow"
               placeholder="Subject"
             />
+            {guestErrors.subject &&
+              typeof guestErrors.subject.message === "string" && (
+                <p className="text-customRed">{guestErrors.subject.message}</p>
+              )}
             <textarea
+              {...guestRegister("body")}
               className=" w-full rounded border p-2 shadow "
-              name="body"
-              value={guestData.body}
-              onChange={handleGuestForm}
               rows={10}
               placeholder="Body"
             />
+            {guestErrors.body &&
+              typeof guestErrors.body.message === "string" && (
+                <p className="text-customRed">{guestErrors.body.message}</p>
+              )}
+
             <button type="submit" className="btn-active px-20 py-3">
               Send Email
             </button>
