@@ -37,16 +37,6 @@ const EmailActivityCall = ({
       body: "",
     });
 
-  const [guestData, setGuestData] = useState({
-    name: "",
-    email: "",
-    sex: "Male",
-    phoneNumber: "",
-    age: "",
-
-    subject: "",
-    body: "",
-  });
 
   // ! REACT USEFORM
   const useFormSetup = (defaultValues: any, resolver: any) => {

@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import emailjs from "@emailjs/browser";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "~/utils/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
+import { formSchema } from "~/utils/schemaValidation";
+import { z } from "zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type FormFields = z.infer<typeof formSchema>;
 
 interface EmailProps {
   subject: string;
@@ -21,9 +28,21 @@ const EmailJoinOrSpon = ({
     body: "",
   });
 
+  const router = useRouter();
+
   const volJoinOrg = api.volJoinOrg.createVolJoinOrg.useMutation();
 
   const orgSponOrg = api.orgSponsorOrg.createOrgSponOrg.useMutation();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = useForm<FormFields>({
+    resolver: zodResolver(formSchema),
+  });
 
   const handleEventForm = (
     e:
@@ -39,20 +58,21 @@ const EmailJoinOrSpon = ({
     console.log(eventData);
   };
 
-  const handleButton = () => {
+  const orgVolOnSubmit: SubmitHandler<FormFields> = (data) => {
+    console.log(data);
     if (role === "ORGANIZATION") {
       orgSponOrg.mutate({
         orgRequesting: organizationLoggedIn?.id,
         orgAccepting: orgId,
-        subject: eventData.subject,
-        body: eventData.body,
+        subject: getValues("subject"),
+        body: getValues("body"),
       });
     } else {
       volJoinOrg.mutate({
         orgId: orgId,
         volId: volunteerLoggedIn?.id,
-        subject: eventData.subject,
-        body: eventData.body,
+        subject: getValues("subject"),
+        body: getValues("body"),
       });
     }
 
@@ -64,8 +84,8 @@ const EmailJoinOrSpon = ({
           role === "ORGANIZATION"
             ? organizationLoggedIn.orgName
             : `${volunteerLoggedIn?.firstName} ${volunteerLoggedIn?.middleInitial} ${volunteerLoggedIn?.lastName} ${volunteerLoggedIn?.suffix}`,
-        subject: eventData.subject,
-        body: eventData.body,
+        subject: getValues("subject"),
+        body: getValues("body"),
         from_email: sessionEmail,
         to_email: organizationEmail,
       },
@@ -73,30 +93,34 @@ const EmailJoinOrSpon = ({
     );
 
     alert("Request Successul");
+
+    void router.reload();
   };
 
   return (
     <>
       <form
-        onSubmit={() => handleButton()}
+        onSubmit={handleSubmit(orgVolOnSubmit)}
         className="mx-40 mb-5 mt-5 flex flex-col gap-4 text-sm"
       >
         <input
+          {...register("subject")}
           type="text"
-          value={eventData.subject}
-          name="subject"
-          onChange={handleEventForm}
           className="h-12 w-full rounded border  p-2 shadow"
           placeholder="Subject"
         />
+        {errors.subject && (
+          <p className="text-customRed">{errors.subject.message}</p>
+        )}
+
         <textarea
+          {...register("body")}
           className=" w-full rounded border p-2 shadow "
-          name="body"
-          value={eventData.body}
-          onChange={handleEventForm}
           rows={10}
           placeholder="Body"
         />
+        {errors.body && <p className="text-customRed">{errors.body.message}</p>}
+
         <button type="submit" className="btn-active px-20 py-3">
           Send Email
         </button>
