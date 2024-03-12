@@ -129,12 +129,13 @@ model Volunteer {
 model Guest {
     id          String @id @default(cuid())
     name        String
-    email       String @unique
+    email       String
     sex         String
-    phoneNumber String @unique
+    phoneNumber String
     age         Int
 
-    activityCalls ActivityCall[]
+    activityCalls  ActivityCall? @relation(fields: [activityCallId], references: [id])
+    activityCallId String?       @unique
 }
 
 model Event {
@@ -245,7 +246,7 @@ model ActivityCall {
     volunteer   Volunteer? @relation(fields: [volunteerId], references: [id])
     volunteerId String?
 
-    guest   Guest?  @relation(fields: [guestId], references: [id])
+    guest   Guest?
     guestId String?
 
     status String

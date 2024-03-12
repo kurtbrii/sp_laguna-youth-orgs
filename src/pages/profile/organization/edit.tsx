@@ -8,35 +8,30 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditProfile from "~/components/EditProfile";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { updateOrganizationSchema } from "~/utils/schemaValidation";
 
-// interface EventProps {
-//   name: "";
-//   organized_by: string;
-//   createdAt: string;
-//   details: string;
-//   location: string;
-//   organizationId: string;
-//   date: string;
-//   partners: string[];
-// }
+type UpdateOrganizationFields = z.infer<typeof updateOrganizationSchema>;
 
 const EditOrganization = () => {
   const updateOrganization = api.organization.updateOrganization.useMutation();
 
   const router = useRouter();
-  const { data: sessionData, update } = useSession();
+  const { data: sessionData } = useSession();
 
   const user = api.user.getUser.useQuery({
     userId: sessionData?.user.id ?? "",
   });
 
-  const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
+  const orgId = user.data?.organization?.id ?? "";
 
   const org = user.data?.organization;
 
   const participation = org?.centersOfParticipation;
 
-  const [orgData, setOrgData] = useState({
+  const organizationQueryDataForm = {
     phoneNumber: org?.phoneNumber,
     bio: org?.bio,
     mission: org?.mission,
@@ -52,27 +47,55 @@ const EditOrganization = () => {
     environment: participation?.environment,
     globalMobility: participation?.globalMobility,
     agriculture: participation?.agriculture,
+  };
+
+  // ! REACT USEFORM
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateOrganizationFields>({
+    defaultValues: {
+      id: org?.id ?? "",
+    },
+    resolver: zodResolver(updateOrganizationSchema),
   });
 
+  const onSubmit: SubmitHandler<UpdateOrganizationFields> = (data) => {
+    console.log("Data", data);
+
+    updateOrganization.mutate({
+      id: org?.id ?? "",
+      phoneNumber: getValues("phoneNumber"),
+      bio: getValues("bio"),
+      mission: getValues("mission"),
+      vision: getValues("vision"),
+      objectives: getValues("objectives"),
+      health: getValues("health"),
+      education: getValues("education"),
+      economicEmpowerment: getValues("economicEmpowerment"),
+      socialInclusion: getValues("socialInclusion"),
+      peaceBuilding: getValues("peaceBuilding"),
+      governance: getValues("governance"),
+      activeCitizenship: getValues("activeCitizenship"),
+      environment: getValues("environment"),
+      globalMobility: getValues("globalMobility"),
+      agriculture: getValues("agriculture"),
+    });
+
+    void router.replace("/profile/organization");
+  };
+
   useEffect(() => {
-    setOrgData(() => ({
-      phoneNumber: org?.phoneNumber ?? "",
-      bio: org?.bio ?? "",
-      mission: org?.mission ?? "",
-      vision: org?.vision,
-      objectives: org?.objectives ?? "",
-      health: participation?.health ?? "",
-      education: participation?.education ?? "",
-      economicEmpowerment: participation?.economicEmpowerment ?? "",
-      socialInclusion: participation?.socialInclusion ?? "",
-      peaceBuilding: participation?.peaceBuilding ?? "",
-      governance: participation?.governance ?? "",
-      activeCitizenship: participation?.activeCitizenship ?? "",
-      environment: participation?.environment ?? "",
-      globalMobility: participation?.globalMobility ?? "",
-      agriculture: participation?.agriculture ?? "",
-    }));
-  }, [orgId]);
+    reset(organizationQueryDataForm);
+  }, []);
+
+  useEffect(() => {
+    setValue("id", org?.id ?? "");
+  }, [orgId, org?.id, setValue, getValues]);
 
   if (user.isLoading) {
     return <div>Loading...</div>;
@@ -81,44 +104,6 @@ const EditOrganization = () => {
   if (user.error ?? !user.data?.organization) {
     return <div>Error loading user data</div>;
   }
-
-  const handleEventForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setOrgData({
-      ...orgData,
-      [name]: value,
-    });
-
-    console.log(orgData);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const submitOrganization = (orgData: any) => {
-    updateOrganization.mutate({
-      id: org?.id ?? "",
-      phoneNumber: orgData.phoneNumber,
-      bio: orgData.bio,
-      mission: orgData.mission,
-      vision: orgData.vision,
-      objectives: orgData.objectives,
-      health: orgData.health,
-      education: orgData.education,
-      economicEmpowerment: orgData.economicEmpowerment,
-      socialInclusion: orgData.socialInclusion,
-      peaceBuilding: orgData.peaceBuilding,
-      governance: orgData.governance,
-      activeCitizenship: orgData.activeCitizenship,
-      environment: orgData.environment,
-      globalMobility: orgData.globalMobility,
-      agriculture: orgData.agriculture,
-    });
-
-    void router.push("/profile/organization");
-  };
 
   const centersData = [
     "health",
@@ -147,16 +132,29 @@ const EditOrganization = () => {
   ];
 
   const centersDataOrg = [
-    orgData.health,
-    orgData.education,
-    orgData.economicEmpowerment,
-    orgData.socialInclusion,
-    orgData.peaceBuilding,
-    orgData.governance,
-    orgData.activeCitizenship,
-    orgData.environment,
-    orgData.globalMobility,
-    orgData.agriculture,
+    getValues("health"),
+    getValues("education"),
+    getValues("economicEmpowerment"),
+    getValues("socialInclusion"),
+    getValues("peaceBuilding"),
+    getValues("governance"),
+    getValues("activeCitizenship"),
+    getValues("environment"),
+    getValues("globalMobility"),
+    getValues("agriculture"),
+  ];
+
+  const errorMessage = [
+    errors.health,
+    errors.education,
+    errors.economicEmpowerment,
+    errors.socialInclusion,
+    errors.peaceBuilding,
+    errors.governance,
+    errors.activeCitizenship,
+    errors.environment,
+    errors.globalMobility,
+    errors.agriculture,
   ];
 
   return (
@@ -168,6 +166,7 @@ const EditOrganization = () => {
         </p>
       </section>
       <form
+        onSubmit={handleSubmit(onSubmit)}
         id="myForm"
         className="mx-40 mb-5 mt-12 flex flex-col gap-4 text-sm"
       >
@@ -176,22 +175,24 @@ const EditOrganization = () => {
             More Information
           </p>
         </section>
+
         <input
+          {...register("phoneNumber")}
           type="text"
-          value={orgData.phoneNumber}
-          name="phoneNumber"
-          onChange={handleEventForm}
           className="h-12 w-full rounded border  p-2 shadow"
-          placeholder="Mobile Number"
+          placeholder="Mobile Number (09xxxxxxxxx)"
         />
+        {errors.phoneNumber && (
+          <p className="text-customRed">{errors.phoneNumber.message}</p>
+        )}
+
         <textarea
+          {...register("bio")}
           className=" w-full rounded border p-2 shadow "
-          name="bio"
-          value={orgData.bio}
-          onChange={handleEventForm}
           rows={10}
           placeholder="Bio"
         />
+        {errors.bio && <p className="text-customRed">{errors.bio.message}</p>}
 
         <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
@@ -199,13 +200,14 @@ const EditOrganization = () => {
           </p>
         </section>
         <textarea
+          {...register("mission")}
           className=" w-full rounded border p-2 shadow "
-          name="mission"
-          value={orgData.mission}
-          onChange={handleEventForm}
           rows={10}
           placeholder="Mission"
         />
+        {errors.mission && (
+          <p className="text-customRed">{errors.mission.message}</p>
+        )}
 
         <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
@@ -213,13 +215,14 @@ const EditOrganization = () => {
           </p>
         </section>
         <textarea
+          {...register("vision")}
           className=" w-full rounded border p-2 shadow "
-          name="vision"
-          value={orgData.vision}
-          onChange={handleEventForm}
           rows={10}
           placeholder="Vision"
         />
+        {errors.vision && (
+          <p className="text-customRed">{errors.vision.message}</p>
+        )}
 
         <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
@@ -227,13 +230,14 @@ const EditOrganization = () => {
           </p>
         </section>
         <textarea
-          className=" w-full rounded border p-2 shadow "
-          name="objectives"
-          value={orgData.objectives}
-          onChange={handleEventForm}
+          {...register("objectives")}
+          className=" w-full rounded border p-2 shadow"
           rows={10}
           placeholder="Objectives"
         />
+        {errors.objectives && (
+          <p className="text-customRed">{errors.objectives.message}</p>
+        )}
 
         {/* CENTERS OF PARTICIPATION */}
         <section className=" mt-20 flex flex-row items-center justify-center bg-secondary p-2 ">
@@ -245,39 +249,33 @@ const EditOrganization = () => {
         {centersData.map((data, index) => (
           <div key={index}>
             <EditProfile
+              errors={errorMessage}
+              register={register}
               data={data}
               centersDataOrg={centersDataOrg}
               centerCapitalize={centerCapitalize}
               index={index}
-              handleEventForm={handleEventForm}
             />
           </div>
         ))}
-      </form>
+        <div className="my-20 flex justify-center">
+          <div className="flex flex-col gap-4">
+            <button type="submit" className="btn-active px-40 py-3">
+              Update Profile
+            </button>
+            <button
+              onClick={() => router.back()}
+              type="reset"
+              className="btn-outline   px-20 py-3"
+              style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
+            >
+              Discard
+            </button>
 
-      <div className="my-20 flex justify-center">
-        <div className="flex flex-col gap-4">
-          <button
-            type="submit"
-            className="btn-active px-40 py-3"
-            onClick={() => {
-              submitOrganization(orgData);
-            }}
-          >
-            Update Profile
-          </button>
-          <button
-            onClick={() => router.back()}
-            type="reset"
-            className="btn-outline   px-20 py-3"
-            style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
-          >
-            Discard
-          </button>
-
-          {/* <button onClick={() => alert(org?.id)}>buton</button> */}
+            {/* <button onClick={() => alert(org?.id)}>buton</button> */}
+          </div>
         </div>
-      </div>
+      </form>
 
       {/* <button onClick={() }>dsd</button> */}
     </div>

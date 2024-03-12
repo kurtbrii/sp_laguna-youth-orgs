@@ -1,20 +1,17 @@
 import { z } from "zod";
-import { useSession } from "next-auth/react";
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { Input } from "postcss";
-import emailjs from "@emailjs/browser";
-
+import { createGuestSchema } from "~/utils/schemaValidation";
 
 
 export const guestRouter = createTRPCRouter({
 
   createGuest: publicProcedure
-    .input(z.object({ activityId: z.string(), name: z.string(), sex: z.string(), age: z.number(), phoneNumber: z.string(), email: z.string(), subject: z.string(), body: z.string() }))
+    .input(createGuestSchema)
     .mutation(async ({ ctx, input }) => {
       const createGuest = await ctx.db.guest.create({
         data: {
@@ -42,25 +39,25 @@ export const guestRouter = createTRPCRouter({
       return { createGuest, createActivityCall }
     }),
 
-  getOne: publicProcedure
-    .input(z.object({ email: z.string() }))
-    .query(async ({ input: { email }, ctx }) => {
-      const data = await ctx.db.guest.findUnique({
-        where: {
-          email
-        },
-        select: {
-          name: true,
-          sex: true,
-          age: true,
-          phoneNumber: true,
-          email: true,
-        }
-      })
+  // getOne: publicProcedure
+  //   .input(z.object({ email: z.string() }))
+  //   .query(async ({ input, ctx }) => {
+  //     const data = await ctx.db.guest.findUnique({
+  //       where: {
+  //         email: input.email
+  //       },
+  //       select: {
+  //         name: true,
+  //         sex: true,
+  //         age: true,
+  //         phoneNumber: true,
+  //         email: true,
+  //       }
+  //     })
 
 
-      return data;
-    }),
+  //     return data;
+  //   }),
 
   // ! TODO: NOT YET SURE
   getGuests: publicProcedure

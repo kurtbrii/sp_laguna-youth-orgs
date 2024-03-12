@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { useSession } from "next-auth/react";
+import { updateOrganizationSchema } from "~/utils/schemaValidation";
 
 import {
   createTRPCRouter,
@@ -151,18 +152,7 @@ export const orgRouter = createTRPCRouter({
     }),
 
   updateOrganization: protectedProcedure
-    .input(z.object({
-      id: z.string(), phoneNumber: z.string(), bio: z.string(), mission: z.string(), vision: z.string(), objectives: z.string(), health: z.string().optional(),
-      education: z.string(),
-      economicEmpowerment: z.string(),
-      socialInclusion: z.string(),
-      peaceBuilding: z.string(),
-      governance: z.string(),
-      activeCitizenship: z.string(),
-      environment: z.string(),
-      globalMobility: z.string(),
-      agriculture: z.string(),
-    }))
+    .input(updateOrganizationSchema)
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
