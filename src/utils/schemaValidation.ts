@@ -82,7 +82,6 @@ const updateVolunteerSchema = z.object({
 
 
 // ! JOIN ACTIVITY
-
 const createJoinActivitySchema = z.object({
   activityId: z.string(),
   orgId: z.string().optional(),
@@ -104,4 +103,12 @@ const createGuestSchema = z.object({
   body: z.string().max(200, { message: "Body must be at most 200 characters" }).min(10, { message: "Body must be at least 10 characters" }),
 })
 
-export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema }
+
+// ! JOIN ORGANIZATION/REQUEST SPONSORSHIP EMAIL
+const formSchema = z.object({
+  subject: z.string().max(30, { message: "Subject must be at most 30 characters" }).min(5, { message: "Subject must be at least 5 characters" }),
+  body: z.string().max(200, { message: "Body must be at most 200 characters" }).min(10, { message: "Body must be at least 10 characters" }),
+});
+
+
+export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema, formSchema }

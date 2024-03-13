@@ -13,11 +13,6 @@ import { createGuestSchema } from "~/utils/schemaValidation";
 type UpdateOrganizationFields = z.infer<typeof createJoinActivitySchema>;
 type UpdateGuestFields = z.infer<typeof createGuestSchema>;
 
-interface EmailProps {
-  subject: string;
-  body: string;
-}
-
 const EmailActivityCall = ({
   activity,
   sessionEmail,
@@ -30,23 +25,6 @@ const EmailActivityCall = ({
   const addOrgOrVol = api.activityCall.createJoinActivity.useMutation();
 
   const createGuest = api.guest.createGuest.useMutation();
-
-  const [authenticatedUserData, setAuthenticatedUserData] =
-    useState<EmailProps>({
-      subject: "",
-      body: "",
-    });
-
-  const [guestData, setGuestData] = useState({
-    name: "",
-    email: "",
-    sex: "Male",
-    phoneNumber: "",
-    age: "",
-
-    subject: "",
-    body: "",
-  });
 
   // ! REACT USEFORM
   const useFormSetup = (defaultValues: any, resolver: any) => {
@@ -118,8 +96,8 @@ const EmailActivityCall = ({
           role === "VOLUNTEER"
             ? `${volunteer?.firstName} ${volunteer?.middleInitial} ${volunteer?.lastName} ${volunteer?.suffix}`
             : organization.orgName,
-        subject: authenticatedUserData.subject,
-        body: authenticatedUserData.body,
+        subject: orgVolGetValues("subject"),
+        body: orgVolGetValues("body"),
         from_email: sessionEmail,
         to_email: activity?.organization?.user?.email,
         action:
@@ -189,25 +167,7 @@ const EmailActivityCall = ({
 
     alert("Request Successul");
 
-    // router.reload();
-  };
-
-  const handleCallActivityForm = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setAuthenticatedUserData({
-      ...authenticatedUserData,
-      [name]: value,
-    });
-
-    console.log(authenticatedUserData);
-  };
-
-  const handleSubmitGuest = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    router.reload();
   };
 
   useEffect(() => {
@@ -233,8 +193,6 @@ const EmailActivityCall = ({
             <input
               {...orgVolRegister("subject")}
               type="text"
-              name="subject"
-              onChange={handleCallActivityForm}
               className="h-12 w-full rounded border  p-2 shadow"
               placeholder="Subject"
             />
@@ -246,9 +204,6 @@ const EmailActivityCall = ({
             <textarea
               {...orgVolRegister("body")}
               className=" w-full rounded border p-2 shadow "
-              name="body"
-              value={authenticatedUserData.body}
-              onChange={handleCallActivityForm}
               rows={10}
               placeholder="Body"
             />
