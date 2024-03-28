@@ -8,7 +8,6 @@ import {
 
 
 export const userRouter = createTRPCRouter({
-
   getUser: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {

@@ -164,7 +164,6 @@ const EditEvent = () => {
           className=" w-full rounded border p-2 shadow "
           name="details"
           value={formData.details}
-          // onChange={handleEventForm}
           rows={10}
           placeholder="Details"
         />

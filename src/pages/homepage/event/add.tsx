@@ -43,7 +43,6 @@ const Add = () => {
   const [partner, setPartner] = useState("");
 
   // ! REACT USEFORM
-
   const {
     register,
     handleSubmit,

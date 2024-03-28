@@ -194,6 +194,7 @@ model Speakers {
     id        String   @id @default(cuid())
     name      String
     age       Int
+    email     String
     bio       String
     createdAt DateTime @default(now())
 
