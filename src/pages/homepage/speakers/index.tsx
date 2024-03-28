@@ -8,26 +8,47 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ActivitiesCard from "~/components/ActivitiesCard";
 import SpeakersCard from "~/components/SpeakersCard";
+import EmailSpeakers from "~/components/EmailSpeakers";
 
 const Speakers = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
+
+  const user = api.user.getUser.useQuery({
+    userId: sessionData?.user.id ?? "",
+  });
 
   const speakers = api.speaker.getSpeakers.useQuery({});
 
   const router = useRouter();
 
   const [searchText, setSearchText] = useState("");
+
+  const [speakerEmail, setSpeaker] = useState({});
+
+  const [toggleEmailSpeaker, setToggleEmailSpeaker] = useState(false);
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleToggleEmailSpeaker = (speaker: any) => {
+    setToggleEmailSpeaker(!toggleEmailSpeaker);
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth", // Add smooth scrolling effect
+    });
+
+    setSpeaker(speaker);
+  };
+
   return (
-    <div className="flex flex-col font-custom-lexend text-customBlack-100">
+    <div className=" flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
       {/* ADD SPEAKERS AND SEARCH BAR */}
-      <div className="mx-10  flex flex-col">
-        <div className=" my-4 flex h-12 flex-col justify-between  ">
-          <h1 className="mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-2xl font-extrabold text-transparent ">
+      <div className="mx-10 my-4 flex flex-col">
+        <div className="flex h-16">
+          <h1 className="text-gradient mb-6 font-custom-epilogue text-2xl  font-extrabold">
             Pool of Speakers
           </h1>
         </div>
@@ -62,13 +83,32 @@ const Speakers = () => {
           )}
         </div>
       </div>
-
       {/* SPEAKERS CARD */}
-      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
+      <div className="mx-10 mb-5 mt-10 flex flex-wrap justify-center gap-3">
         {speakers?.data?.map((querySpeaker) => (
-          <SpeakersCard key={querySpeaker.id} speaker={querySpeaker} />
+          <SpeakersCard
+            key={querySpeaker.id}
+            speaker={querySpeaker}
+            handleToggleEmailSpeaker={handleToggleEmailSpeaker}
+          />
         ))}
       </div>
+
+      {/* EMAIL SPEAKER */}
+      {toggleEmailSpeaker && (
+        <>
+          <section className="mx-40 mt-20 flex flex-row items-center justify-center bg-secondary p-4 ">
+            <p className="font-custom-epilogue text-xl font-extrabold text-white">
+              TAP SPEAKER
+            </p>
+          </section>
+          <EmailSpeakers
+            sessionEmail={sessionData?.user.email}
+            orgName={user.data?.organization?.orgName}
+            speakerEmail={speakerEmail}
+          />
+        </>
+      )}
     </div>
   );
 };

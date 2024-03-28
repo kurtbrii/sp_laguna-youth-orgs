@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Image from "next/image";
 import vol2 from "public/images/vol2.png";
@@ -16,16 +17,23 @@ type SpeakersProps = {
     age: number;
     bio: string;
     organization: {
+      email: string;
       user: {
         id: string;
         image: string | null;
       };
       orgName: string;
     };
+    email: string;
   };
+
+  handleToggleEmailSpeaker: any;
 };
 
-const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
+const SpeakersCard: React.FC<SpeakersProps> = ({
+  speaker,
+  handleToggleEmailSpeaker,
+}) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [toggleSeeMore, setToggleSeeMore] = useState(false);
@@ -62,9 +70,11 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
   return (
     <>
       <div
-        // href={`/homepage/speakers/${speaker.id}`}
         className="flex flex-col justify-between  rounded-md  p-4  text-customBlack-100 shadow-2xl"
-        style={{ height: "17rem", width: "24rem" }}
+        style={{
+          height: `${sessionData?.user.role === "ORGANIZATION" ? "20rem" : "17rem"} `,
+          width: "24rem",
+        }}
       >
         <div className=" mb-2 flex  gap-4  font-custom-lexend ">
           <Image
@@ -77,20 +87,25 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
           />
 
           <div className="overflow-hidden">
-            <p className="text-gradient overflow-hidden text-ellipsis whitespace-nowrap font-custom-epilogue text-lg font-extrabold">
-              {speaker.name}
-            </p>
+            <div className="flex">
+              <p className="text-gradient overflow-hidden text-ellipsis whitespace-nowrap font-custom-epilogue text-lg font-extrabold">
+                {speaker.name}
+              </p>
+            </div>
             <p className="overflow-hidden  text-ellipsis whitespace-nowrap">
               from {speaker.organization.orgName}
             </p>
-            <p className="text-ellipsis whitespace-nowrap">
+            <p className="text-ellipsis whitespace-nowrap text-sm">
               Age: {speaker.age}
+            </p>
+            <p className="text-ellipsis whitespace-nowrap text-sm">
+              {speaker.email}
             </p>
           </div>
         </div>
 
         <div
-          className={`mb-4 line-clamp-3  ${toggleSeeMore ? "overflow-y-scroll" : "overflow-clip"}`}
+          className={`mb-2 line-clamp-3  ${toggleSeeMore ? "overflow-y-scroll" : "overflow-clip"}`}
           style={{ maxHeight: "6rem" }}
         >
           <p className="overflow-ellipsis whitespace-pre-wrap">{speaker.bio}</p>
@@ -115,6 +130,21 @@ const SpeakersCard: React.FC<SpeakersProps> = ({ speaker }) => {
             </div>
           )}
         </div>
+
+        {sessionData?.user.role === "ORGANIZATION" ? (
+          sessionData?.user.email !== speaker.organization.email ? (
+            <button
+              className="btn-active mt-6 px-3 py-2"
+              onClick={() => {
+                handleToggleEmailSpeaker(speaker.email);
+              }}
+            >
+              Tap Speaker
+            </button>
+          ) : (
+            <div className=" mt-6 px-3 py-2 text-white"></div>
+          )
+        ) : null}
       </div>
 
       <DeleteModal

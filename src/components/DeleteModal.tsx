@@ -9,7 +9,7 @@ const DeleteModal = ({
   return (
     <>
       {toggleModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-80">
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-gray-700 bg-opacity-80">
           <div className="rounded-md bg-white p-12">
             <p className="mb-6 font-bold">
               Do you want to delete this {string}?
