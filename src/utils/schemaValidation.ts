@@ -120,6 +120,7 @@ const createSpeakerSchema = z.object({
 })
 
 const editSpeakerSchema = z.object({
+  id: z.string(),
   name: z.string().min(5, { message: "Name must be at least 5 characters" }),
   bio: z.string().refine((data) => data.trim().length > 0, { message: 'Bio is required', }),
   email: z.string().email({ message: "Invalid email address" }),
