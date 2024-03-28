@@ -99,7 +99,7 @@ const Speakers = () => {
         <>
           <section className="mx-40 mt-20 flex flex-row items-center justify-center bg-secondary p-4 ">
             <p className="font-custom-epilogue text-xl font-extrabold text-white">
-              TAP SPEAKER
+              INVITE SPEAKER
             </p>
           </section>
           <EmailSpeakers

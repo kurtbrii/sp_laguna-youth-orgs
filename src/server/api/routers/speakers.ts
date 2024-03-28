@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { createSpeakerSchema } from "~/utils/schemaValidation";
 
 import {
   createTRPCRouter,
@@ -9,12 +10,13 @@ import {
 
 export const speakerRouter = createTRPCRouter({
   createSpeaker: protectedProcedure
-    .input(z.object({ name: z.string(), bio: z.string(), age: z.number(), orgId: z.string() }))
+    .input(createSpeakerSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.speakers.create({
         data: {
           name: input.name,
           age: input.age,
+          email: input.email,
           bio: input.bio,
           organizationId: input.orgId,
           createdAt: new Date(),

@@ -4,6 +4,13 @@ import { useSession } from "next-auth/react";
 import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import {
+  editSpeakerSchema,
+  createSpeakerSchema,
+} from "~/utils/schemaValidation";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type SubmitHandler, useForm } from "react-hook-form";
 
 // interface ActivityProps {
 //   name: string;
@@ -17,6 +24,8 @@ import { api } from "~/utils/api";
 //   hasParticipants: boolean;
 //   organizationId: string;
 // }
+
+type SpeakerFields = z.infer<typeof createSpeakerSchema>;
 
 const EditSpeaker = () => {
   const editSpeaker = api.speaker.updateSpeaker.useMutation();
@@ -46,11 +55,33 @@ const EditSpeaker = () => {
     age: speakerQueryData?.age,
   };
 
+  // ! REACT USEFORM
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<SpeakerFields>({
+    defaultValues: {
+      orgId: orgId,
+    },
+    resolver: zodResolver(createSpeakerSchema),
+  });
+
   const [speakerData, setSpeakerData] = useState({
     name: "",
     bio: "",
     age: "10",
   });
+
+  const onSubmit: SubmitHandler<SpeakerFields> = (data) => {
+    console.log("Data", data);
+
+    // void router.back();
+  };
 
   useEffect(() => {
     if (speakerQueryData) {

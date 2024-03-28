@@ -64,7 +64,7 @@ const SpeakersCard: React.FC<SpeakersProps> = ({
       id: speaker.id,
     });
 
-    void router.push("/homepage");
+    void router.reload();
   };
 
   return (

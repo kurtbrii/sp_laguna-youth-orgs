@@ -110,5 +110,21 @@ const formSchema = z.object({
   body: z.string().max(200, { message: "Body must be at most 200 characters" }).min(10, { message: "Body must be at least 10 characters" }),
 });
 
+// ! SPEAKERS
+const createSpeakerSchema = z.object({
+  name: z.string().min(5, { message: "Name must be at least 5 characters" }),
+  bio: z.string().refine((data) => data.trim().length > 0, { message: 'Bio is required', }),
+  email: z.string().email({ message: "Invalid email address" }),
+  age: z.coerce.number().refine((data) => data > 0, { message: 'Age is required', }),
+  orgId: z.string()
+})
 
-export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema, formSchema }
+const editSpeakerSchema = z.object({
+  name: z.string().min(5, { message: "Name must be at least 5 characters" }),
+  bio: z.string().refine((data) => data.trim().length > 0, { message: 'Bio is required', }),
+  email: z.string().email({ message: "Invalid email address" }),
+  age: z.coerce.number().refine((data) => data > 0, { message: 'Age is required', }),
+  orgId: z.string()
+})
+
+export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema, formSchema, createSpeakerSchema, editSpeakerSchema }
