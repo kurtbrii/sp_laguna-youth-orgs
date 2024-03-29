@@ -4,7 +4,7 @@ const centersOfParticipation = ["Health",
   "Social Inclusion and Equity",
   "Peace-Building and Security",
   "Governance",
-  "ActiveCitizenship",
+  "Active Citizenship",
   "Environment",
   "Global Mobility",
   "Agriculture",]

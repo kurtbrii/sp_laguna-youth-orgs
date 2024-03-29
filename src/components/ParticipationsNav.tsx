@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useEffect, useState } from "react";
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -9,14 +10,10 @@ import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import ParticipationsCard from "./ParticipationsCard";
 
-const ParticipationNav = () => {
+const ParticipationNav = ({ orgId, tag }: any) => {
   const router = useRouter();
 
-  const [activeLink, setActiveLink] = useState<string>("");
-
-  const [toggleProfileButton, setToggleButton] = useState(false);
-
-  const [toggleGetInvolved, setToggleGetInvolved] = useState(false);
+  const [activeLink, setActiveLink] = useState<string>("Health");
 
   useEffect(() => {
     // Get the current route pathname
@@ -45,14 +42,6 @@ const ParticipationNav = () => {
     setActiveLink(link);
   };
 
-  // const create = api.particpation.createParticipation.useMutation();
-
-  // const handleCreate = () => {
-  //   create.mutate({
-  //     orgId: "clsh0h772000apsfxa3047hqy",
-  //   });
-  // };
-
   const links = [
     "Health",
     "Education",
@@ -60,7 +49,7 @@ const ParticipationNav = () => {
     "Social Inclusion and Equity",
     "Peace-Building and Security",
     "Governance",
-    "ActiveCitizenship",
+    "Active Citizenship",
     "Environment",
     "Global Mobility",
     "Agriculture",
@@ -74,7 +63,9 @@ const ParticipationNav = () => {
     setDataIndex(index);
   };
 
-  const participationQuery = api.particpation.getParticipations.useQuery({});
+  const participationQuery = api.particpation.getParticipations.useQuery({
+    orgId: orgId,
+  });
 
   // const handleGetParticipation = (index: number) => {};
 
@@ -103,8 +94,8 @@ const ParticipationNav = () => {
           <ParticipationsCard
             key={index}
             data={data}
-            linkData={linkData}
-            dataIndex={dataIndex}
+            linkData={tag ?? linkData}
+            dataIndex={tag !== undefined ? links.indexOf(tag) : dataIndex}
           />
         ))}
       </div>

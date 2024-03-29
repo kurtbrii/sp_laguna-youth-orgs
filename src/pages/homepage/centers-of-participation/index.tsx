@@ -48,7 +48,7 @@ const Participation = () => {
           </div>
         </div>
 
-        <ParticipationNav />
+        <ParticipationNav orgId={id} tag={tag} />
       </div>
     </div>
   );
