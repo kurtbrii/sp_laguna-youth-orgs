@@ -150,6 +150,7 @@ export default function Home() {
                     searchText={""}
                     key={queryActivity.id}
                     activity={queryActivity}
+                    callOrParticipation={""}
                   />
                 ))}
               </div>

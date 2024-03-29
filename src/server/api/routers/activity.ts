@@ -22,7 +22,9 @@ export const activityRouter = createTRPCRouter({
           hasOrganizations: input.hasOrganizations,
           hasVolunteers: input.hasVolunteers,
           hasParticipants: input.hasParticipants,
-          organizationId: input.organizationId
+          organizationId: input.organizationId,
+          centersTags: input.centersTags,
+          // customTags: input.customTags,
         }
       });
     }),
@@ -43,7 +45,8 @@ export const activityRouter = createTRPCRouter({
           hasOrganizations: input.hasOrganizations,
           hasVolunteers: input.hasVolunteers,
           hasParticipants: input.hasParticipants,
-          organizationId: input.organizationId
+          organizationId: input.organizationId,
+          centersTags: input.centersTags
         }
       });
     }),
@@ -94,6 +97,8 @@ export const activityRouter = createTRPCRouter({
           hasVolunteers: true,
           hasParticipants: true,
           organizationId: true,
+          centersTags: true,
+          customTags: true,
           organization: {
             select: {
               orgName: true,
@@ -118,6 +123,7 @@ export const activityRouter = createTRPCRouter({
         select: {
           organization: {
             select: {
+              id: true,
               orgName: true,
               user: {
                 select: {
@@ -140,6 +146,7 @@ export const activityRouter = createTRPCRouter({
           hasVolunteers: true,
           hasParticipants: true,
           organizationId: true,
+          centersTags: true,
         },
 
       });

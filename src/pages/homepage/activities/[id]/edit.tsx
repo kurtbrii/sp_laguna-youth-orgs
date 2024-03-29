@@ -14,6 +14,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { updateActivitySchema } from "~/utils/schemaValidation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { centersOfParticipation } from "~/utils/obj";
 
 type UpdateActivityFields = z.infer<typeof updateActivitySchema>;
 
@@ -47,6 +48,7 @@ const EditActivity = () => {
     location: activityQueryData?.location ?? "",
     organizationId: orgId,
     images: activityQueryData?.images ?? [],
+    centersTags: activityQueryData?.centersTags ?? [],
 
     hasOrganizations: activityQueryData?.hasOrganizations ?? false,
     hasVolunteers: activityQueryData?.hasVolunteers ?? false,
@@ -63,22 +65,8 @@ const EditActivity = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<UpdateActivityFields>({
-    defaultValues: {
-      // id: "",
-      // name: "",
-      // details: "",
-      // date: "",
-      // location: "",
-      // images: [],
-      // hasOrganizations: false,
-      // hasVolunteers: false,
-      // hasParticipants: false,
-      // organizationId: orgId,
-    },
     resolver: zodResolver(updateActivitySchema),
   });
-
-  const formData = watch();
 
   const onSubmit: SubmitHandler<UpdateActivityFields> = (data) => {
     console.log("Data", data);
@@ -95,17 +83,11 @@ const EditActivity = () => {
       hasVolunteers: getValues("hasVolunteers"),
       hasParticipants: getValues("hasParticipants"),
       organizationId: orgId,
+      centersTags: getValues("centersTags"),
     });
 
     window.location.replace("/homepage/activities");
   };
-
-  // useEffect(() => {
-  //   if (activityQuery.data) {
-  //     reset(formData);
-  //     reset(activityQueryDataForm);
-  //   }
-  // }, []);
 
   const handleAddImages = (newImageUrl: string) => {
     const currentArray = getValues("images") ?? [];
@@ -118,11 +100,21 @@ const EditActivity = () => {
     setValue("images", updatedImages);
   };
 
+  const handleCheckboxChange = (data: string) => {
+    if (getValues("centersTags")?.includes(data)) {
+      setValue(
+        "centersTags",
+        getValues("centersTags")?.filter((center) => center !== data),
+      );
+    } else {
+      const centersTags = getValues("centersTags") ?? [];
+      setValue("centersTags", [...centersTags, data]);
+    }
+  };
+
   useEffect(() => {
     if (activityQueryData) {
-      reset(formData);
       reset(activityQueryDataForm);
-      // reset(activityQueryDataForm);
     }
   }, []);
 
@@ -130,6 +122,7 @@ const EditActivity = () => {
     setValue("organizationId", orgId);
     setValue("id", id as string);
     getValues("images");
+    getValues("centersTags");
   }, [orgId, id as string, setValue, getValues]);
 
   if (user.isLoading) {
@@ -139,24 +132,6 @@ const EditActivity = () => {
   if (user.error ?? !user.data?.organization) {
     return <div>Error loading user data</div>;
   }
-
-  // const submitActivity = () => {
-  //   editActivity.mutate({
-  //     id: id as string,
-  //     name: activitiesData.name,
-  //     details: activitiesData.details,
-  //     date: activitiesData.date,
-  //     location: activitiesData.location,
-  //     images: activitiesData.images,
-
-  //     hasOrganizations: activitiesData.hasOrganizations,
-  //     hasVolunteers: activitiesData.hasVolunteers,
-  //     hasParticipants: activitiesData.hasParticipants,
-  //     organizationId: orgId,
-  //   });
-
-  //   window.location.replace("/homepage/activities");
-  // };
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -180,9 +155,8 @@ const EditActivity = () => {
         <input
           {...register("name")}
           type="text"
-          name="name"
           className="h-12 w-full rounded border  p-2 shadow"
-          placeholder="Event Name"
+          placeholder="Activity Name"
         />
         {errors.name && <p className="text-customRed">{errors.name.message}</p>}
 
@@ -216,6 +190,44 @@ const EditActivity = () => {
               <p className="text-customRed">{errors.date.message}</p>
             )}
           </div>
+        </div>
+
+        <UploadImage string={"activities"} handleAddImages={handleAddImages} />
+
+        <div className="flex flex-wrap justify-center gap-4">
+          {getValues("images")?.length
+            ? getValues("images")?.map((data, index) => (
+                <div className="relative " key={index}>
+                  <div className="absolute right-0 top-0">
+                    <IconButton
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="mdi mdi-close cursor-pointer hover:text-white"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </div>
+
+                  <div
+                    style={{
+                      width: "240px", // Use 100% width for responsiveness
+                      height: "150px", // Set a fixed height for all images
+                      display: "flex",
+                    }}
+                  >
+                    <Image
+                      title={data}
+                      className="rounded-md object-cover shadow-xl"
+                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                      alt={`Uploaded file ${index}`}
+                      width={240}
+                      height={150}
+                    />
+                  </div>
+                </div>
+              ))
+            : null}
         </div>
 
         <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
@@ -266,42 +278,30 @@ const EditActivity = () => {
           </div>
         </div>
 
-        <UploadImage string={"activities"} handleAddImages={handleAddImages} />
+        <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
+          <p className="font-custom-epilogue text-xl font-extrabold text-white">
+            Centers of Participation
+          </p>
+        </section>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          {getValues("images")?.length
-            ? getValues("images")?.map((data, index) => (
-                <div className="relative " key={index}>
-                  <div className="absolute right-0 top-0">
-                    <IconButton
-                      onClick={() => {
-                        handleRemoveImage(index);
-                      }}
-                      className="mdi mdi-close cursor-pointer hover:text-white"
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </div>
-
-                  <div
-                    style={{
-                      width: "240px", // Use 100% width for responsiveness
-                      height: "150px", // Set a fixed height for all images
-                      display: "flex",
-                    }}
-                  >
-                    <Image
-                      title={data}
-                      className="rounded-md object-cover shadow-xl"
-                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                      alt={`Uploaded file ${index}`}
-                      width={240}
-                      height={150}
-                    />
-                  </div>
-                </div>
-              ))
-            : null}
+        <div className="flex flex-wrap justify-center gap-3">
+          {centersOfParticipation.map((data, index) => (
+            <div key={index} className="flex items-center">
+              <input
+                type="checkbox"
+                id={data}
+                className="peer hidden"
+                checked={getValues("centersTags")?.includes(data)}
+                onChange={() => handleCheckboxChange(data)}
+              />
+              <label
+                htmlFor={data}
+                className="peer-checked:btn-active cursor-pointer select-none rounded-lg border border-customBlack-100 px-6 py-3 text-customBlack-100 transition-colors duration-200 ease-in-out peer-checked:border-0  "
+              >
+                {data}
+              </label>
+            </div>
+          ))}
         </div>
 
         <div className="my-20 flex justify-center">
@@ -320,6 +320,7 @@ const EditActivity = () => {
           </div>
         </div>
       </form>
+
       {/* <button onClick={() }>dsd</button> */}
     </div>
   );

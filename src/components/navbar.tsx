@@ -45,7 +45,11 @@ const Navbar = () => {
       setActiveLink("howItWorks");
     } else if (currentRoute === "/homepage/find-organizations") {
       setActiveLink("findOrganizations");
-    } else if (currentRoute === "/homepage/activities") {
+    } else if (
+      currentRoute === "/homepage/activities" ||
+      currentRoute === "/homepage/speakers" ||
+      currentRoute === "/homepage/centers-of-participation"
+    ) {
       setActiveLink("getInvolved");
     } else if (
       currentRoute === "/profile/organization" ||

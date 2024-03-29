@@ -12,6 +12,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import LocationForm from "~/components/LocationForm";
+import { centersOfParticipation } from "~/utils/obj";
 
 type CreateActivityFields = z.infer<typeof createActivitySchema>;
 
@@ -45,9 +46,22 @@ const Add = () => {
       hasVolunteers: false,
       hasParticipants: false,
       organizationId: orgId,
+      images: [],
     },
     resolver: zodResolver(createActivitySchema),
   });
+
+  const handleCheckboxChange = (data: string) => {
+    if (getValues("centersTags")?.includes(data)) {
+      setValue(
+        "centersTags",
+        getValues("centersTags")?.filter((center) => center !== data),
+      );
+    } else {
+      const centersTags = getValues("centersTags") ?? [];
+      setValue("centersTags", [...centersTags, data]);
+    }
+  };
 
   useEffect(() => {
     setValue("organizationId", orgId);
@@ -66,9 +80,10 @@ const Add = () => {
       hasParticipants: getValues("hasParticipants"),
       organizationId: orgId,
       images: getValues("images") ?? [],
+      centersTags: getValues("centersTags") ?? [],
     });
 
-    // void router.push("/homepage/activities");
+    void router.push("/homepage/activities");
   };
 
   if (user.isLoading) {
@@ -148,52 +163,6 @@ const Add = () => {
           </div>
         </div>
 
-        <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
-          <p className="font-custom-epilogue text-xl font-extrabold text-white">
-            Type of Activity
-          </p>
-        </section>
-
-        <div className="mb-6 flex items-center  justify-center gap-10">
-          {/* CALL FOR PARTICIPANTS */}
-          <div className="flex items-center  justify-center gap-2">
-            <input
-              {...register("hasParticipants")}
-              type="checkbox"
-              id="participants"
-              onClick={() => {
-                setValue("hasParticipants", !getValues("hasParticipants"));
-              }}
-            />
-            <label htmlFor="participants">Call for Participants</label>
-          </div>
-
-          {/* CALL FOR VOLUNTEERS */}
-          <div className="flex items-center  justify-center gap-2">
-            <input
-              type="checkbox"
-              name="volunteers"
-              id="volunteers"
-              onClick={() => {
-                setValue("hasVolunteers", !getValues("hasVolunteers"));
-              }}
-            />
-            <label htmlFor="volunteers">Call for Volunteers</label>
-          </div>
-
-          {/* Partnership */}
-          <div className=" flex items-center justify-center gap-2">
-            <input
-              type="checkbox"
-              id="partnership"
-              onClick={() => {
-                setValue("hasOrganizations", !getValues("hasOrganizations"));
-              }}
-            />
-            <label htmlFor="partnership">Partnerships</label>
-          </div>
-        </div>
-
         <UploadImage string={"activities"} handleAddImages={handleAddImages} />
 
         <div className="flex flex-wrap justify-center gap-4">
@@ -230,6 +199,79 @@ const Add = () => {
                 </div>
               ))
             : null}
+        </div>
+
+        <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
+          <p className="font-custom-epilogue text-xl font-extrabold text-white">
+            Type of Activity
+          </p>
+        </section>
+
+        <div className="mb-6 flex items-center  justify-center gap-10">
+          {/* CALL FOR PARTICIPANTS */}
+          <div className="flex items-center  justify-center gap-2">
+            <input
+              {...register("hasParticipants")}
+              type="checkbox"
+              id="participants"
+              onClick={() => {
+                setValue("hasParticipants", !getValues("hasParticipants"));
+              }}
+            />
+            <label htmlFor="participants">Call for Participants</label>
+          </div>
+
+          {/* CALL FOR VOLUNTEERS */}
+          <div className="flex items-center  justify-center gap-2">
+            <input
+              {...register("hasVolunteers")}
+              type="checkbox"
+              name="volunteers"
+              id="volunteers"
+              onClick={() => {
+                setValue("hasVolunteers", !getValues("hasVolunteers"));
+              }}
+            />
+            <label htmlFor="volunteers">Call for Volunteers</label>
+          </div>
+
+          {/* Partnership */}
+          <div className=" flex items-center justify-center gap-2">
+            <input
+              {...register("hasOrganizations")}
+              type="checkbox"
+              id="partnership"
+              onClick={() => {
+                setValue("hasOrganizations", !getValues("hasOrganizations"));
+              }}
+            />
+            <label htmlFor="partnership">Partnerships</label>
+          </div>
+        </div>
+
+        <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
+          <p className="font-custom-epilogue text-xl font-extrabold text-white">
+            Centers of Participation
+          </p>
+        </section>
+
+        <div className="flex flex-wrap justify-center gap-3">
+          {centersOfParticipation.map((data, index) => (
+            <div key={index} className="flex items-center">
+              <input
+                type="checkbox"
+                id={`checkbox_${index}`}
+                className="peer hidden"
+                onChange={() => handleCheckboxChange(data)}
+              />
+              <label
+                htmlFor={`checkbox_${index}`}
+                className="peer-checked:btn-active cursor-pointer select-none rounded-lg border border-customBlack-100 px-6 py-3 text-customBlack-100 transition-colors duration-200 ease-in-out peer-checked:border-0  "
+              >
+                {data}
+              </label>
+            </div>
+          ))}
         </div>
 
         <div className="my-20 flex justify-center">

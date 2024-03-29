@@ -9,16 +9,13 @@ import { api } from "~/utils/api";
 import ParticipationNav from "~/components/ParticipationsNav";
 
 const Participation = () => {
-  const { data: sessionData, status: sessionStatus } = useSession();
-
-  const speakers = api.speaker.getSpeakers.useQuery({});
-
-  const router = useRouter();
-
   const [searchText, setSearchText] = useState("");
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
+
+  const router = useRouter();
+  const { id, tag } = router.query;
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -51,7 +48,7 @@ const Participation = () => {
           </div>
         </div>
 
-        <ParticipationNav />
+        <ParticipationNav orgId={id} tag={tag} />
       </div>
     </div>
   );

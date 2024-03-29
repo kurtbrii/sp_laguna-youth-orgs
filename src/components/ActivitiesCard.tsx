@@ -1,18 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import vol2 from "public/images/vol2.png";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { Organization, type User } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
-import { router } from "@trpc/server";
 import { useRouter } from "next/router";
-
-type ActivitiesCardProps = {
-  activity: ActivityProps["activity"];
-  searchText: string;
-};
 
 type ActivityProps = {
   activity: {
@@ -30,6 +22,8 @@ type ActivityProps = {
         image: string | null;
       };
     };
+    centersTags: string[] | null;
+    customTags: string[] | null;
     hasOrganizations: boolean;
     hasVolunteers: boolean;
     hasParticipants: boolean;
@@ -37,9 +31,16 @@ type ActivityProps = {
   };
 };
 
+type ActivitiesCardProps = {
+  activity: ActivityProps["activity"];
+  searchText: string;
+  callOrParticipation: string;
+};
+
 const ActivitiesCard: React.FC<ActivitiesCardProps> = ({
   activity,
   searchText,
+  callOrParticipation,
 }) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
@@ -115,31 +116,46 @@ const ActivitiesCard: React.FC<ActivitiesCardProps> = ({
           {activity.details}
         </p>
         <section className=" flex flex-wrap gap-2">
-          {activity.hasOrganizations && (
-            <div
-              className="btn-outline border px-2 py-1"
-              style={{ fontSize: "8px" }}
-            >
-              Partnership
-            </div>
-          )}
+          {callOrParticipation === "call" ? (
+            <>
+              {activity.hasOrganizations && (
+                <div
+                  className="btn-outline border px-2 py-1"
+                  style={{ fontSize: "8px" }}
+                >
+                  Partnership
+                </div>
+              )}
 
-          {activity.hasParticipants && (
-            <div
-              className="btn-outline border px-2 py-1"
-              style={{ fontSize: "8px" }}
-            >
-              Call for Participants
-            </div>
-          )}
+              {activity.hasParticipants && (
+                <div
+                  className="btn-outline border px-2 py-1"
+                  style={{ fontSize: "8px" }}
+                >
+                  Call for Participants
+                </div>
+              )}
 
-          {activity.hasVolunteers && (
-            <div
-              className="btn-outline border px-2 py-1"
-              style={{ fontSize: "8px" }}
-            >
-              Call for Volunteers
-            </div>
+              {activity.hasVolunteers && (
+                <div
+                  className="btn-outline border px-2 py-1"
+                  style={{ fontSize: "8px" }}
+                >
+                  Call for Volunteers
+                </div>
+              )}
+            </>
+          ) : (
+            activity.centersTags?.map((data, index) => (
+              <div key={index} className="flex items-center">
+                <p
+                  className=" btn-outline border border-primary px-2 py-1 text-primary "
+                  style={{ fontSize: "8px" }}
+                >
+                  {data}
+                </p>
+              </div>
+            ))
           )}
         </section>
       </div>

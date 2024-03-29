@@ -46,6 +46,7 @@ const OrgManageVolunteerRequests = () => {
                 key={queryActivity.id}
                 activity={queryActivity}
                 searchText={""}
+                callOrParticipation={""}
               />
             ))}
           </div>

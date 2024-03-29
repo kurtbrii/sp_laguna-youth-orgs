@@ -171,6 +171,8 @@ model Activity {
     organizationId String
 
     activityCalls ActivityCall[]
+    centersTags   String[]
+    customTags    String[]
 }
 
 model CentersOfParticipation {
