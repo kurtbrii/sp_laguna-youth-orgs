@@ -12,6 +12,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import LocationForm from "~/components/LocationForm";
+import { centersOfParticipation } from "~/utils/obj";
 
 type CreateActivityFields = z.infer<typeof createActivitySchema>;
 
@@ -45,9 +46,22 @@ const Add = () => {
       hasVolunteers: false,
       hasParticipants: false,
       organizationId: orgId,
+      images: [],
     },
     resolver: zodResolver(createActivitySchema),
   });
+
+  const handleCheckboxChange = (data: string) => {
+    if (getValues("centersTags")?.includes(data)) {
+      setValue(
+        "centersTags",
+        getValues("centersTags")?.filter((center) => center !== data),
+      );
+    } else {
+      const centersTags = getValues("centersTags") ?? [];
+      setValue("centersTags", [...centersTags, data]);
+    }
+  };
 
   useEffect(() => {
     setValue("organizationId", orgId);
@@ -66,9 +80,10 @@ const Add = () => {
       hasParticipants: getValues("hasParticipants"),
       organizationId: orgId,
       images: getValues("images") ?? [],
+      centersTags: getValues("centersTags") ?? [],
     });
 
-    // void router.push("/homepage/activities");
+    void router.push("/homepage/activities");
   };
 
   if (user.isLoading) {
@@ -148,6 +163,44 @@ const Add = () => {
           </div>
         </div>
 
+        <UploadImage string={"activities"} handleAddImages={handleAddImages} />
+
+        <div className="flex flex-wrap justify-center gap-4">
+          {getValues("images")?.length
+            ? getValues("images")?.map((data, index) => (
+                <div className="relative " key={index}>
+                  <div className="absolute right-0 top-0">
+                    <IconButton
+                      onClick={() => {
+                        handleRemoveImage(index);
+                      }}
+                      className="mdi mdi-close cursor-pointer hover:text-white"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </div>
+
+                  <div
+                    style={{
+                      width: "240px", // Use 100% width for responsiveness
+                      height: "150px", // Set a fixed height for all images
+                      display: "flex",
+                    }}
+                  >
+                    <Image
+                      title={data}
+                      className="rounded-md object-cover shadow-xl"
+                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
+                      alt={`Uploaded file ${index}`}
+                      width={240}
+                      height={150}
+                    />
+                  </div>
+                </div>
+              ))
+            : null}
+        </div>
+
         <section className=" mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
             Type of Activity
@@ -194,42 +247,29 @@ const Add = () => {
           </div>
         </div>
 
-        <UploadImage string={"activities"} handleAddImages={handleAddImages} />
+        <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
+          <p className="font-custom-epilogue text-xl font-extrabold text-white">
+            Centers of Participation
+          </p>
+        </section>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          {getValues("images")?.length
-            ? getValues("images")?.map((data, index) => (
-                <div className="relative " key={index}>
-                  <div className="absolute right-0 top-0">
-                    <IconButton
-                      onClick={() => {
-                        handleRemoveImage(index);
-                      }}
-                      className="mdi mdi-close cursor-pointer hover:text-white"
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </div>
-
-                  <div
-                    style={{
-                      width: "240px", // Use 100% width for responsiveness
-                      height: "150px", // Set a fixed height for all images
-                      display: "flex",
-                    }}
-                  >
-                    <Image
-                      title={data}
-                      className="rounded-md object-cover shadow-xl"
-                      src={`https://res.cloudinary.com/dif5glv4a/image/upload/${data}`}
-                      alt={`Uploaded file ${index}`}
-                      width={240}
-                      height={150}
-                    />
-                  </div>
-                </div>
-              ))
-            : null}
+        <div className="flex flex-wrap justify-center gap-3">
+          {centersOfParticipation.map((data, index) => (
+            <div key={index} className="flex items-center">
+              <input
+                type="checkbox"
+                id={`checkbox_${index}`}
+                className="peer hidden"
+                onChange={() => handleCheckboxChange(data)}
+              />
+              <label
+                htmlFor={`checkbox_${index}`}
+                className="peer-checked:btn-active cursor-pointer select-none rounded-lg border border-customBlack-100 px-6 py-3 text-customBlack-100 transition-colors duration-200 ease-in-out peer-checked:border-0  "
+              >
+                {data}
+              </label>
+            </div>
+          ))}
         </div>
 
         <div className="my-20 flex justify-center">

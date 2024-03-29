@@ -9,12 +9,6 @@ import { api } from "~/utils/api";
 import ParticipationNav from "~/components/ParticipationsNav";
 
 const Participation = () => {
-  const { data: sessionData, status: sessionStatus } = useSession();
-
-  const speakers = api.speaker.getSpeakers.useQuery({});
-
-  const router = useRouter();
-
   const [searchText, setSearchText] = useState("");
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);

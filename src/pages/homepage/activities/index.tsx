@@ -34,6 +34,8 @@ const Index = () => {
 
   const [searchText, setSearchText] = useState("");
 
+  const [callOrParticipation, setCurrentTag] = useState<string>("call");
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
@@ -80,6 +82,21 @@ const Index = () => {
             </div>
           </div>
 
+          <section className="flex flex-col">
+            <div className="mx-20 flex justify-center">
+              <select
+                className={`${callOrParticipation === "call" ? "border-secondary text-secondary" : "border-primary text-primary"} w-full rounded-md border  bg-transparent px-2 py-2 text-sm font-bold  transition ease-in-out hover:bg-transparent focus:outline-none`}
+                value={callOrParticipation}
+                onChange={(e) => {
+                  setCurrentTag(e.target.value);
+                }}
+              >
+                <option value="call">Activity Call</option>
+                <option value="participation">Centers of Participations</option>
+              </select>
+            </div>
+          </section>
+
           {/* ADD EVENT */}
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
@@ -108,6 +125,7 @@ const Index = () => {
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5 ">
         {activity?.data?.map((queryActivity) => (
           <ActivitiesCard
+            callOrParticipation={callOrParticipation}
             key={queryActivity.id}
             searchText={searchText}
             activity={queryActivity}
