@@ -53,12 +53,20 @@ export const speakerRouter = createTRPCRouter({
     }),
 
   getSpeakers: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional() }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional() }))
     .query(async ({ ctx, input }) => {
 
       return ctx.db.speakers.findMany({
         where: {
-          organizationId: input.orgId
+          organizationId: input.orgId,
+          OR: [
+            {
+              name: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+          ]
         },
         orderBy: {
           createdAt: "desc",

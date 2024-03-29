@@ -253,7 +253,7 @@ const ActivitiesPage = () => {
             className="flex items-center gap-5"
             onClick={() =>
               router.push(
-                `/homepage/centers-of-participation?id=${activity?.organization?.id}&tag=${data}`,
+                `/homepage/centers-of-participation?id=${activity?.organization?.id}&name=${organization?.orgName}&tag=${data}`,
               )
             }
           >

@@ -1,23 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useEffect, useState } from "react";
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
 import { api } from "~/utils/api";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { IconButton } from "@mui/material";
-import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import ParticipationsCard from "./ParticipationsCard";
 
-const ParticipationNav = ({ orgId, tag }: any) => {
-  const router = useRouter();
+const ParticipationNav = ({ orgId, tag, searchText }: any) => {
+  const [activeLink, setActiveLink] = useState("");
 
-  const [activeLink, setActiveLink] = useState<string>("Health");
-
-  const handleLinkClick = (link: string) => {
-    setActiveLink(link);
-  };
+  const [initialSearch, setInitialSearch] = useState<boolean>(true);
 
   const links = [
     "Health",
@@ -32,7 +21,7 @@ const ParticipationNav = ({ orgId, tag }: any) => {
     "Agriculture",
   ];
 
-  const [linkData, setLinkData] = useState("Health");
+  const [linkData, setLinkData] = useState(tag ?? "Health");
   const [dataIndex, setDataIndex] = useState(0);
 
   const handleSetParticipation = (index: number) => {
@@ -42,10 +31,17 @@ const ParticipationNav = ({ orgId, tag }: any) => {
   };
 
   const participationQuery = api.particpation.getParticipations.useQuery({
-    orgId: orgId,
+    orgId: initialSearch ? (orgId as string) : undefined,
+    search: searchText,
   });
 
-  // const handleGetParticipation = (index: number) => {};
+  useEffect(() => {
+    if (initialSearch && searchText !== "") {
+      setInitialSearch(false);
+      setLinkData(linkData);
+      setActiveLink(linkData);
+    }
+  }, [initialSearch, searchText]);
 
   return (
     // navbar
@@ -72,8 +68,8 @@ const ParticipationNav = ({ orgId, tag }: any) => {
           <ParticipationsCard
             key={index}
             data={data}
-            linkData={tag ?? linkData}
-            dataIndex={tag !== undefined ? links.indexOf(tag) : dataIndex}
+            linkData={linkData}
+            dataIndex={tag === linkData ? links.indexOf(tag) : dataIndex}
           />
         ))}
       </div>

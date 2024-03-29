@@ -31,11 +31,6 @@ export default function Home() {
   // ! Get Activities
   const activity = api.activity.getActivities.useQuery({ take: 3 });
 
-  if (event.isSuccess) {
-    console.log("Event Data:", event.data);
-    console.log("Event Data:", activity.data);
-  }
-
   return (
     <>
       <Head>
@@ -79,7 +74,7 @@ export default function Home() {
                 </span>{" "}
                 in Laguna
               </h1>
-              <p className="custom-lexend text-lg italic phone:text-sm tablet:text-sm">
+              <p className="custom-lexend text-2xl italic phone:text-sm tablet:text-sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
                 eget placerat nulla.{" "}
               </p>
@@ -150,7 +145,7 @@ export default function Home() {
                     searchText={""}
                     key={queryActivity.id}
                     activity={queryActivity}
-                    callOrParticipation={""}
+                    callOrParticipation={"call"}
                   />
                 ))}
               </div>

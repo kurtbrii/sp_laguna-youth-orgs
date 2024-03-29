@@ -1,39 +1,15 @@
-// pages/homepage/organization/[id].js
-
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import Image from "next/image";
 
-import {
-  LinearTextGradient,
-  RadialTextGradient,
-  ConicTextGradient,
-} from "react-text-gradients-and-animations";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { ToggleButton } from "@mui/material";
 import EmailJoinOrSpon from "~/components/EmailJoinOrSpon";
-import { volunteerRouter } from "~/server/api/routers/volunteer";
-import { CldUploadWidget } from "next-cloudinary";
-import { string } from "zod";
-
-// type OrganizationProps = {
-//   id: string;
-//   orgName: string;
-//   phoneNumber: string;
-//   mission: string;
-//   bio: string;
-//   vision: string;
-//   objectives: string;
-//   user: {
-//     id: string;
-//     role: string;
-//     image: string | null;
-//     email: string | null;
-//   };
-//   userId: string;
-// };
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import EventCard from "~/components/eventCard";
+import ActivitiesCard from "~/components/ActivitiesCard";
+import { IconButton } from "@mui/material";
 
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -53,6 +29,19 @@ const OrganizationPage = () => {
   });
 
   const organization = organizationsQuery.data;
+
+  // ! EVENTS
+  const event = api.event.getEvents.useQuery({
+    search: "",
+    take: 3,
+    orgId: id as string,
+  });
+
+  // ! ACTIVITIES
+  const activity = api.activity.getActivities.useQuery({
+    take: 3,
+    orgId: id as string,
+  });
 
   // ! VOLUNTEERS JOINING ORGANIZATIONS
   const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
@@ -249,12 +238,31 @@ const OrganizationPage = () => {
         </div>
 
         {/* EVENTS ORGANIZED */}
-
         <div className=" mb-24 flex flex-col gap-6">
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Events Organized
           </h1>
-          <div className="flex gap-4 "></div>
+          <div className="flex gap-4 phone:flex-col laptop:flex-col">
+            <div className="mt mb-5 flex flex-wrap justify-start gap-7 phone:justify-center ">
+              {event?.data?.map((queryEvent) => (
+                <EventCard
+                  searchText={""}
+                  key={queryEvent.id}
+                  event={queryEvent}
+                />
+              ))}
+            </div>
+            <IconButton
+              className="self-center"
+              onClick={() =>
+                router.push(
+                  `/homepage?id=${id as string}&name=${organization?.orgName}`,
+                )
+              }
+            >
+              <ArrowForwardRoundedIcon fontSize="large" />
+            </IconButton>
+          </div>
         </div>
 
         {/* ALL ACTIVITIES */}
@@ -262,21 +270,38 @@ const OrganizationPage = () => {
           <h1 className="text-gradient flex   font-custom-epilogue text-4xl font-semibold">
             All Activities
           </h1>
-          <div className="flex gap-4">
-            {/* <OrgCard key={organization?.id} organization={organization} />
-            <OrgCard key={organization?.id} organization={organization} />
-            <OrgCard key={organization?.id} organization={organization} />
-            <OrgCard key={organization?.id} organization={organization} /> */}
+
+          <div className="flex gap-4 phone:flex-col laptop:flex-col">
+            <div className="mb-5  flex flex-wrap justify-start gap-7 phone:justify-center ">
+              {activity?.data?.map((queryActivity) => (
+                <ActivitiesCard
+                  searchText={""}
+                  key={queryActivity.id}
+                  activity={queryActivity}
+                  callOrParticipation={"call"}
+                />
+              ))}
+            </div>
+            <IconButton
+              className="self-center"
+              onClick={() =>
+                router.push(
+                  `/homepage/activities?id=${id as string}&name=${organization?.orgName}`,
+                )
+              }
+            >
+              <ArrowForwardRoundedIcon fontSize="large" />
+            </IconButton>
           </div>
         </div>
 
         {/* POOL OF SPEAKERS */}
-        <div className="mb-20 flex flex-col gap-6">
+        {/* <div className="mb-20 flex flex-col gap-6">
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Pool of Speakers
           </h1>
           <div className="flex gap-4"></div>
-        </div>
+        </div> */}
 
         {toggleJoinOrg || toggleSponOrg ? (
           <>

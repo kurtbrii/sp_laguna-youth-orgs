@@ -84,13 +84,25 @@ export const participationRouter = createTRPCRouter({
       // environment: z.boolean().optional(),
       // globalMobility: z.boolean().optional(),
       // agriculture: z.boolean().optional(),
-      orgId: z.string().optional()
+      orgId: z.string().optional(),
+      search: z.string().optional()
+
 
     }))
     .query(async ({ ctx, input }) => {
       return ctx.db.centersOfParticipation.findMany({
         where: {
-          organizationId: input.orgId
+          organizationId: input.orgId,
+          OR: [
+            {
+              organization: {
+                orgName: {
+                  contains: input.search,
+                  mode: 'insensitive',
+                },
+              }
+            },
+          ]
         },
         include: {
           organization: {
