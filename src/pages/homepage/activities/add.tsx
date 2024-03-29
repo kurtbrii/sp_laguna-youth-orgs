@@ -224,6 +224,7 @@ const Add = () => {
           {/* CALL FOR VOLUNTEERS */}
           <div className="flex items-center  justify-center gap-2">
             <input
+              {...register("hasVolunteers")}
               type="checkbox"
               name="volunteers"
               id="volunteers"
@@ -237,6 +238,7 @@ const Add = () => {
           {/* Partnership */}
           <div className=" flex items-center justify-center gap-2">
             <input
+              {...register("hasOrganizations")}
               type="checkbox"
               id="partnership"
               onClick={() => {

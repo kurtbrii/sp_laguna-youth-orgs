@@ -190,6 +190,7 @@ const OrganizationPage = () => {
           <div className="flex gap-4">
             {activities?.map((activityQuery) => (
               <ActivitiesCard
+                callOrParticipation={""}
                 key={activityQuery.id}
                 activity={activityQuery}
                 searchText={""}
