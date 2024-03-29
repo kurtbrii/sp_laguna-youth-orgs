@@ -15,29 +15,6 @@ const ParticipationNav = ({ orgId, tag }: any) => {
 
   const [activeLink, setActiveLink] = useState<string>("Health");
 
-  useEffect(() => {
-    // Get the current route pathname
-    const currentRoute = router.asPath;
-
-    // Set active link based on the current route
-    if (currentRoute === "/homepage") {
-      setActiveLink("home");
-    } else if (currentRoute === "/homepage/how-it-works") {
-      setActiveLink("howItWorks");
-    } else if (currentRoute === "/homepage/find-organizations") {
-      setActiveLink("findOrganizations");
-    } else if (currentRoute === "/homepage/activities") {
-      setActiveLink("getInvolved");
-    } else if (
-      currentRoute === "/profile/organization" ||
-      currentRoute === "/profile/volunteer"
-    ) {
-      setActiveLink("profile");
-    } else {
-      setActiveLink("");
-    }
-  }, [router.asPath]);
-
   const handleLinkClick = (link: string) => {
     setActiveLink(link);
   };
@@ -61,6 +38,7 @@ const ParticipationNav = ({ orgId, tag }: any) => {
   const handleSetParticipation = (index: number) => {
     setLinkData(links[index]!);
     setDataIndex(index);
+    setActiveLink(links[index]!);
   };
 
   const participationQuery = api.particpation.getParticipations.useQuery({
