@@ -123,6 +123,7 @@ export const activityRouter = createTRPCRouter({
         select: {
           organization: {
             select: {
+              id: true,
               orgName: true,
               user: {
                 select: {

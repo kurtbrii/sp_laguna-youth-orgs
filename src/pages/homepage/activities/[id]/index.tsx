@@ -148,7 +148,7 @@ const ActivitiesPage = () => {
   return (
     <div className="flex flex-col">
       <Navbar />
-      <div className="mx-16 my-10  flex  justify-center gap-8 font-custom-lexend   text-customBlack-100">
+      <div className="mx-16 my-10 mb-0 flex  justify-center gap-8 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
         <Carousel images={activity?.images ?? [""]} />
 
@@ -236,119 +236,7 @@ const ActivitiesPage = () => {
               {activity?.organization?.orgName}
             </p>
 
-            <p className="mb-20 mt-12 whitespace-pre-wrap">
-              {activity?.details}
-            </p>
-          </div>
-
-          <DeleteModal
-            toggleModal={toggleModal}
-            handleToggleButton={handleToggleButton}
-            handleDeleteButton={handleDeleteButton}
-            string={"activity"}
-          />
-
-          {sessionStatus !== "authenticated" && activity?.hasParticipants && (
-            <button
-              className="btn-active w-1/2 self-center px-2 py-2"
-              onClick={() => handleToggleGuest()}
-            >
-              Join Activity
-            </button>
-          )}
-
-          {sessionData?.user.role === "VOLUNTEER" &&
-            activity?.hasVolunteers &&
-            (getOrgOrVol.data?.[0]?.volunteerId ? (
-              getOrgOrVol.data?.[0]?.status === "PENDING" ? (
-                <button
-                  className="btn-outline w-1/2 self-center px-2 py-2"
-                  onClick={() => handleDeleteOrgOrVolActivity()}
-                >
-                  Cancel Request
-                </button>
-              ) : (
-                <button
-                  className="btn-active w-1/2 cursor-no-drop self-center px-2 py-2  opacity-60 hover:translate-y-0"
-                  disabled
-                >
-                  Already Joined
-                </button>
-              )
-            ) : (
-              <button
-                className="btn-active w-1/2 self-center px-2 py-2"
-                onClick={() => handleToggleVolunteer()}
-                // onClick={() => handleVolunteerCall()}
-              >
-                Volunteer Now
-              </button>
-            ))}
-
-          {sessionData?.user.role === "ORGANIZATION" &&
-            organization?.id !== activity?.organizationId &&
-            activity?.hasOrganizations &&
-            (getOrgOrVol.data?.[0]?.organizationId ? (
-              getOrgOrVol.data?.[0]?.status === "PENDING" ? (
-                <button
-                  className="btn-outline w-1/2 self-center px-2 py-2"
-                  onClick={() => handleDeleteOrgOrVolActivity()}
-                >
-                  Cancel Request
-                </button>
-              ) : (
-                <button
-                  className="btn-active w-1/2 cursor-no-drop self-center px-2 py-2  opacity-60 hover:translate-y-0"
-                  disabled
-                >
-                  Already Partnered With
-                </button>
-              )
-            ) : (
-              <button
-                className="btn-active w-1/2 self-center px-2 py-2"
-                onClick={() => handleToggleOrganization()}
-
-                // onClick={() => handleOrganizationCall()}
-              >
-                Partner With Us
-              </button>
-            ))}
-
-          <div className="flex gap-3 ">
-            {/* MANAGING ACTIVITIES */}
-            {sessionData?.user.role === "ORGANIZATION" &&
-              organization?.id === activity?.organizationId &&
-              activity?.hasOrganizations && (
-                <button
-                  className="btn-outline w-1/2 self-center px-2 py-2"
-                  onClick={() => handleRouterPush("partnership")}
-                >
-                  Manage Partnership
-                </button>
-              )}
-
-            {sessionData?.user.role === "ORGANIZATION" &&
-              organization?.id === activity?.organizationId &&
-              activity?.hasParticipants && (
-                <button
-                  className="btn-outline w-1/2 self-center px-2 py-2"
-                  onClick={() => handleRouterPush("participants")}
-                >
-                  Manage Participants
-                </button>
-              )}
-
-            {sessionData?.user.role === "ORGANIZATION" &&
-              organization?.id === activity?.organizationId &&
-              activity?.hasVolunteers && (
-                <button
-                  className="btn-outline w-1/2 self-center px-2 py-2"
-                  onClick={() => handleRouterPush("volunteers")}
-                >
-                  Manage Volunteers
-                </button>
-              )}
+            <p className=" mt-8 whitespace-pre-wrap">{activity?.details}</p>
           </div>
         </div>
 
@@ -356,6 +244,96 @@ const ActivitiesPage = () => {
           button
         </button> */}
       </div>
+
+      {/* CENTERS OF PARTICIPATION TAGS */}
+      <div className="mx-20 my-10 flex justify-center gap-2">
+        {activity?.centersTags?.map((data, index) => (
+          <button
+            key={index}
+            className="flex items-center gap-5"
+            onClick={() =>
+              router.push(
+                `/homepage/centers-of-participation?id=${activity?.organization?.id}&tag=${data}`,
+              )
+            }
+          >
+            <p
+              className=" btn-outline border border-primary px-3 py-2 text-primary "
+              style={{ fontSize: "12px" }}
+            >
+              {data}
+            </p>
+          </button>
+        ))}
+      </div>
+
+      {/* BUTTONS */}
+      {sessionStatus !== "authenticated" && activity?.hasParticipants && (
+        <button
+          className="btn-active w-1/2 self-center px-2 py-2"
+          onClick={() => handleToggleGuest()}
+        >
+          Join Activity
+        </button>
+      )}
+
+      {sessionData?.user.role === "VOLUNTEER" &&
+        activity?.hasVolunteers &&
+        (getOrgOrVol.data?.[0]?.volunteerId ? (
+          getOrgOrVol.data?.[0]?.status === "PENDING" ? (
+            <button
+              className="btn-outline w-1/2 self-center px-2 py-2"
+              onClick={() => handleDeleteOrgOrVolActivity()}
+            >
+              Cancel Request
+            </button>
+          ) : (
+            <button
+              className="btn-active w-1/2 cursor-no-drop self-center px-2 py-2  opacity-60 hover:translate-y-0"
+              disabled
+            >
+              Already Joined
+            </button>
+          )
+        ) : (
+          <button
+            className="btn-active w-1/2 self-center px-2 py-2"
+            onClick={() => handleToggleVolunteer()}
+            // onClick={() => handleVolunteerCall()}
+          >
+            Volunteer Now
+          </button>
+        ))}
+
+      {sessionData?.user.role === "ORGANIZATION" &&
+        organization?.id !== activity?.organizationId &&
+        activity?.hasOrganizations &&
+        (getOrgOrVol.data?.[0]?.organizationId ? (
+          getOrgOrVol.data?.[0]?.status === "PENDING" ? (
+            <button
+              className="btn-outline w-1/2 self-center px-2 py-2"
+              onClick={() => handleDeleteOrgOrVolActivity()}
+            >
+              Cancel Request
+            </button>
+          ) : (
+            <button
+              className="btn-active w-1/2 cursor-no-drop self-center px-2 py-2  opacity-60 hover:translate-y-0"
+              disabled
+            >
+              Already Partnered With
+            </button>
+          )
+        ) : (
+          <button
+            className="btn-active w-1/2 self-center px-2 py-2"
+            onClick={() => handleToggleOrganization()}
+
+            // onClick={() => handleOrganizationCall()}
+          >
+            Partner With Us
+          </button>
+        ))}
 
       <div className="mx-16">
         {toggleVolunteerNow || togglePartnership ? (
@@ -401,6 +379,49 @@ const ActivitiesPage = () => {
           </>
         )}
       </div>
+
+      <div className="mx-20 flex justify-center gap-5 ">
+        {/* MANAGING ACTIVITIES */}
+        {sessionData?.user.role === "ORGANIZATION" &&
+          organization?.id === activity?.organizationId &&
+          activity?.hasOrganizations && (
+            <button
+              className="btn-outline w-1/2 self-center px-2 py-2"
+              onClick={() => handleRouterPush("partnership")}
+            >
+              Manage Partnership
+            </button>
+          )}
+
+        {sessionData?.user.role === "ORGANIZATION" &&
+          organization?.id === activity?.organizationId &&
+          activity?.hasParticipants && (
+            <button
+              className="btn-outline w-1/2 self-center px-2 py-2"
+              onClick={() => handleRouterPush("participants")}
+            >
+              Manage Participants
+            </button>
+          )}
+
+        {sessionData?.user.role === "ORGANIZATION" &&
+          organization?.id === activity?.organizationId &&
+          activity?.hasVolunteers && (
+            <button
+              className="btn-outline w-1/2 self-center px-2 py-2"
+              onClick={() => handleRouterPush("volunteers")}
+            >
+              Manage Volunteers
+            </button>
+          )}
+      </div>
+
+      <DeleteModal
+        toggleModal={toggleModal}
+        handleToggleButton={handleToggleButton}
+        handleDeleteButton={handleDeleteButton}
+        string={"activity"}
+      />
       {/* <button onClick={() => alert(activity?.id)}>kodo</button> */}
     </div>
   );

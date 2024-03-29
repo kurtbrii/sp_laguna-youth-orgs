@@ -14,6 +14,9 @@ const Participation = () => {
     setSearchText(e.target.value);
   };
 
+  const router = useRouter();
+  const { id, tag } = router.query;
+
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
