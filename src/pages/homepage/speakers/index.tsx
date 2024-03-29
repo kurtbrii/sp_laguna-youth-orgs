@@ -6,7 +6,6 @@ import TuneIcon from "@mui/icons-material/Tune";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import ActivitiesCard from "~/components/ActivitiesCard";
 import SpeakersCard from "~/components/SpeakersCard";
 import EmailSpeakers from "~/components/EmailSpeakers";
 
@@ -17,11 +16,13 @@ const Speakers = () => {
     userId: sessionData?.user.id ?? "",
   });
 
-  const speakers = api.speaker.getSpeakers.useQuery({});
+  const [searchText, setSearchText] = useState("");
+
+  const speakers = api.speaker.getSpeakers.useQuery({
+    search: searchText,
+  });
 
   const router = useRouter();
-
-  const [searchText, setSearchText] = useState("");
 
   const [speakerEmail, setSpeaker] = useState({});
 
@@ -54,22 +55,15 @@ const Speakers = () => {
         </div>
 
         <div className=" flex items-center justify-between">
-          <div className="flex w-3/5 items-center">
+          <div className="flex w-2/5 items-center phone:w-full">
             <input
               type="text"
               value={searchText}
               name="search"
               onChange={handleSearchChange}
-              className="flex-1 rounded-l p-2  shadow-lg"
+              className="flex-1 rounded-l p-2 shadow-lg"
               placeholder="Search"
             />
-            <button className="bg-gradient mr-7 flex rounded-r border-gray-300 p-2 shadow-lg ">
-              <SearchIcon style={{ color: "white" }} />
-            </button>
-
-            <IconButton className="flex">
-              <TuneIcon />
-            </IconButton>
           </div>
 
           {/* ADD SPEAKERS */}

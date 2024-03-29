@@ -31,11 +31,6 @@ export default function Home() {
   // ! Get Activities
   const activity = api.activity.getActivities.useQuery({ take: 3 });
 
-  if (event.isSuccess) {
-    console.log("Event Data:", event.data);
-    console.log("Event Data:", activity.data);
-  }
-
   return (
     <>
       <Head>

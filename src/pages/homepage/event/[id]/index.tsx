@@ -69,12 +69,6 @@ const EventPage = () => {
     void router.push("/homepage");
   };
 
-  // const handleCancel = () => {
-  //   // void router.back();
-  // };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
   return (
     <div className="flex flex-col flex-wrap">
       <Navbar />

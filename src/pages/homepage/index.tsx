@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "~/components/navbar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -13,28 +13,19 @@ import { api } from "~/utils/api";
 import ViewLocationModal from "~/components/ViewLocationModal";
 
 const Index = () => {
-  const { data: sessionData, status: sessionStatus } = useSession();
-
-  type EventProps = {
-    id: string;
-    name: string;
-    organizedBy: string;
-    createdAt: Date;
-    details: string;
-    location: string;
-    organizationId: string;
-    organization: {
-      user: {
-        image: string | null;
-      };
-    };
-    date: Date;
-  };
+  const { data: sessionData } = useSession();
 
   const router = useRouter();
+  const { id, name } = router.query;
 
-  const [searchText, setSearchText] = useState("");
-  const event = api.event.getEvents.useQuery({ search: searchText });
+  const [searchText, setSearchText] = useState((name as string) ?? "");
+
+  const [initialSearch, setInitialSearch] = useState<boolean>(true);
+
+  const event = api.event.getEvents.useQuery({
+    search: searchText,
+    orgId: initialSearch ? (id as string) : undefined,
+  });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -45,9 +36,16 @@ const Index = () => {
     setToggleFilter(!toggleFilter);
   };
 
+  useEffect(() => {
+    if (initialSearch && searchText !== "") {
+      setInitialSearch(false);
+    }
+  }, [initialSearch, searchText]);
+
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100 ">
       <Navbar />
+
       {/* ADD EVENT AND SEARCH BAR */}
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12 flex-col justify-between  ">
@@ -66,7 +64,7 @@ const Index = () => {
               value={searchText}
               name="search"
               onChange={handleSearchChange}
-              className="flex-1 rounded-l p-2 shadow-inner"
+              className="flex-1 rounded-l p-2 shadow-lg"
               placeholder="Search"
             />
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/navbar";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -28,13 +28,16 @@ import ActivitiesCard from "~/components/ActivitiesCard";
 // };
 
 const Index = () => {
-  const { data: sessionData, status: sessionStatus } = useSession();
+  const { data: sessionData } = useSession();
 
   const router = useRouter();
+  const { id, name } = router.query;
 
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState((name as string) ?? "");
 
   const [callOrParticipation, setCurrentTag] = useState<string>("call");
+
+  const [initialSearch, setInitialSearch] = useState<boolean>(true);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -45,7 +48,16 @@ const Index = () => {
     setToggleFilter(!toggleFilter);
   };
 
-  const activity = api.activity.getActivities.useQuery({ search: searchText });
+  const activity = api.activity.getActivities.useQuery({
+    search: searchText,
+    orgId: initialSearch ? (id as string) : undefined,
+  });
+
+  useEffect(() => {
+    if (initialSearch && searchText !== "") {
+      setInitialSearch(false);
+    }
+  }, [initialSearch, searchText]);
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -65,7 +77,7 @@ const Index = () => {
               value={searchText}
               name="search"
               onChange={handleSearchChange}
-              className="flex-1 rounded-l p-2 shadow-inner"
+              className="flex-1 rounded-l p-2 shadow-lg"
               placeholder="Search"
             />
 
