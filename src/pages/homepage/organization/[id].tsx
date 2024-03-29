@@ -238,7 +238,6 @@ const OrganizationPage = () => {
         </div>
 
         {/* EVENTS ORGANIZED */}
-
         <div className=" mb-24 flex flex-col gap-6">
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             Events Organized
@@ -279,7 +278,7 @@ const OrganizationPage = () => {
                   searchText={""}
                   key={queryActivity.id}
                   activity={queryActivity}
-                  callOrParticipation={""}
+                  callOrParticipation={"call"}
                 />
               ))}
             </div>
