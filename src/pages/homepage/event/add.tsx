@@ -15,21 +15,11 @@ import { createEventSchema } from "~/utils/schemaValidation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface EventProps {
-  name: string;
-  createdAt: string;
-  details: string;
-  location: string;
-  organizationId: string;
-  date: string;
-  partners: string[];
-  images: string[];
-  organizedBy: string;
-}
-
 type EventFields = z.infer<typeof createEventSchema>;
 
 const Add = () => {
+  const router = useRouter();
+
   const createEvent = api.event.createEvent.useMutation();
 
   const { data: sessionData } = useSession();
@@ -72,7 +62,7 @@ const Add = () => {
       images: getValues("images"),
     });
 
-    window.location.replace("/homepage");
+    void router.push("/homepage");
   };
 
   // ! LOADING

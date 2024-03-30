@@ -146,7 +146,7 @@ const ActivitiesPage = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="mb-10 flex flex-col">
       <Navbar />
       <div className="mx-16 my-10 mb-0 flex  justify-center gap-8 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
@@ -232,9 +232,16 @@ const ActivitiesPage = () => {
             >
               Organized By:
             </p>
-            <p className="text-gradient text-sm">
+            <button
+              className="text-gradient text-sm"
+              onClick={() =>
+                router.push(
+                  `/homepage/organization/${activity?.organization?.id}`,
+                )
+              }
+            >
               {activity?.organization?.orgName}
-            </p>
+            </button>
 
             <p className=" mt-8 whitespace-pre-wrap">{activity?.details}</p>
           </div>
@@ -246,14 +253,14 @@ const ActivitiesPage = () => {
       </div>
 
       {/* CENTERS OF PARTICIPATION TAGS */}
-      <div className="mx-20 my-10 flex justify-center gap-2">
+      <div className="mx-20 mb-3 mt-10 flex justify-center gap-2">
         {activity?.centersTags?.map((data, index) => (
           <button
             key={index}
             className="flex items-center gap-5"
             onClick={() =>
               router.push(
-                `/homepage/centers-of-participation?id=${activity?.organization?.id}&name=${organization?.orgName}&tag=${data}`,
+                `/homepage/centers-of-participation?id=${activity?.organization?.id}&name=${activity?.organization?.orgName}&tag=${data}`,
               )
             }
           >
@@ -264,6 +271,23 @@ const ActivitiesPage = () => {
               {data}
             </p>
           </button>
+        ))}
+      </div>
+
+      {/* CUSTOM TAGS */}
+      <div className="mx-20 mb-20 flex justify-center gap-2">
+        {activity?.customTags?.map((data, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-5"
+          >
+            <p
+              className=" btn-outline border border-customBlack-100 px-3 py-2 text-customBlack-100 "
+              style={{ fontSize: "12px" }}
+            >
+              {data}
+            </p>
+          </div>
         ))}
       </div>
 
@@ -334,6 +358,8 @@ const ActivitiesPage = () => {
             Partner With Us
           </button>
         ))}
+
+      {/* FORMS */}
 
       <div className="mx-16">
         {toggleVolunteerNow || togglePartnership ? (

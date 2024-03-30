@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import LocationForm from "~/components/LocationForm";
 import { centersOfParticipation } from "~/utils/obj";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 type CreateActivityFields = z.infer<typeof createActivitySchema>;
 
@@ -28,6 +29,12 @@ const Add = () => {
 
   const orgId = user.data?.organization?.id ?? ""; // Ensure to handle potential undefined
 
+  const [customTag, setCustomTag] = useState("");
+
+  // useEffect(() => {
+  //   setValue("organizationId", orgId);
+  // });
+
   // ! REACT USEFORM
   const {
     register,
@@ -35,6 +42,8 @@ const Add = () => {
     setValue,
     getValues,
     setError,
+    watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateActivityFields>({
     defaultValues: {
@@ -47,28 +56,18 @@ const Add = () => {
       hasParticipants: false,
       organizationId: orgId,
       images: [],
+      centersTags: [],
+      customTags: [],
     },
     resolver: zodResolver(createActivitySchema),
   });
 
-  const handleCheckboxChange = (data: string) => {
-    if (getValues("centersTags")?.includes(data)) {
-      setValue(
-        "centersTags",
-        getValues("centersTags")?.filter((center) => center !== data),
-      );
-    } else {
-      const centersTags = getValues("centersTags") ?? [];
-      setValue("centersTags", [...centersTags, data]);
-    }
-  };
-
-  useEffect(() => {
-    setValue("organizationId", orgId);
-  });
+  const formData = watch();
 
   const onSubmit: SubmitHandler<CreateActivityFields> = (data) => {
     console.log(data);
+
+    setValue("organizationId", orgId);
 
     createActivity.mutate({
       name: getValues("name"),
@@ -79,8 +78,9 @@ const Add = () => {
       hasVolunteers: getValues("hasVolunteers"),
       hasParticipants: getValues("hasParticipants"),
       organizationId: orgId,
-      images: getValues("images") ?? [],
-      centersTags: getValues("centersTags") ?? [],
+      images: getValues("images"),
+      centersTags: getValues("centersTags"),
+      customTags: getValues("customTags"),
     });
 
     void router.push("/homepage/activities");
@@ -94,8 +94,39 @@ const Add = () => {
     return <div>Error loading user data</div>;
   }
 
+  const handleCustomTag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomTag(e.target.value);
+  };
+
+  const handleAddCustomTag = () => {
+    const currentArray = formData.customTags ?? [];
+    // const currentArray = getValues("customTags") ?? [];
+    setValue("customTags", [...currentArray, customTag]);
+    setCustomTag("");
+  };
+
+  const handleRemoveCustomTag = (index: number) => {
+    const updatedCustomTag = [...(getValues("customTags") ?? [])];
+    updatedCustomTag.splice(index, 1);
+    setValue("customTags", updatedCustomTag);
+  };
+
+  const handleCheckboxChange = (data: string) => {
+    if (getValues("centersTags")?.includes(data)) {
+      setValue(
+        "centersTags",
+        getValues("centersTags")?.filter((center) => center !== data),
+      );
+    } else {
+      const centersTags = getValues("centersTags") ?? [];
+      setValue("centersTags", [...centersTags, data]);
+    }
+  };
+
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = getValues("images") ?? [];
+    const currentArray = formData.images ?? [];
+
+    // const currentArray = getValues("images") ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
   const handleRemoveImage = (index: number) => {
@@ -103,6 +134,10 @@ const Add = () => {
     updatedImages.splice(index, 1);
     setValue("images", updatedImages);
   };
+
+  // useEffect(() => {
+  //   setValue("organizationId", orgId);
+  // });
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -255,7 +290,7 @@ const Add = () => {
           </p>
         </section>
 
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="mb-6 flex flex-wrap justify-center gap-3">
           {centersOfParticipation.map((data, index) => (
             <div key={index} className="flex items-center">
               <input
@@ -274,20 +309,51 @@ const Add = () => {
           ))}
         </div>
 
-        <div className="my-20 flex justify-center">
-          <div className="flex gap-4">
-            <button type="submit" className="btn-active px-20 py-3">
-              Create Activity
-            </button>
-            <button
-              onClick={() => window.location.replace("/homepage/activities")}
-              type="reset"
-              className="btn-outline   px-20 py-3"
-              style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
-            >
-              Discard
-            </button>
-          </div>
+        <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
+          <p className="font-custom-epilogue text-xl font-extrabold text-white">
+            Centers of Participation
+          </p>
+        </section>
+
+        <div>
+          <input
+            // {...register("partners")}
+            type="text"
+            name="customTags"
+            className=" h-12 w-1/2 rounded border p-2 shadow"
+            placeholder="Add Custom Tag"
+            onChange={handleCustomTag}
+            value={customTag}
+          />
+          <IconButton className="h-12 w-12" onClick={handleAddCustomTag}>
+            <AddBoxIcon />
+          </IconButton>
+          {getValues("customTags")?.length
+            ? getValues("customTags")?.map((tag: string, index: number) => (
+                <div key={index} className="flex">
+                  <p className="w-1/2 text-sm">{tag}</p>
+                  <IconButton onClick={() => handleRemoveCustomTag(index)}>
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+              ))
+            : null}
+        </div>
+
+        {/* BUTTON */}
+        <div className="my-20 flex justify-center gap-4">
+          <button type="submit" className="btn-active px-20 py-3">
+            Create Activity
+          </button>
+
+          <button
+            onClick={() => window.location.replace("/homepage/activities")}
+            type="reset"
+            className="btn-outline   px-20 py-3"
+            style={{ color: "#ec4b42", borderColor: "#ec4b42" }}
+          >
+            Discard
+          </button>
         </div>
       </form>
 

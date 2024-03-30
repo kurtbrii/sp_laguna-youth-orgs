@@ -8,25 +8,6 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ActivitiesCard from "~/components/ActivitiesCard";
 
-// type QueryActivity = {
-//   id: string;
-//   name: string;
-//   details: string;
-//   date: Date;
-//   createdAt: Date;
-//   location: string;
-//   organization: {
-//     user: {
-//       id: string;
-//       image: string | null;
-//     };
-//   };
-//   hasOrganizations: boolean;
-//   hasVolunteers: boolean;
-//   hasParticipants: boolean;
-//   organizationId: string;
-// };
-
 const Index = () => {
   const { data: sessionData } = useSession();
 
@@ -97,14 +78,21 @@ const Index = () => {
           <section className="flex flex-col">
             <div className="mx-20 flex justify-center">
               <select
-                className={`${callOrParticipation === "call" ? "border-secondary text-secondary" : "border-primary text-primary"} w-full rounded-md border  bg-transparent px-2 py-2 text-sm font-bold  transition ease-in-out hover:bg-transparent focus:outline-none`}
+                className={`${
+                  callOrParticipation === "call"
+                    ? "border-secondary text-secondary"
+                    : callOrParticipation === "custom"
+                      ? "border-customBlack-100 text-customBlack-100"
+                      : "border-primary text-primary"
+                } w-full rounded-md border  bg-transparent px-2 py-2 text-sm font-bold  transition ease-in-out hover:bg-transparent focus:outline-none`}
                 value={callOrParticipation}
                 onChange={(e) => {
                   setCurrentTag(e.target.value);
                 }}
               >
-                <option value="call">Activity Call</option>
+                <option value="call">Type of Activity</option>
                 <option value="participation">Centers of Participations</option>
+                <option value="custom">Custom Tags</option>
               </select>
             </div>
           </section>
