@@ -7,25 +7,6 @@ import Image from "next/image";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import EventCard from "~/components/eventCard";
-import ActivitiesCard from "~/components/ActivitiesCard";
-
-type OrganizationProps = {
-  id: string;
-  orgName: string;
-  phoneNumber: string;
-  mission: string;
-  bio: string;
-  vision: string;
-  objectives: string;
-  user: {
-    id: string;
-    role: string;
-    image: string | null;
-    email: string | null;
-  };
-  userId: string;
-};
 
 const VolunteerPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -60,7 +41,7 @@ const VolunteerPage = () => {
       <div className="mx-16  my-10 flex  flex-col justify-evenly font-custom-lexend  text-customBlack-100">
         {/* CONTACT INFO AND DETAILS */}
         <div className="mb-16 grid grid-flow-col">
-          <div className="flex-flex-col">
+          <div className="flex flex-col">
             <Image
               src={volunteer?.user?.image ?? ""}
               alt="Volunteer Image"
@@ -87,6 +68,33 @@ const VolunteerPage = () => {
             </div>
 
             <p className="mb-6 mr-20 text-sm">{volunteer?.bio}</p>
+
+            <div className="mb-3 mt-10 flex flex-wrap justify-start gap-2">
+              {volunteer?.centersTags?.map((data, index) => (
+                <div key={index} className="flex items-center gap-5">
+                  <p
+                    className=" btn-outline border border-primary px-3 py-2 text-primary "
+                    style={{ fontSize: "12px" }}
+                  >
+                    {data}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* CUSTOM TAGS */}
+            <div className="mb-10 flex flex-wrap justify-start gap-2">
+              {volunteer?.customTags?.map((data, index) => (
+                <div key={index} className="flex items-center gap-5">
+                  <p
+                    className=" btn-outline border border-customBlack-100 px-3 py-2 text-customBlack-100 "
+                    style={{ fontSize: "12px" }}
+                  >
+                    {data}
+                  </p>
+                </div>
+              ))}
+            </div>
 
             <div className="flex gap-5  text-center">
               <button

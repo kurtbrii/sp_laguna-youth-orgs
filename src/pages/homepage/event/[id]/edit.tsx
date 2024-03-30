@@ -128,7 +128,8 @@ const EditEvent = () => {
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = getValues("images") ?? [];
+    const currentArray = formData.images ?? [];
+    // const currentArray = getValues("images") ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
 

@@ -311,7 +311,7 @@ const Add = () => {
 
         <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
-            Centers of Participation
+            Custom Tags
           </p>
         </section>
 

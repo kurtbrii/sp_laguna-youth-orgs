@@ -55,6 +55,9 @@ export const volunteerRouter = createTRPCRouter({
           phoneNumber: true,
           bio: true,
           userId: true,
+          customTags: true,
+          centersTags: true,
+          setTags: true,
           user: {
             select: {
               id: true,
@@ -79,7 +82,10 @@ export const volunteerRouter = createTRPCRouter({
           phoneNumber: input.phoneNumber,
           bio: input.bio,
           sex: input.sex,
-          age: input.age
+          age: input.age,
+          centersTags: input.centersTags,
+          customTags: input.customTags,
+          setTags: input.setTags
         },
       });
     }),

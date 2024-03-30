@@ -82,6 +82,9 @@ const updateVolunteerSchema = z.object({
   bio: z.string().refine((data) => data.trim().length > 0, { message: 'Bio is required', }),
   sex: z.string().refine((data) => data.trim().length > 0, { message: 'Sex is required', }),
   age: z.coerce.number().refine((data) => data > 0, { message: 'Age is required', }),
+  centersTags: z.array(z.string()).optional(),
+  customTags: z.array(z.string()).optional(),
+  setTags: z.boolean().optional()
 })
 
 
