@@ -31,6 +31,10 @@ const Add = () => {
 
   const [customTag, setCustomTag] = useState("");
 
+  // useEffect(() => {
+  //   setValue("organizationId", orgId);
+  // });
+
   // ! REACT USEFORM
   const {
     register,
@@ -38,30 +42,32 @@ const Add = () => {
     setValue,
     getValues,
     setError,
+    watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateActivityFields>({
     defaultValues: {
-      // name: "",
-      // details: "",
-      // date: "",
-      // location: "",
-      // hasOrganizations: false,
-      // hasVolunteers: false,
-      // hasParticipants: false,
-      // organizationId: orgId,
-      // images: [],
-      // centersTags: [],
-      // customTags: [],
+      name: "",
+      details: "",
+      date: "",
+      location: "",
+      hasOrganizations: false,
+      hasVolunteers: false,
+      hasParticipants: false,
+      organizationId: orgId,
+      images: [],
+      centersTags: [],
+      customTags: [],
     },
     resolver: zodResolver(createActivitySchema),
   });
 
-  // useEffect(() => {
-  //   setValue("organizationId", orgId);
-  // });
+  const formData = watch();
 
   const onSubmit: SubmitHandler<CreateActivityFields> = (data) => {
     console.log(data);
+
+    setValue("organizationId", orgId);
 
     createActivity.mutate({
       name: getValues("name"),
@@ -93,7 +99,8 @@ const Add = () => {
   };
 
   const handleAddCustomTag = () => {
-    const currentArray = getValues("customTags") ?? [];
+    const currentArray = formData.customTags ?? [];
+    // const currentArray = getValues("customTags") ?? [];
     setValue("customTags", [...currentArray, customTag]);
     setCustomTag("");
   };
@@ -117,7 +124,9 @@ const Add = () => {
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = getValues("images") ?? [];
+    const currentArray = formData.images ?? [];
+
+    // const currentArray = getValues("images") ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
   const handleRemoveImage = (index: number) => {
@@ -125,6 +134,10 @@ const Add = () => {
     updatedImages.splice(index, 1);
     setValue("images", updatedImages);
   };
+
+  // useEffect(() => {
+  //   setValue("organizationId", orgId);
+  // });
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
