@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -49,6 +48,7 @@ const EditActivity = () => {
     organizationId: orgId,
     images: activityQueryData?.images ?? [],
     centersTags: activityQueryData?.centersTags ?? [],
+    customTags: activityQueryData?.customTags ?? [],
 
     hasOrganizations: activityQueryData?.hasOrganizations ?? false,
     hasVolunteers: activityQueryData?.hasVolunteers ?? false,
@@ -68,8 +68,10 @@ const EditActivity = () => {
     resolver: zodResolver(updateActivitySchema),
   });
 
+  const formData = watch();
+
   const onSubmit: SubmitHandler<UpdateActivityFields> = (data) => {
-    console.log("Data", data);
+    // console.log("Data", data);
 
     editActivity.mutate({
       id: id as string,
@@ -84,9 +86,29 @@ const EditActivity = () => {
       hasParticipants: getValues("hasParticipants"),
       organizationId: orgId,
       centersTags: getValues("centersTags"),
+      customTags: getValues("customTags"),
     });
 
-    window.location.replace("/homepage/activities");
+    void router.push("/homepage/activities");
+  };
+
+  const [customTag, setCustomTag] = useState("");
+
+  const handleCustomTag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomTag(e.target.value);
+    console.log(customTag);
+  };
+
+  const handleAddCustomTag = () => {
+    const currentArray = getValues("customTags") ?? [];
+    setValue("customTags", [...currentArray, customTag]);
+    setCustomTag("");
+  };
+
+  const handleRemoveCustomTag = (index: number) => {
+    const updatedCustomTag = [...(getValues("customTags") ?? [])];
+    updatedCustomTag.splice(index, 1);
+    setValue("customTags", updatedCustomTag);
   };
 
   const handleAddImages = (newImageUrl: string) => {
@@ -95,7 +117,8 @@ const EditActivity = () => {
   };
 
   const handleRemoveImage = (index: number) => {
-    const updatedImages = [...(getValues("images") ?? [])];
+    const updatedImages = formData.images ?? [];
+    // const updatedImages = [...(getValues("images") ?? [])];
     updatedImages.splice(index, 1);
     setValue("images", updatedImages);
   };
@@ -114,6 +137,7 @@ const EditActivity = () => {
 
   useEffect(() => {
     if (activityQueryData) {
+      reset(formData);
       reset(activityQueryDataForm);
     }
   }, []);
@@ -123,6 +147,7 @@ const EditActivity = () => {
     setValue("id", id as string);
     getValues("images");
     getValues("centersTags");
+    getValues("customTags");
   }, [orgId, id as string, setValue, getValues]);
 
   if (user.isLoading) {
@@ -304,6 +329,38 @@ const EditActivity = () => {
           ))}
         </div>
 
+        <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
+          <p className="font-custom-epilogue text-xl font-extrabold text-white">
+            Centers of Participation
+          </p>
+        </section>
+
+        <div>
+          <input
+            // {...register("partners")}
+            type="text"
+            name="customTags"
+            className=" h-12 w-1/2 rounded border p-2 shadow"
+            placeholder="Add Custom Tag"
+            onChange={handleCustomTag}
+            value={customTag}
+          />
+          <IconButton className="h-12 w-12" onClick={handleAddCustomTag}>
+            <AddBoxIcon />
+          </IconButton>
+          {getValues("customTags")?.length
+            ? getValues("customTags")?.map((tag: string, index: number) => (
+                <div key={index} className="flex">
+                  <p className="w-1/2 text-sm">{tag}</p>
+                  <IconButton onClick={() => handleRemoveCustomTag(index)}>
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+              ))
+            : null}
+        </div>
+
+        {/* BUTTONS */}
         <div className="my-20 flex justify-center">
           <div className="flex gap-4">
             <button type="submit" className="btn-active px-20 py-3">

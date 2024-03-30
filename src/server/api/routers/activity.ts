@@ -24,7 +24,7 @@ export const activityRouter = createTRPCRouter({
           hasParticipants: input.hasParticipants,
           organizationId: input.organizationId,
           centersTags: input.centersTags,
-          // customTags: input.customTags,
+          customTags: input.customTags,
         }
       });
     }),
@@ -46,7 +46,8 @@ export const activityRouter = createTRPCRouter({
           hasVolunteers: input.hasVolunteers,
           hasParticipants: input.hasParticipants,
           organizationId: input.organizationId,
-          centersTags: input.centersTags
+          centersTags: input.centersTags,
+          customTags: input.customTags,
         }
       });
     }),
@@ -147,6 +148,7 @@ export const activityRouter = createTRPCRouter({
           hasParticipants: true,
           organizationId: true,
           centersTags: true,
+          customTags: true,
         },
 
       });

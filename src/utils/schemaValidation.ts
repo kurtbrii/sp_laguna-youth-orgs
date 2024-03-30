@@ -35,7 +35,8 @@ const createActivitySchema = z.object({
   location: z.string().min(5, { message: "Activity must have a location" }),
   organizationId: z.string(),
   images: z.array(z.string()).optional(),
-  centersTags: z.array(z.string()).optional()
+  centersTags: z.array(z.string()).optional(),
+  customTags: z.array(z.string()).optional()
 })
 
 const updateActivitySchema = z.object({
@@ -49,7 +50,8 @@ const updateActivitySchema = z.object({
   location: z.string().min(5, { message: "Activity must have a location" }),
   organizationId: z.string(),
   images: z.array(z.string()).optional(),
-  centersTags: z.string().array().optional()
+  centersTags: z.string().array().optional(),
+  customTags: z.string().array().optional()
 })
 
 

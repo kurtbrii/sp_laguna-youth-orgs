@@ -145,6 +145,17 @@ const ActivitiesCard: React.FC<ActivitiesCardProps> = ({
                 </div>
               )}
             </>
+          ) : callOrParticipation === "custom" ? (
+            activity.customTags?.map((data, index) => (
+              <div key={index} className="flex items-center">
+                <p
+                  className=" btn-outline border border-customBlack-100 px-2 py-1 text-customBlack-100 "
+                  style={{ fontSize: "8px" }}
+                >
+                  {data}
+                </p>
+              </div>
+            ))
           ) : (
             activity.centersTags?.map((data, index) => (
               <div key={index} className="flex items-center">
