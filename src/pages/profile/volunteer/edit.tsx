@@ -1,7 +1,6 @@
-import React, { ChangeEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import { userRouter } from "~/server/api/routers/user";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { z } from "zod";
@@ -10,6 +9,9 @@ import { updateVolunteerSchema } from "~/utils/schemaValidation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { centersOfParticipation } from "~/utils/obj";
 import Switch from "react-switch";
+import { IconButton } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 type UpdateVolunteerFields = z.infer<typeof updateVolunteerSchema>;
 
@@ -113,7 +115,7 @@ const EditVolunteer = () => {
         age: volunteer?.age ?? undefined,
         centersTags: volunteer?.centersTags ?? [],
         customTags: volunteer?.customTags ?? [],
-        setTags: volunteer?.setTags ?? [],
+        setTags: volunteer?.setTags ?? false,
       });
     }
   }, []);
@@ -123,6 +125,7 @@ const EditVolunteer = () => {
     getValues("setTags");
     getValues("centersTags");
     getValues("customTags");
+    setTags(getValues("setTags") ?? false);
   }, [volunteerId, setValue, getValues]);
 
   if (user.isLoading) {
@@ -197,7 +200,7 @@ const EditVolunteer = () => {
         {errors.sex && <p className="text-customRed">{errors.sex.message}</p>}
         <section className="mt-6 flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
-            Centers of Participation
+            Centers of Participation Tags
           </p>
         </section>
         <div className="flex flex-wrap justify-center gap-3">
@@ -224,26 +227,51 @@ const EditVolunteer = () => {
             Custom Tags
           </p>
         </section>
-        {/* <IOSSwitch
-          sx={{ m: 1 }}
-          // defaultChecked
-          // onChange={(e, checked) => {
-          //   setTags(checked);
-          // }}
-        /> */}
-        <Switch
-          onChange={(checked) => setTags(checked)}
-          checked={tags}
-          onColor="#86d3ff"
-          onHandleColor="#2693e6"
-          handleDiameter={30}
-          uncheckedIcon={false}
-          checkedIcon={false}
-          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-          height={20}
-          width={48}
-        />
+
+        <div className="mb-20">
+          <input
+            type="text"
+            name="customTags"
+            className=" h-12 w-1/2 rounded border p-2 shadow"
+            placeholder="Add Custom Tag"
+            onChange={handleCustomTag}
+            value={customTag}
+          />
+          <IconButton className="h-12 w-12" onClick={handleAddCustomTag}>
+            <AddBoxIcon />
+          </IconButton>
+          {getValues("customTags")?.length
+            ? getValues("customTags")?.map((tag: string, index: number) => (
+                <div key={index} className="flex">
+                  <p className="w-1/2 text-sm">{tag}</p>
+                  <IconButton onClick={() => handleRemoveCustomTag(index)}>
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+              ))
+            : null}
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-2">
+          <Switch
+            onChange={(checked) => setTags(checked)}
+            checked={tags}
+            onColor="#86d3ff"
+            onHandleColor="#2693e6"
+            handleDiameter={30}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+            height={20}
+            width={48}
+          />
+
+          <p className="w-5/12 text-center italic">
+            Setting this on will enable you to automatically filter the
+            activities section based on your selected tags.
+          </p>
+        </div>
 
         <div className="my-20 flex justify-center">
           <div className="flex flex-col gap-4">

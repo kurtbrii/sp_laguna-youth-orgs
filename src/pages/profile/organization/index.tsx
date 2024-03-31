@@ -96,12 +96,12 @@ const OrganizationPage = () => {
                 Update Information
               </button>
 
-              <button
+              {/* <button
                 className="btn-outline w-1/2 border px-8 py-2 font-normal"
                 style={{ color: "var(--red)", borderColor: "var(--red)" }}
               >
                 Deactivate Account
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

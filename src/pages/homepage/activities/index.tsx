@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ActivitiesCard from "~/components/ActivitiesCard";
+import { centersOfParticipation } from "~/utils/obj";
 
 const Index = () => {
   const { data: sessionData } = useSession();
@@ -32,6 +33,11 @@ const Index = () => {
   const activity = api.activity.getActivities.useQuery({
     search: searchText,
     orgId: initialSearch ? (id as string) : undefined,
+    centersTags:
+      sessionData?.user?.role === "VOLUNTEER"
+        ? centersOfParticipation
+        : centersOfParticipation,
+    customTags: sessionData?.user?.role === "VOLUNTEER" ? [] : [],
   });
 
   useEffect(() => {
@@ -42,6 +48,10 @@ const Index = () => {
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
+      <button onClick={() => alert(sessionData?.user?.organization?.orgName)}>
+        click
+      </button>
+      <button onClick={() => alert(sessionData?.user?.role)}>click</button>
       <Navbar />
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12">

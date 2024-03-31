@@ -53,35 +53,55 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getActivities: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional() }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional() }))
     .query(async ({ ctx, input }) => {
 
       // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.activity.findMany({
         where: {
-          organizationId: input.orgId,
           OR: [
             {
-              name: {
-                contains: input.search,
-                mode: 'insensitive',
+
+              organizationId: input.orgId,
+            },
+            {
+
+              centersTags: {
+                hasSome: input.centersTags,
               },
             },
             {
-              location: {
-                contains: input.search,
-                mode: 'insensitive',
+
+              customTags: {
+                hasSome: input.customTags,
               },
-            },
-            {
-              organization: {
-                orgName: {
-                  contains: input.search,
-                  mode: 'insensitive',
-                },
-              }
             }
-          ],
+          ]
+          // OR: [
+
+          //   {
+          //     name: {
+          //       contains: input.search,
+          //       mode: 'insensitive',
+          //     },
+          //   },
+          //   {
+          //     location: {
+          //       contains: input.search,
+          //       mode: 'insensitive',
+          //     },
+          //   },
+          //   {
+          //     organization: {
+          //       orgName: {
+          //         contains: input.search,
+          //         mode: 'insensitive',
+          //       },
+          //     }
+          //   },
+
+
+          // ],
         },
         orderBy: {
           createdAt: "desc",
