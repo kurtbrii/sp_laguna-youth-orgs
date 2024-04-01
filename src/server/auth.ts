@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { Organization } from "@prisma/client";
+import { type Organization, type Volunteer } from "@prisma/client";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -22,6 +22,7 @@ declare module "next-auth" {
     id: string;
     role: string;
     organization: Organization;
+    volunteer: Volunteer;
   }
 
   interface Session extends DefaultSession {
@@ -29,9 +30,9 @@ declare module "next-auth" {
       id: string;
       role: string | undefined | null;
       organization: Organization;
+      volunteer: Volunteer;
     };
   }
-
 }
 
 /**
@@ -40,7 +41,6 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-
   callbacks: {
     session: async ({ session, user }) => ({
       ...session,
@@ -49,6 +49,7 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
         role: user.role,
         organization: user.organization,
+        volunteer: user.volunteer,
       },
     }),
   },

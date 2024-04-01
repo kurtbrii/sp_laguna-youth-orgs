@@ -43,16 +43,6 @@ const EditVolunteer = () => {
     resolver: zodResolver(updateVolunteerSchema),
   });
 
-  const volunteerQueryDataForm = {
-    id: volunteerId,
-    phoneNumber: volunteer?.phoneNumber ?? "",
-    bio: volunteer?.bio ?? "",
-    sex: volunteer?.sex ?? "",
-    age: volunteer?.age ?? undefined,
-  };
-
-  const formData = watch();
-
   const [tags, setTags] = useState(false);
 
   const onSubmit: SubmitHandler<UpdateVolunteerFields> = (data) => {

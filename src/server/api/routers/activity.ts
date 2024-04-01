@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -5,6 +6,8 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { createActivitySchema, updateActivitySchema } from "~/utils/schemaValidation";
+import { centersOfParticipation } from "~/utils/obj";
+
 
 export const activityRouter = createTRPCRouter({
   createActivity: protectedProcedure
@@ -53,56 +56,60 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getActivities: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional() }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional(), filterCenterTags: z.array(z.string()).optional(), filterCustomTags: z.array(z.string()).optional(), filterHasVolunteers: z.boolean().optional(), filterHasOrganizations: z.boolean().optional(), filterHasParticipants: z.boolean().optional() }))
     .query(async ({ ctx, input }) => {
 
-      // const whereCondition = input.id ? { id: input.id } : {};
+      const whereCondition: Prisma.ActivityWhereInput = {
+        AND: [
+          // Search conditions
+          {
+            OR: [
+              { organizationId: input.orgId },
+              { name: { contains: input.search, mode: 'insensitive' } },
+              { location: { contains: input.search, mode: 'insensitive' } },
+              { organization: { orgName: { contains: input.search, mode: 'insensitive' } } },
+            ],
+          },
+          {
+            AND: [
+              { // for the user profile filter
+                OR: [
+                  {
+                    centersTags: { hasSome: input.centersTags },
+                  },
+                  {
+                    customTags: { hasSome: input.customTags },
+                  },
+                ]
+              },
+              { // for the checkbox
+                AND: [
+                  {
+                    centersTags: { hasEvery: input.filterCenterTags },
+                  },
+                  {
+                    customTags: { hasEvery: input.filterCustomTags },
+                  },
+
+                  {
+                    hasVolunteers: input.filterHasVolunteers,
+                  },
+                  {
+                    hasOrganizations: input.filterHasOrganizations,
+                  },
+                  {
+                    hasParticipants: input.filterHasParticipants,
+                  },
+                ]
+              }
+            ]
+          }
+
+        ],
+      };
+
       return ctx.db.activity.findMany({
-        where: {
-          OR: [
-            {
-
-              organizationId: input.orgId,
-            },
-            {
-
-              centersTags: {
-                hasSome: input.centersTags,
-              },
-            },
-            {
-
-              customTags: {
-                hasSome: input.customTags,
-              },
-            }
-          ]
-          // OR: [
-
-          //   {
-          //     name: {
-          //       contains: input.search,
-          //       mode: 'insensitive',
-          //     },
-          //   },
-          //   {
-          //     location: {
-          //       contains: input.search,
-          //       mode: 'insensitive',
-          //     },
-          //   },
-          //   {
-          //     organization: {
-          //       orgName: {
-          //         contains: input.search,
-          //         mode: 'insensitive',
-          //       },
-          //     }
-          //   },
-
-
-          // ],
-        },
+        where: whereCondition,
         orderBy: {
           createdAt: "desc",
         },
@@ -120,6 +127,7 @@ export const activityRouter = createTRPCRouter({
           organizationId: true,
           centersTags: true,
           customTags: true,
+
           organization: {
             select: {
               orgName: true,

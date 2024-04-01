@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/navbar";
 import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ActivitiesCard from "~/components/ActivitiesCard";
 import { centersOfParticipation } from "~/utils/obj";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { updateVolunteerSchema } from "~/utils/schemaValidation";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+const filterSchema = z.object({
+  centersTags: z.array(z.string()).optional(),
+  customTags: z.array(z.string()).optional(),
+  hasParticipants: z.boolean().optional(),
+  hasVolunteers: z.boolean().optional(),
+  hasOrganizations: z.boolean().optional(),
+});
+
+type FilterSchemaFields = z.infer<typeof filterSchema>;
 
 const Index = () => {
   const { data: sessionData } = useSession();
+
+  const volunteer = api.volunteer.getOne.useQuery({
+    userId: sessionData?.user?.id ?? "",
+  });
 
   const router = useRouter();
   const { id, name } = router.query;
@@ -30,28 +47,85 @@ const Index = () => {
     setToggleFilter(!toggleFilter);
   };
 
+  // ! REACT USEFORM
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    watch,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FilterSchemaFields>({
+    defaultValues: {},
+    resolver: zodResolver(filterSchema),
+  });
+
   const activity = api.activity.getActivities.useQuery({
     search: searchText,
     orgId: initialSearch ? (id as string) : undefined,
     centersTags:
       sessionData?.user?.role === "VOLUNTEER"
-        ? centersOfParticipation
+        ? volunteer?.data?.setTags
+          ? volunteer?.data?.centersTags
+          : centersOfParticipation
         : centersOfParticipation,
-    customTags: sessionData?.user?.role === "VOLUNTEER" ? [] : [],
+    customTags:
+      sessionData?.user?.role === "VOLUNTEER"
+        ? volunteer?.data?.setTags
+          ? volunteer?.data?.customTags
+          : []
+        : [],
+    filterCenterTags: getValues("centersTags") ?? [],
+    filterCustomTags: [],
+    filterHasVolunteers: getValues("hasVolunteers")
+      ? getValues("hasVolunteers")
+      : undefined,
+    filterHasOrganizations: getValues("hasOrganizations")
+      ? getValues("hasOrganizations")
+      : undefined,
+    filterHasParticipants: getValues("hasParticipants")
+      ? getValues("hasParticipants")
+      : undefined,
   });
+
+  type data = "hasOrganizations" | "hasVolunteers" | "hasParticipants";
+
+  const filterSetParams: data[] = [
+    "hasOrganizations",
+    "hasVolunteers",
+    "hasParticipants",
+  ];
+
+  const filterLabel = [
+    "Partnership",
+    "Call for Volunteers",
+    "Call for Participants",
+  ];
+
+  const handleCheckboxChange = (data: string) => {
+    if (getValues("centersTags")?.includes(data)) {
+      setValue(
+        "centersTags",
+        getValues("centersTags")?.filter((center) => center !== data),
+      );
+    } else {
+      const centersTags = getValues("centersTags") ?? [];
+      setValue("centersTags", [...centersTags, data]);
+    }
+  };
 
   useEffect(() => {
     if (initialSearch && searchText !== "") {
       setInitialSearch(false);
     }
-  }, [initialSearch, searchText]);
+    getValues("centersTags");
+  }, [initialSearch, searchText, getValues]);
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
-      <button onClick={() => alert(sessionData?.user?.organization?.orgName)}>
-        click
-      </button>
-      <button onClick={() => alert(sessionData?.user?.role)}>click</button>
+      {/* <button onClick={handleClick}>click</button>
+      <button onClick={() => alert(sessionData?.user?.role)}>click</button> */}
       <Navbar />
       <div className="mx-10  flex flex-col">
         <div className=" my-4 flex h-12">
@@ -120,14 +194,79 @@ const Index = () => {
       </div>
 
       {toggleFilter && (
-        <div className="bg-gradient mx-10 rounded-md px-10 py-5 ">
-          <p className="text-white">ihg</p>
-          <p>ihg</p>
-          <p>ih</p>
-          <p>ih</p>
-          <p>ih</p>
-          <p>ih</p>
-          <p>ih</p>
+        <div className="bg-gradient mx-10 flex justify-between gap-4 rounded-md px-10 py-5">
+          {/* FILTER BASED ON CENTERS OF PARTICIPATION */}
+          <section className="flex w-1/3 flex-col items-center gap-5">
+            <p className="text-white">Filter Activity Call</p>
+
+            <div className="flex items-center gap-3">
+              {filterSetParams.map((data: data, index: number) => (
+                <div key={index} className="flex items-center">
+                  {/* {data} */}
+                  <input
+                    {...register(data)}
+                    id={data}
+                    type="checkbox"
+                    className="peer hidden"
+                    checked={getValues(data)}
+                    onChange={() => setValue(data, !getValues(data))}
+                  />
+                  <label
+                    htmlFor={filterSetParams[index]}
+                    className="cursor-pointer select-none rounded-lg border border-white px-3 py-2 text-xs text-white transition-colors duration-200 ease-in-out peer-checked:border-0 peer-checked:bg-white peer-checked:text-customBlack-100"
+                  >
+                    {filterLabel[index]}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="flex w-1/3 flex-col items-center gap-5">
+            <p className="text-white">Filter Centers of Participation</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {centersOfParticipation.map((data, index) => (
+                <div key={index} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={data}
+                    className="peer hidden"
+                    checked={getValues("centersTags")?.includes(data)}
+                    onChange={() => handleCheckboxChange(data)}
+                  />
+                  <label
+                    htmlFor={data}
+                    className="cursor-pointer select-none rounded-lg border border-white px-3 py-2 text-xs text-white transition-colors duration-200 ease-in-out peer-checked:border-0 peer-checked:bg-white peer-checked:text-customBlack-100"
+                  >
+                    {data}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="flex w-1/3 flex-col items-center gap-5">
+            <p className="text-white">Filter Centers of Participation</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {centersOfParticipation.map((data, index) => (
+                <div key={index} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={data}
+                    className="peer hidden"
+                    checked={getValues("centersTags")?.includes(data)}
+                    onChange={() => handleCheckboxChange(data)}
+                  />
+                  <label
+                    htmlFor={data}
+                    className="cursor-pointer select-none rounded-lg border border-white px-3 py-2 text-xs text-white transition-colors duration-200 ease-in-out peer-checked:border-0 peer-checked:bg-white peer-checked:text-customBlack-100"
+                  >
+                    {data}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       )}
 
