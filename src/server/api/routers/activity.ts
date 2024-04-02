@@ -118,27 +118,31 @@ export const activityRouter = createTRPCRouter({
           name: true,
           details: true,
           date: true,
-          createdAt: true,
           location: true,
           images: true,
+
+          organization: {
+            select: {
+              id: true,
+              orgName: true,
+              phoneNumber: true,
+              bio: true,
+
+              user: {
+                select: {
+                  id: true,
+                  image: true,
+                }
+              }
+            }
+          },
+
+          centersTags: true,
+          customTags: true,
           hasOrganizations: true,
           hasVolunteers: true,
           hasParticipants: true,
           organizationId: true,
-          centersTags: true,
-          customTags: true,
-
-          organization: {
-            select: {
-              orgName: true,
-              user: {
-                select: {
-                  image: true,
-                  id: true,
-                }
-              }
-            }
-          }
         },
         take: input.take
       });

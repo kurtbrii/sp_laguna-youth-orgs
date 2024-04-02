@@ -37,11 +37,12 @@ import { useRouter } from "next/router";
 type ActivityProps = {
   activity: {
     id: string;
-    date: Date;
     name: string;
     details: string;
+    date: Date;
     location: string;
     images: string[];
+
     organization: {
       id: string;
       orgName: string;
