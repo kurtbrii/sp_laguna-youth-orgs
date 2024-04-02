@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/navbar";
-import IconButton from "@mui/material/IconButton";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -11,6 +10,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateVolunteerSchema } from "~/utils/schemaValidation";
 import { SubmitHandler, useForm } from "react-hook-form";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import ClearIcon from "@mui/icons-material/Clear";
+import IconButton from "@mui/material/IconButton";
 
 const filterSchema = z.object({
   centersTags: z.array(z.string()).optional(),
@@ -61,6 +63,8 @@ const Index = () => {
     resolver: zodResolver(filterSchema),
   });
 
+  const formData = watch();
+
   const activity = api.activity.getActivities.useQuery({
     search: searchText,
     orgId: initialSearch ? (id as string) : undefined,
@@ -76,16 +80,16 @@ const Index = () => {
           ? volunteer?.data?.customTags
           : []
         : [],
-    filterCenterTags: getValues("centersTags") ?? [],
-    filterCustomTags: [],
-    filterHasVolunteers: getValues("hasVolunteers")
-      ? getValues("hasVolunteers")
+    filterCenterTags: formData.centersTags ?? [],
+    filterCustomTags: formData.customTags ?? [],
+    filterHasVolunteers: formData.hasVolunteers
+      ? formData.hasVolunteers
       : undefined,
-    filterHasOrganizations: getValues("hasOrganizations")
-      ? getValues("hasOrganizations")
+    filterHasOrganizations: formData.hasOrganizations
+      ? formData.hasOrganizations
       : undefined,
-    filterHasParticipants: getValues("hasParticipants")
-      ? getValues("hasParticipants")
+    filterHasParticipants: formData.hasParticipants
+      ? formData.hasParticipants
       : undefined,
   });
 
@@ -102,6 +106,25 @@ const Index = () => {
     "Call for Volunteers",
     "Call for Participants",
   ];
+
+  const [customTag, setCustomTag] = useState("");
+
+  const handleCustomTag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomTag(e.target.value);
+    console.log(customTag);
+  };
+
+  const handleAddCustomTag = () => {
+    const currentArray = getValues("customTags") ?? [];
+    setValue("customTags", [...currentArray, customTag]);
+    setCustomTag("");
+  };
+
+  const handleRemoveCustomTag = (index: number) => {
+    const updatedCustomTag = [...(getValues("customTags") ?? [])];
+    updatedCustomTag.splice(index, 1);
+    setValue("customTags", updatedCustomTag);
+  };
 
   const handleCheckboxChange = (data: string) => {
     if (getValues("centersTags")?.includes(data)) {
@@ -195,11 +218,11 @@ const Index = () => {
 
       {toggleFilter && (
         <div className="bg-gradient mx-10 flex justify-between gap-4 rounded-md px-10 py-5">
-          {/* FILTER BASED ON CENTERS OF PARTICIPATION */}
-          <section className="flex w-1/3 flex-col items-center gap-5">
+          {/* FILTER BASED ACTIVITY CALL */}
+          <section className="flex w-1/4 flex-col items-center gap-5">
             <p className="text-white">Filter Activity Call</p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               {filterSetParams.map((data: data, index: number) => (
                 <div key={index} className="flex items-center">
                   {/* {data} */}
@@ -213,7 +236,7 @@ const Index = () => {
                   />
                   <label
                     htmlFor={filterSetParams[index]}
-                    className="cursor-pointer select-none rounded-lg border border-white px-3 py-2 text-xs text-white transition-colors duration-200 ease-in-out peer-checked:border-0 peer-checked:bg-white peer-checked:text-customBlack-100"
+                    className="cursor-pointer select-none rounded-lg border border-white px-4 py-2 text-center  text-xs text-white transition-colors duration-200 ease-in-out peer-checked:border-0 peer-checked:bg-white peer-checked:text-customBlack-100"
                   >
                     {filterLabel[index]}
                   </label>
@@ -222,7 +245,8 @@ const Index = () => {
             </div>
           </section>
 
-          <section className="flex w-1/3 flex-col items-center gap-5">
+          {/* FILTER BASED ON CENTERS OF PARTICIPATION */}
+          <section className="flex w-2/4 flex-col items-center gap-5">
             <p className="text-white">Filter Centers of Participation</p>
             <div className="flex flex-wrap justify-center gap-3">
               {centersOfParticipation.map((data, index) => (
@@ -245,26 +269,38 @@ const Index = () => {
             </div>
           </section>
 
-          <section className="flex w-1/3 flex-col items-center gap-5">
-            <p className="text-white">Filter Centers of Participation</p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {centersOfParticipation.map((data, index) => (
-                <div key={index} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id={data}
-                    className="peer hidden"
-                    checked={getValues("centersTags")?.includes(data)}
-                    onChange={() => handleCheckboxChange(data)}
-                  />
-                  <label
-                    htmlFor={data}
-                    className="cursor-pointer select-none rounded-lg border border-white px-3 py-2 text-xs text-white transition-colors duration-200 ease-in-out peer-checked:border-0 peer-checked:bg-white peer-checked:text-customBlack-100"
-                  >
-                    {data}
-                  </label>
-                </div>
-              ))}
+          {/* CUSTOM TAGS  FILTER */}
+          <section className="flex w-1/4 flex-col items-center gap-5">
+            <p className="text-white">Custom Tags Filter</p>
+
+            <div className="flex flex-wrap justify-center">
+              <input
+                type="text"
+                name="customTags"
+                className="rounded border p-2 text-xs shadow"
+                placeholder="Add Custom Tag"
+                onChange={handleCustomTag}
+                value={customTag}
+              />
+              <IconButton className="h-8" onClick={handleAddCustomTag}>
+                <AddBoxIcon />
+              </IconButton>
+            </div>
+
+            <div className="flex flex-col flex-wrap justify-center">
+              {getValues("customTags")?.length
+                ? getValues("customTags")?.map((tag: string, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
+                      <p className="text-sm text-white">{tag}</p>
+                      <IconButton onClick={() => handleRemoveCustomTag(index)}>
+                        <ClearIcon />
+                      </IconButton>
+                    </div>
+                  ))
+                : null}
             </div>
           </section>
         </div>

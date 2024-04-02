@@ -9,6 +9,7 @@ import OrgCard from "~/components/orgcard";
 import { useEffect } from "react";
 import EventCard from "~/components/eventCard";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import { centersOfParticipation } from "~/utils/obj";
 
 const OrganizationPage = () => {
   // const { id } = router.query;
@@ -42,6 +43,10 @@ const OrganizationPage = () => {
   const activity = api.activity.getActivities.useQuery({
     take: 3,
     orgId: organization?.id,
+    centersTags: centersOfParticipation,
+    customTags: [],
+    filterCenterTags: [],
+    filterCustomTags: [],
   });
   // if (!id) {
   //   return <div>No organization ID provided</div>;

@@ -7,6 +7,8 @@ import Image from "next/image";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import OrgCard from "~/components/orgcard";
+import ActivitiesCard from "~/components/ActivitiesCard";
 
 const VolunteerPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -23,6 +25,18 @@ const VolunteerPage = () => {
   // ! Organization Query
   const volunteerQuery = api.volunteer.getOne.useQuery({
     userId: sessionData?.user.id,
+  });
+
+  const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
+    volId: volunteerQuery?.data?.id ?? "",
+    status: "APPROVED",
+    // orgId: id as string,
+  });
+
+  const myActivities = api.activityCall.getOrgOrVol.useQuery({
+    // activityId: id as string,
+    volId: volunteerQuery?.data?.id ?? "",
+    status: "APPROVED",
   });
 
   const volunteer = volunteerQuery.data;
@@ -119,11 +133,15 @@ const VolunteerPage = () => {
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             My Organizations
           </h1>
-          {/* <div className="flex gap-4 ">
-            {events?.map((eventQuery) => (
-              <EventCard key={eventQuery.id} event={eventQuery} />
+          <div className="flex gap-4 ">
+            {orgCheckJoin?.data?.map((orgQuery, index) => (
+              <OrgCard
+                key={index}
+                searchText={""}
+                organization={orgQuery.organization}
+              />
             ))}
-          </div> */}
+          </div>
         </div>
 
         {/* ACTIVITIES JOINED */}
@@ -131,11 +149,16 @@ const VolunteerPage = () => {
           <h1 className="text-gradient flex   font-custom-epilogue text-4xl font-semibold">
             Activities Attended
           </h1>
-          {/* <div className="flex gap-4">
-            {activities?.map((activityQuery) => (
-              <ActivitiesCard key={activityQuery.id} activity={activityQuery} />
+          <div className="flex gap-4">
+            {myActivities?.data?.map((activityQuery, index) => (
+              <ActivitiesCard
+                key={index}
+                activity={activityQuery?.activity}
+                searchText={""}
+                callOrParticipation={""}
+              />
             ))}
-          </div> */}
+          </div>
         </div>
       </div>
     </>

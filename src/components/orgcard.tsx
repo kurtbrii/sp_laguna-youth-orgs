@@ -2,33 +2,37 @@ import React from "react";
 import Image from "next/image";
 import vol2 from "public/images/vol2.png";
 import Link from "next/link";
+import Organization from "@prisma/client";
 
 interface OrgProps {
-  organization: {
-    id: string;
-    orgName: string;
-    phoneNumber: string;
-    bio: string;
-    userId: string;
-    mission: string;
-    vision: string;
-    objectives: string;
-    user: {
-      id: string;
-      image: string | null;
-      role: string;
-      email: string | null;
-    };
-    event: {
-      id: string;
-      name: string;
-      organizedBy: string;
-      details: string;
-      location: string;
-      date: Date; // Update this line to Date
-      partners: string[];
-    }[];
-  };
+  // organization: {
+  //   id: string;
+  //   orgName: string;
+  //   phoneNumber: string;
+  //   bio: string;
+  //   userId: string;
+  //   mission: string;
+  //   vision: string;
+  //   objectives: string;
+  //   user: {
+  //     id: string;
+  //     image: string | null;
+  //     role: string;
+  //     email: string | null;
+  //   };
+  //   event: {
+  //     id: string;
+  //     name: string;
+  //     organizedBy: string;
+  //     details: string;
+  //     location: string;
+  //     date: Date; // Update this line to Date
+  //     partners: string[];
+  //   }[];
+  // };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  organization: any;
   searchText: string;
 }
 

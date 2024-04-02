@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import OrgNav from "~/components/OrgNav";
 import ActivitiesCard from "~/components/ActivitiesCard";
+import { centersOfParticipation } from "~/utils/obj";
 
 const OrgManageVolunteerRequests = () => {
   const router = useRouter();
@@ -25,7 +26,13 @@ const OrgManageVolunteerRequests = () => {
     status: "PENDING",
   });
 
-  const activity = api.activity.getActivities.useQuery({ orgId: org?.id });
+  const activity = api.activity.getActivities.useQuery({
+    orgId: org?.id,
+    centersTags: centersOfParticipation,
+    customTags: [],
+    filterCenterTags: [],
+    filterCustomTags: [],
+  });
 
   return (
     <div className="flex flex-col">

@@ -62,9 +62,9 @@ export const activityRouter = createTRPCRouter({
       const whereCondition: Prisma.ActivityWhereInput = {
         AND: [
           // Search conditions
+          { organizationId: input.orgId },
           {
             OR: [
-              { organizationId: input.orgId },
               { name: { contains: input.search, mode: 'insensitive' } },
               { location: { contains: input.search, mode: 'insensitive' } },
               { organization: { orgName: { contains: input.search, mode: 'insensitive' } } },
