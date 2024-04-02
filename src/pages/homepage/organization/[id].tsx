@@ -10,6 +10,7 @@ import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import EventCard from "~/components/eventCard";
 import ActivitiesCard from "~/components/ActivitiesCard";
 import { IconButton } from "@mui/material";
+import { centersOfParticipation } from "~/utils/obj";
 
 const OrganizationPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -41,6 +42,10 @@ const OrganizationPage = () => {
   const activity = api.activity.getActivities.useQuery({
     take: 3,
     orgId: id as string,
+    centersTags: centersOfParticipation,
+    customTags: [],
+    filterCenterTags: [],
+    filterCustomTags: [],
   });
 
   // ! VOLUNTEERS JOINING ORGANIZATIONS

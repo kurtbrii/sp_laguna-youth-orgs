@@ -50,15 +50,27 @@ export const activityCallRouter = createTRPCRouter({
               name: true,
               details: true,
               location: true,
+              images: true,
               organization: {
                 select: {
                   id: true,
                   orgName: true,
                   phoneNumber: true,
                   bio: true,
-                  user: true,
+                  user: {
+                    select: {
+                      image: true,
+                      id: true,
+                    }
+                  },
                 }
               },
+              centersTags: true,
+              customTags: true,
+              hasOrganizations: true,
+              hasVolunteers: true,
+              hasParticipants: true,
+              organizationId: true,
             }
           },
           organizationId: true,

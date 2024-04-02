@@ -7,25 +7,8 @@ import Image from "next/image";
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import EventCard from "~/components/eventCard";
+import OrgCard from "~/components/orgcard";
 import ActivitiesCard from "~/components/ActivitiesCard";
-
-type OrganizationProps = {
-  id: string;
-  orgName: string;
-  phoneNumber: string;
-  mission: string;
-  bio: string;
-  vision: string;
-  objectives: string;
-  user: {
-    id: string;
-    role: string;
-    image: string | null;
-    email: string | null;
-  };
-  userId: string;
-};
 
 const VolunteerPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -44,6 +27,18 @@ const VolunteerPage = () => {
     userId: sessionData?.user.id,
   });
 
+  const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
+    volId: volunteerQuery?.data?.id ?? "",
+    status: "APPROVED",
+    // orgId: id as string,
+  });
+
+  const myActivities = api.activityCall.getOrgOrVol.useQuery({
+    // activityId: id as string,
+    volId: volunteerQuery?.data?.id ?? "",
+    status: "APPROVED",
+  });
+
   const volunteer = volunteerQuery.data;
 
   if (volunteerQuery.isLoading) {
@@ -60,7 +55,7 @@ const VolunteerPage = () => {
       <div className="mx-16  my-10 flex  flex-col justify-evenly font-custom-lexend  text-customBlack-100">
         {/* CONTACT INFO AND DETAILS */}
         <div className="mb-16 grid grid-flow-col">
-          <div className="flex-flex-col">
+          <div className="flex flex-col">
             <Image
               src={volunteer?.user?.image ?? ""}
               alt="Volunteer Image"
@@ -88,6 +83,33 @@ const VolunteerPage = () => {
 
             <p className="mb-6 mr-20 text-sm">{volunteer?.bio}</p>
 
+            <div className="mb-3 mt-10 flex flex-wrap justify-start gap-2">
+              {volunteer?.centersTags?.map((data, index) => (
+                <div key={index} className="flex items-center gap-5">
+                  <p
+                    className=" btn-outline border border-primary px-3 py-2 text-primary "
+                    style={{ fontSize: "12px" }}
+                  >
+                    {data}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* CUSTOM TAGS */}
+            <div className="mb-10 flex flex-wrap justify-start gap-2">
+              {volunteer?.customTags?.map((data, index) => (
+                <div key={index} className="flex items-center gap-5">
+                  <p
+                    className=" btn-outline border border-customBlack-100 px-3 py-2 text-customBlack-100 "
+                    style={{ fontSize: "12px" }}
+                  >
+                    {data}
+                  </p>
+                </div>
+              ))}
+            </div>
+
             <div className="flex gap-5  text-center">
               <button
                 className="btn-outline w-1/2 border  px-8 py-2 font-normal"
@@ -96,12 +118,12 @@ const VolunteerPage = () => {
                 Update Information
               </button>
 
-              <button
+              {/* <button
                 className="btn-outline w-1/2 border px-8 py-2 font-normal"
                 style={{ color: "var(--red)", borderColor: "var(--red)" }}
               >
                 Deactivate Account
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -111,11 +133,15 @@ const VolunteerPage = () => {
           <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
             My Organizations
           </h1>
-          {/* <div className="flex gap-4 ">
-            {events?.map((eventQuery) => (
-              <EventCard key={eventQuery.id} event={eventQuery} />
+          <div className="flex gap-4 ">
+            {orgCheckJoin?.data?.map((orgQuery, index) => (
+              <OrgCard
+                key={index}
+                searchText={""}
+                organization={orgQuery.organization}
+              />
             ))}
-          </div> */}
+          </div>
         </div>
 
         {/* ACTIVITIES JOINED */}
@@ -123,11 +149,16 @@ const VolunteerPage = () => {
           <h1 className="text-gradient flex   font-custom-epilogue text-4xl font-semibold">
             Activities Attended
           </h1>
-          {/* <div className="flex gap-4">
-            {activities?.map((activityQuery) => (
-              <ActivitiesCard key={activityQuery.id} activity={activityQuery} />
+          <div className="flex gap-4">
+            {myActivities?.data?.map((activityQuery, index) => (
+              <ActivitiesCard
+                key={index}
+                activity={activityQuery?.activity}
+                searchText={""}
+                callOrParticipation={""}
+              />
             ))}
-          </div> */}
+          </div>
         </div>
       </div>
     </>

@@ -6,17 +6,48 @@ import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
 import { useRouter } from "next/router";
 
+// id: true,
+// name: true,
+// details: true,
+// date: true,
+// createdAt: true,
+// location: true,
+// images: true,
+// hasOrganizations: true,
+// hasVolunteers: true,
+// hasParticipants: true,
+// organizationId: true,
+// centersTags: true,
+// customTags: true,
+
+// organization: {
+//   select: {
+//     orgName: true,
+//     user: {
+//       select: {
+//         image: true,
+//         id: true,
+//       }
+//     }
+//   }
+// }
+// },
+// take: input.take
+
 type ActivityProps = {
   activity: {
     id: string;
     name: string;
     details: string;
     date: Date;
-    createdAt: Date;
     location: string;
     images: string[];
+
     organization: {
+      id: string;
       orgName: string;
+      phoneNumber: string;
+      bio: string;
       user: {
         id: string;
         image: string | null;

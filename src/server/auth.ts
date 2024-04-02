@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { Organization } from "@prisma/client";
+import { type Organization, type Volunteer } from "@prisma/client";
 import { type GetServerSidePropsContext } from "next";
 import {
   getServerSession,
@@ -11,7 +11,6 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
-
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -19,32 +18,21 @@ import { db } from "~/server/db";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  // interface Org {
-  //   id: string,
-  //   orgName: string,
-  //   phoneNumber: string,
-  //   bio: string,
-  //   userId: string,
-  //   mission: string,
-  //   vision: string,
-  //   objectives: string,
-  // }
-
   interface User {
     id: string;
     role: string;
     organization: Organization;
+    volunteer: Volunteer;
   }
+
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
-      // ...other properties
       role: string | undefined | null;
       organization: Organization;
+      volunteer: Volunteer;
     };
-
   }
-
 }
 
 /**
@@ -53,7 +41,6 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-
   callbacks: {
     session: async ({ session, user }) => ({
       ...session,
@@ -62,6 +49,7 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
         role: user.role,
         organization: user.organization,
+        volunteer: user.volunteer,
       },
     }),
   },

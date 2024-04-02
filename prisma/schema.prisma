@@ -124,6 +124,10 @@ model Volunteer {
 
     VolJoinOrg    VolJoinOrg[]
     activityCalls ActivityCall[]
+
+    centersTags String[]
+    customTags  String[]
+    setTags     Boolean  @default(false)
 }
 
 model Guest {

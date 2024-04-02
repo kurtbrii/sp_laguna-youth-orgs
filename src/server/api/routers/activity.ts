@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -5,6 +6,8 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { createActivitySchema, updateActivitySchema } from "~/utils/schemaValidation";
+import { centersOfParticipation } from "~/utils/obj";
+
 
 export const activityRouter = createTRPCRouter({
   createActivity: protectedProcedure
@@ -53,36 +56,60 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getActivities: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional() }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional(), filterCenterTags: z.array(z.string()).optional(), filterCustomTags: z.array(z.string()).optional(), filterHasVolunteers: z.boolean().optional(), filterHasOrganizations: z.boolean().optional(), filterHasParticipants: z.boolean().optional() }))
     .query(async ({ ctx, input }) => {
 
-      // const whereCondition = input.id ? { id: input.id } : {};
-      return ctx.db.activity.findMany({
-        where: {
-          organizationId: input.orgId,
-          OR: [
-            {
-              name: {
-                contains: input.search,
-                mode: 'insensitive',
+      const whereCondition: Prisma.ActivityWhereInput = {
+        AND: [
+          // Search conditions
+          { organizationId: input.orgId },
+          {
+            OR: [
+              { name: { contains: input.search, mode: 'insensitive' } },
+              { location: { contains: input.search, mode: 'insensitive' } },
+              { organization: { orgName: { contains: input.search, mode: 'insensitive' } } },
+            ],
+          },
+          {
+            AND: [
+              { // for the user profile filter
+                OR: [
+                  {
+                    centersTags: { hasSome: input.centersTags },
+                  },
+                  {
+                    customTags: { hasSome: input.customTags },
+                  },
+                ]
               },
-            },
-            {
-              location: {
-                contains: input.search,
-                mode: 'insensitive',
-              },
-            },
-            {
-              organization: {
-                orgName: {
-                  contains: input.search,
-                  mode: 'insensitive',
-                },
+              { // for the checkbox
+                AND: [
+                  {
+                    centersTags: { hasEvery: input.filterCenterTags },
+                  },
+                  {
+                    customTags: { hasEvery: input.filterCustomTags },
+                  },
+
+                  {
+                    hasVolunteers: input.filterHasVolunteers,
+                  },
+                  {
+                    hasOrganizations: input.filterHasOrganizations,
+                  },
+                  {
+                    hasParticipants: input.filterHasParticipants,
+                  },
+                ]
               }
-            }
-          ],
-        },
+            ]
+          }
+
+        ],
+      };
+
+      return ctx.db.activity.findMany({
+        where: whereCondition,
         orderBy: {
           createdAt: "desc",
         },
@@ -91,26 +118,31 @@ export const activityRouter = createTRPCRouter({
           name: true,
           details: true,
           date: true,
-          createdAt: true,
           location: true,
           images: true,
+
+          organization: {
+            select: {
+              id: true,
+              orgName: true,
+              phoneNumber: true,
+              bio: true,
+
+              user: {
+                select: {
+                  id: true,
+                  image: true,
+                }
+              }
+            }
+          },
+
+          centersTags: true,
+          customTags: true,
           hasOrganizations: true,
           hasVolunteers: true,
           hasParticipants: true,
           organizationId: true,
-          centersTags: true,
-          customTags: true,
-          organization: {
-            select: {
-              orgName: true,
-              user: {
-                select: {
-                  image: true,
-                  id: true,
-                }
-              }
-            }
-          }
         },
         take: input.take
       });

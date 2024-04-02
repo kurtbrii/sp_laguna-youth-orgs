@@ -12,6 +12,7 @@ import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import { IconButton } from "@mui/material";
 import router from "next/router";
 import { useState } from "react";
+import { centersOfParticipation } from "~/utils/obj";
 
 export default function Home() {
   const { data: sessionData } = useSession();
@@ -29,7 +30,13 @@ export default function Home() {
   });
 
   // ! Get Activities
-  const activity = api.activity.getActivities.useQuery({ take: 3 });
+  const activity = api.activity.getActivities.useQuery({
+    take: 3,
+    centersTags: centersOfParticipation,
+    customTags: [],
+    filterCenterTags: [],
+    filterCustomTags: [],
+  });
 
   return (
     <>

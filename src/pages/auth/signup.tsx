@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-// import ViewListIcon from "@mui/icons-material/ViewList";
-// import ViewModuleIcon from "@mui/icons-material/ViewModule";
-// import ViewQuiltIcon from "@mui/icons-material/ViewQuilt";
-// import ToggleButton from "@mui/material/ToggleButton";
-// import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-// import { vol2} from "../../../assets/vol2.png";
-
 import vol2 from "public/images/vol2.png";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
