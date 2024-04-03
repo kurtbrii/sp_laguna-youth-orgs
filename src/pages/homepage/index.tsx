@@ -68,7 +68,7 @@ const Index = () => {
               placeholder="Search"
             />
 
-            <div
+            {/* <div
               className={`ml-12 rounded-t-md ${toggleFilter && "bg-gradient "}`}
             >
               <IconButton
@@ -78,7 +78,7 @@ const Index = () => {
               >
                 <TuneIcon />
               </IconButton>
-            </div>
+            </div> */}
           </div>
 
           {/* ADD EVENT */}
