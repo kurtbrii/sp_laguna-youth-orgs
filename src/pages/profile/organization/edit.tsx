@@ -32,21 +32,21 @@ const EditOrganization = () => {
   const participation = org?.centersOfParticipation;
 
   const organizationQueryDataForm = {
-    phoneNumber: org?.phoneNumber,
-    bio: org?.bio,
-    mission: org?.mission,
-    vision: org?.vision,
-    objectives: org?.objectives,
-    health: participation?.health,
-    education: participation?.education,
-    economicEmpowerment: participation?.economicEmpowerment,
-    socialInclusion: participation?.socialInclusion,
-    peaceBuilding: participation?.peaceBuilding,
-    governance: participation?.governance,
-    activeCitizenship: participation?.activeCitizenship,
-    environment: participation?.environment,
-    globalMobility: participation?.globalMobility,
-    agriculture: participation?.agriculture,
+    phoneNumber: org?.phoneNumber ?? "",
+    bio: org?.bio ?? "",
+    mission: org?.mission ?? "",
+    vision: org?.vision ?? "",
+    objectives: org?.objectives ?? "",
+    health: participation?.health ?? "",
+    education: participation?.education ?? "",
+    economicEmpowerment: participation?.economicEmpowerment ?? "",
+    socialInclusion: participation?.socialInclusion ?? "",
+    peaceBuilding: participation?.peaceBuilding ?? "",
+    governance: participation?.governance ?? "",
+    activeCitizenship: participation?.activeCitizenship ?? "",
+    environment: participation?.environment ?? "",
+    globalMobility: participation?.globalMobility ?? "",
+    agriculture: participation?.agriculture ?? "",
   };
 
   // ! REACT USEFORM
@@ -55,6 +55,7 @@ const EditOrganization = () => {
     handleSubmit,
     setValue,
     getValues,
+    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<UpdateOrganizationFields>({
@@ -63,6 +64,8 @@ const EditOrganization = () => {
     },
     resolver: zodResolver(updateOrganizationSchema),
   });
+
+  const formData = watch();
 
   const onSubmit: SubmitHandler<UpdateOrganizationFields> = (data) => {
     console.log("Data", data);
@@ -90,8 +93,28 @@ const EditOrganization = () => {
   };
 
   useEffect(() => {
-    reset(organizationQueryDataForm);
+    if (user.data) {
+      reset(organizationQueryDataForm);
+    }
   }, []);
+
+  useEffect(() => {
+    if (org) {
+      setValue("phoneNumber", org.phoneNumber ?? "");
+      setValue("bio", org.bio ?? "");
+      setValue("mission", org.mission ?? "");
+      setValue("vision", org.vision ?? "");
+      setValue("objectives", org.objectives ?? "");
+
+      setValue("socialInclusion", participation?.socialInclusion ?? ""),
+        setValue("peaceBuilding", participation?.peaceBuilding ?? ""),
+        setValue("governance", participation?.governance ?? ""),
+        setValue("activeCitizenship", participation?.activeCitizenship ?? ""),
+        setValue("environment", participation?.environment ?? ""),
+        setValue("globalMobility", participation?.globalMobility ?? ""),
+        setValue("agriculture", participation?.agriculture ?? "");
+    }
+  }, [org, setValue]);
 
   useEffect(() => {
     setValue("id", org?.id ?? "");

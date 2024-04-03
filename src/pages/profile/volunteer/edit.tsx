@@ -64,6 +64,8 @@ const EditVolunteer = () => {
     void router.push("/profile/volunteer");
   };
 
+  const formData = watch();
+
   const [customTag, setCustomTag] = useState("");
 
   const handleCustomTag = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,10 +113,23 @@ const EditVolunteer = () => {
   }, []);
 
   useEffect(() => {
+    setValue("phoneNumber", volunteer?.phoneNumber ?? "");
+    setValue("bio", volunteer?.bio ?? "");
+    setValue("sex", volunteer?.sex ?? "");
+    setValue("centersTags", volunteer?.centersTags ?? []);
+    setValue("customTags", volunteer?.customTags ?? []);
+    setValue("setTags", volunteer?.setTags ?? false);
+  }, [volunteerId, setValue, getValues]);
+
+  useEffect(() => {
     setValue("id", volunteerId);
     getValues("setTags");
     getValues("centersTags");
     getValues("customTags");
+    getValues("phoneNumber");
+    getValues("bio");
+    getValues("sex");
+    getValues("age");
     setTags(getValues("setTags") ?? false);
   }, [volunteerId, setValue, getValues]);
 
