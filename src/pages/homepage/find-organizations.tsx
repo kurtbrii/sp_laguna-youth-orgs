@@ -42,7 +42,7 @@ const FindOrganizations: NextPage = () => {
           placeholder="Search"
         />
 
-        <div
+        {/* <div
           className={`ml-12  rounded-t-md ${toggleFilter && "bg-gradient "}`}
         >
           <IconButton
@@ -52,10 +52,10 @@ const FindOrganizations: NextPage = () => {
           >
             <TuneIcon />
           </IconButton>
-        </div>
+        </div> */}
       </div>
 
-      {toggleFilter && (
+      {/* {toggleFilter && (
         <div className="bg-gradient mx-10 rounded-md  px-10 py-5 ">
           <p className="text-white">ihg</p>
           <p>ihg</p>
@@ -65,7 +65,7 @@ const FindOrganizations: NextPage = () => {
           <p>ih</p>
           <p>ih</p>
         </div>
-      )}
+      )} */}
 
       <div className="mx-4 mb-5 mt-10 flex flex-wrap justify-center gap-5">
         {organizations?.data?.map((organization) => (
