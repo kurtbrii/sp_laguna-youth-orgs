@@ -182,6 +182,7 @@ const EditEvent = () => {
             {...register("date")}
             type="datetime-local"
             name="date"
+            max={new Date().toISOString().slice(0, 16)}
             // onChange={handleEventForm}
             className="h-12 w-1/2 rounded border p-2 shadow"
             placeholder="Input Date"

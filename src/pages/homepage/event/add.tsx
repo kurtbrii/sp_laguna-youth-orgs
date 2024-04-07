@@ -147,6 +147,7 @@ const Add = () => {
               {...register("date")}
               type="datetime-local"
               name="date"
+              max={new Date().toISOString().slice(0, 16)}
               className="h-12 w-full rounded border p-2 shadow"
               placeholder="Input Date"
             />

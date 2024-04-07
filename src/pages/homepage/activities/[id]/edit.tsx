@@ -208,6 +208,8 @@ const EditActivity = () => {
               {...register("date")}
               type="datetime-local"
               name="date"
+              min={new Date().toISOString().slice(0, 16)}
+
               className="h-12 w-full rounded border p-2 shadow"
               placeholder="Input Date"
             />
@@ -328,6 +330,9 @@ const EditActivity = () => {
             </div>
           ))}
         </div>
+        {errors.centersTags && (
+          <p className="text-customRed">{errors.centersTags.message}</p>
+        )}
 
         <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
