@@ -5,12 +5,12 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-import { updateVolunteerSchema } from "~/utils/schemaValidation";
+import { updateVolunteerSchema, createVolSchema } from "~/utils/schemaValidation";
 
 export const volunteerRouter = createTRPCRouter({
 
   createVolunteer: publicProcedure
-    .input(z.object({ firstName: z.string(), lastName: z.string(), middleInitial: z.string(), suffix: z.string(), phoneNumber: z.string(), userId: z.string(), email: z.string() }))
+    .input(createVolSchema)
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -26,17 +26,6 @@ export const volunteerRouter = createTRPCRouter({
         },
       });
     }),
-
-  // id            String @id @default(cuid())
-  // firstName     String
-  // lastName      String
-  // middleInitial String
-  // suffix        String
-  // phoneNumber   String
-  // bio           String
-
-  // user   User?   @relation(fields: [userId], references: [id])
-  // userId String? @unique
 
   getOne: publicProcedure
     .input(z.object({ id: z.string().optional(), userId: z.string().optional() }))

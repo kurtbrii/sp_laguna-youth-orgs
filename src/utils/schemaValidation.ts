@@ -135,4 +135,23 @@ const editSpeakerSchema = z.object({
   orgId: z.string()
 })
 
-export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema, formSchema, createSpeakerSchema, editSpeakerSchema }
+
+// ! SIGN UP
+const createOrgSchema = z.object({
+  orgName: z.string(),
+  phoneNumber: z.string(),
+  userId: z.string(),
+  email: z.string()
+})
+
+const createVolSchema = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  middleInitial: z.string(),
+  suffix: z.string(),
+  phoneNumber: z.string(),
+  userId: z.string(),
+  email: z.string()
+})
+
+export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema, formSchema, createSpeakerSchema, editSpeakerSchema, createOrgSchema, createVolSchema }

@@ -9,6 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { createGuestSchema } from "~/utils/schemaValidation";
+import { useFormSetup } from "~/utils/func";
 
 type UpdateOrganizationFields = z.infer<typeof createJoinActivitySchema>;
 type UpdateGuestFields = z.infer<typeof createGuestSchema>;
@@ -27,27 +28,6 @@ const EmailActivityCall = ({
   const createGuest = api.guest.createGuest.useMutation();
 
   // ! REACT USEFORM
-  const useFormSetup = (defaultValues: any, resolver: any) => {
-    const {
-      register,
-      handleSubmit,
-      setValue,
-      getValues,
-      formState: { errors, isSubmitting },
-    } = useForm({
-      defaultValues,
-      resolver,
-    });
-
-    return {
-      register,
-      handleSubmit,
-      setValue,
-      getValues,
-      errors,
-      isSubmitting,
-    };
-  };
 
   const {
     register: orgVolRegister,

@@ -2,8 +2,16 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import vol2 from "public/images/vol2.png";
 import { api } from "~/utils/api";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useFormSetup } from "~/utils/func";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/router";
+import { createOrgSchema, createVolSchema } from "~/utils/schemaValidation";
+
+type CreateVolunteerFields = z.infer<typeof createVolSchema>;
+type CreateOrganizationFields = z.infer<typeof createOrgSchema>;
 
 interface VolunteerProps {
   firstName: string;
@@ -33,9 +41,17 @@ const SignUp = () => {
     }
   }, [router, sessionStatus]);
 
-  const [volOrOrg, setCurrentState] = useState<string>("organization");
+  const [volOrOrg, setVolOrOrg] = useState<string>("organization");
 
   //! VOLUNTEER SET STATE
+  const {
+    register: volunteerRegister,
+    handleSubmit: volunteerHandleSubmit,
+    setValue: volunteerSetValue,
+    getValues: volunteerGetValues,
+    errors: volunteerErrors,
+    isSubmitting: volunteerIsSubmitting,
+  } = useFormSetup({}, zodResolver(createVolSchema));
 
   const [volunteerFormData, setVolunteerFormData] = useState<VolunteerProps>({
     firstName: "",
@@ -58,6 +74,15 @@ const SignUp = () => {
   };
 
   //! ORGANIZATION SET STATE
+  const {
+    register: organizationRegister,
+    handleSubmit: organizationHandleSubmit,
+    setValue: organizationSetValue,
+    getValues: organizationGetValues,
+    errors: organizationErrors,
+    isSubmitting: organizationIsSubmitting,
+  } = useFormSetup({}, zodResolver(createOrgSchema));
+
   const [orgFormData, setOrgFormData] = useState<OrgProps>({
     orgName: "",
     phoneNumber: "",
@@ -80,43 +105,40 @@ const SignUp = () => {
 
   //! Organization
   const handleOrgSubmit = async () => {
-    createOrganization.mutate({
-      orgName: orgFormData.orgName,
-      phoneNumber: orgFormData.phoneNumber,
-      userId: sessionData?.user.id ?? "",
-      email: sessionData?.user.email ?? "",
-    });
+    // createOrganization.mutate({
+    //   orgName: orgFormData.orgName,
+    //   phoneNumber: orgFormData.phoneNumber,
+    //   userId: sessionData?.user.id ?? "",
+    //   email: sessionData?.user.email ?? "",
+    // });
 
-    updateRole.mutate({
-      userId: sessionData?.user.id ?? "",
-      role: "ORGANIZATION",
-    });
+    // updateRole.mutate({
+    //   userId: sessionData?.user.id ?? "",
+    //   role: "ORGANIZATION",
+    // });
+    alert("Organization Created");
 
-    setTimeout(() => {
-      //C - 1 second later
-    }, 500);
-
-    void router.push("/homepage");
+    // void router.push("/homepage");
   };
 
   //! Volunteer
   const handleVolunteerSubmit = async () => {
-    createVolunteer.mutate({
-      firstName: volunteerFormData.firstName,
-      lastName: volunteerFormData.lastName,
-      middleInitial: volunteerFormData.middleInitial,
-      suffix: volunteerFormData.suffix,
-      phoneNumber: volunteerFormData.phoneNumber,
-      userId: sessionData?.user.id ?? "",
-      email: sessionData?.user.email ?? "",
-    });
+    alert("Volunteer Created");
 
-    updateRole.mutate({
-      userId: sessionData?.user.id ?? "",
-      role: "VOLUNTEER",
-    });
-
-    void router.push("/homepage");
+    // createVolunteer.mutate({
+    //   firstName: volunteerFormData.firstName,
+    //   lastName: volunteerFormData.lastName,
+    //   middleInitial: volunteerFormData.middleInitial,
+    //   suffix: volunteerFormData.suffix,
+    //   phoneNumber: volunteerFormData.phoneNumber,
+    //   userId: sessionData?.user.id ?? "",
+    //   email: sessionData?.user.email ?? "",
+    // });
+    // updateRole.mutate({
+    //   userId: sessionData?.user.id ?? "",
+    //   role: "VOLUNTEER",
+    // });
+    // void router.push("/homepage");
   };
 
   return (
@@ -143,10 +165,12 @@ const SignUp = () => {
       </section>
 
       {/* <!-- Right part with login page --> */}
-      <section className=" flex w-2/5 flex-shrink-0 flex-col  justify-between gap-7 p-8">
-        <h1 className=" h-30 font-custom-changa-one mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-4xl  font-extrabold text-transparent">
-          Register Now
-        </h1>
+      <section className=" flex w-2/5 flex-shrink-0 flex-col  justify-around p-8">
+        <div className="flex">
+          <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text font-custom-epilogue text-4xl  font-extrabold text-transparent">
+            Register Now
+          </h1>
+        </div>
 
         {volOrOrg === "volunteer" ? (
           // ! Volunteer Form
@@ -205,6 +229,8 @@ const SignUp = () => {
                 onChange={volunteerHandleInputChange}
               />
             </div>
+
+            <ToggleVolOrg volOrOrg={"volunteer"} setVolOrOrg={setVolOrOrg} />
           </form>
         ) : (
           //! Organization Form
@@ -230,58 +256,71 @@ const SignUp = () => {
                 onChange={orgHandleInputChange}
               />
             </div>
+
+            <ToggleVolOrg volOrOrg={"organization"} setVolOrOrg={setVolOrOrg} />
           </form>
         )}
 
-        <section className="flex flex-col gap-6">
-          <div className="mx-20 flex justify-center">
-            <button
-              type="submit"
-              id="organizationBtn"
-              className={`w-1/2 transition ease-in-out focus:outline-none ${
-                volOrOrg === "organization"
-                  ? "bg-gradient rounded-l-md text-white"
-                  : "rounded-l-md border border-secondary bg-transparent text-secondary"
-              }`}
-              onClick={() => {
-                setCurrentState("organization");
-              }}
-            >
-              Organization
-            </button>
-            <button
-              id="volunteerBtn"
-              className={`w-1/2 px-4 py-2 transition ease-in-out focus:outline-none ${
-                volOrOrg === "volunteer"
-                  ? "rounded-r-md bg-gradient-to-r  from-secondary to-primary text-white"
-                  : "rounded-r-md border border-secondary bg-transparent text-secondary"
-              }`}
-              onClick={() => {
-                setCurrentState("volunteer");
-              }}
-            >
-              Volunteer
-            </button>
-          </div>
-
-          <div className="mx-16 flex flex-col items-stretch gap-2">
-            <button
-              type="submit"
-              onClick={
-                volOrOrg === "organization"
-                  ? () => handleOrgSubmit()
-                  : () => handleVolunteerSubmit()
-              }
-              className="btn-active flex items-center justify-center gap-3 rounded-md px-12 py-2"
-            >
-              <p>Sign Up</p>
-            </button>
-            <button className="btn-outline  border-1 flex items-center justify-center gap-3 rounded-md border px-12 py-2">
-              <p>Continue as Guest</p>
-            </button>
-          </div>
-        </section>
+        {/* Submit Button */}
+        <div className="mx-16 flex flex-col items-stretch gap-2">
+          <button
+            type="submit"
+            onClick={
+              volOrOrg === "organization"
+                ? () => handleOrgSubmit()
+                : () => handleVolunteerSubmit()
+            }
+            className="btn-active flex items-center justify-center gap-3 rounded-md px-12 py-2"
+          >
+            <p>Sign Up</p>
+          </button>
+        </div>
       </section>
+    </section>
+  );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ToggleVolOrg = ({
+  volOrOrg,
+  setVolOrOrg,
+}: {
+  volOrOrg: string;
+  setVolOrOrg: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  return (
+    <section className="flex flex-col gap-6">
+      <div className="mx-20 flex justify-center">
+        <button
+          id="organizationBtn"
+          className={`w-1/2 transition ease-in-out focus:outline-none ${
+            volOrOrg === "organization"
+              ? "bg-gradient rounded-l-md text-white"
+              : "rounded-l-md border border-secondary bg-transparent text-secondary"
+          }`}
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            e.preventDefault();
+
+            setVolOrOrg("organization");
+          }}
+        >
+          Organization
+        </button>
+        <button
+          id="volunteerBtn"
+          className={`w-1/2 px-4 py-2 transition ease-in-out focus:outline-none ${
+            volOrOrg === "volunteer"
+              ? "rounded-r-md bg-gradient-to-r  from-secondary to-primary text-white"
+              : "rounded-r-md border border-secondary bg-transparent text-secondary"
+          }`}
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            e.preventDefault();
+            setVolOrOrg("volunteer");
+          }}
+        >
+          Volunteer
+        </button>
+      </div>
     </section>
   );
 };
