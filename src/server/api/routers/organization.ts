@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { useSession } from "next-auth/react";
 import { updateOrganizationSchema } from "~/utils/schemaValidation";
+import { createOrgSchema } from "~/utils/schemaValidation";
 
 import {
   createTRPCRouter,
@@ -15,7 +15,7 @@ const loremText = "(replace with your data...) Lorem ipsum dolor sit amet, conse
 export const orgRouter = createTRPCRouter({
 
   createOrganization: publicProcedure
-    .input(z.object({ orgName: z.string(), phoneNumber: z.string(), userId: z.string(), email: z.string() }))
+    .input(createOrgSchema)
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       // await new Promise((resolve) => setTimeout(resolve, 1000));

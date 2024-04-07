@@ -135,4 +135,23 @@ const editSpeakerSchema = z.object({
   orgId: z.string()
 })
 
-export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema, formSchema, createSpeakerSchema, editSpeakerSchema }
+
+// ! SIGN UP
+const createOrgSchema = z.object({
+  orgName: z.string().refine((data) => data.trim().length > 0, { message: 'Organization name is required', }),
+  phoneNumber: z.string().length(11, { message: "Phone number should be written in the prescribed format" }),
+  userId: z.string(),
+  email: z.string().email({ message: "Invalid email address" }),
+})
+
+const createVolSchema = z.object({
+  firstName: z.string().refine((data) => data.trim().length > 0, { message: 'First name is required', }),
+  lastName: z.string().refine((data) => data.trim().length > 0, { message: 'Last name is required', }),
+  middleInitial: z.string().optional(),
+  suffix: z.string().optional(),
+  phoneNumber: z.string().length(11, { message: "Phone number should be written in the prescribed format" }),
+  userId: z.string(),
+  email: z.string().email({ message: "Invalid email address" }),
+})
+
+export { createEventSchema, updateEventSchema, createActivitySchema, updateActivitySchema, updateOrganizationSchema, updateVolunteerSchema, createJoinActivitySchema, createGuestSchema, formSchema, createSpeakerSchema, editSpeakerSchema, createOrgSchema, createVolSchema }

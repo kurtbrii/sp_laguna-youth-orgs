@@ -60,7 +60,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, searchText }) => {
             ? vol1
             : `https://res.cloudinary.com/dif5glv4a/image/upload/${event.images[0]}`
         }
-        className="left-0 top-0 h-2/5 w-full object-cover blur-[1px]"
+        className="left-0 top-0 h-2/5 w-full object-cover"
         alt="sunset "
         width={100}
         height={100}
