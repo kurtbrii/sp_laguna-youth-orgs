@@ -124,9 +124,9 @@ const Add = () => {
   };
 
   const handleAddImages = (newImageUrl: string) => {
-    const currentArray = formData.images ?? [];
+    // const currentArray = formData.images ?? [];
 
-    // const currentArray = getValues("images") ?? [];
+    const currentArray = getValues("images") ?? [];
     setValue("images", [...currentArray, newImageUrl]);
   };
   const handleRemoveImage = (index: number) => {
@@ -191,6 +191,7 @@ const Add = () => {
               name="date"
               className="h-12 w-full rounded border p-2 shadow"
               placeholder="Input Date"
+              min={new Date().toISOString().slice(0, 16)}
             />
             {errors.date && (
               <p className="text-customRed">{errors.date.message}</p>
@@ -308,6 +309,9 @@ const Add = () => {
             </div>
           ))}
         </div>
+        {errors.centersTags && (
+          <p className="text-customRed">{errors.centersTags.message}</p>
+        )}
 
         <section className="flex flex-row items-center justify-center bg-secondary p-2 ">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
