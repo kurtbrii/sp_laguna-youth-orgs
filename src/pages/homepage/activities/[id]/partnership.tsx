@@ -28,20 +28,24 @@ const Partnership = () => {
 
   const organization = user.data?.organization;
 
-  const getPendingOrgOrVol = api.activityCall.getOrgOrVol.useQuery({
-    activityId: id as string,
-    label: "partnership",
-    // orgId: organization?.id,
-    status: "PENDING",
-  });
+  const { data: getPendingOrgOrVol, refetch } =
+    api.activityCall.getOrgOrVol.useQuery({
+      activityId: id as string,
+      label: "partnership",
+      // orgId: organization?.id,
+      status: "PENDING",
+    });
 
   const updateStatus = api.activityCall.updateActivityCall.useMutation();
 
-  const handleAccept = (orgId: string) => {
+  const handleAccept = async (orgId: string) => {
     updateStatus.mutate({
       activityId: id as string,
       orgId: orgId,
     });
+
+    await refetch();
+    await refetch();
   };
 
   return (
@@ -65,7 +69,7 @@ const Partnership = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {getPendingOrgOrVol?.data?.map((data, index) => {
+              {getPendingOrgOrVol?.map((data, index) => {
                 // Declare a constant to simplify access to nested properties
                 const organization = data.organization;
 

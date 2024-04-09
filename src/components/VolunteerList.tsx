@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -34,8 +35,7 @@ type VolunteerProps = {
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VolunteerList = ({ volunteer, organization, data }: any) => {
+const VolunteerList = ({ volunteer, organization, data, refetch }: any) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [expanded, setExpanded] = useState(false);
@@ -48,22 +48,28 @@ const VolunteerList = ({ volunteer, organization, data }: any) => {
 
   const discard = api.volJoinOrg.deleteVolJoinOrg.useMutation();
 
-  const handleApproveVol = () => {
+  const handleApproveVol = async () => {
     approveStatus.mutate({
       volId: volunteer.id,
       orgId: organization.id,
     });
 
     alert("Request Approved");
+
+    await refetch();
+    await refetch();
   };
 
-  const handleDiscard = () => {
+  const handleDiscard = async () => {
     discard.mutate({
       volId: volunteer.id,
       orgId: organization.id,
     });
 
     alert("Request Discarded");
+
+    await refetch();
+    await refetch();
   };
 
   return (
@@ -168,17 +174,18 @@ const VolunteerList = ({ volunteer, organization, data }: any) => {
 
             <div className="mt-12 flex gap-4">
               <button
+                className="btn-active w-1/3 px-16 py-2"
+                onClick={() => handleApproveVol()}
+              >
+                Confirm
+              </button>
+
+              <button
                 className="btn-outline w-1/3 px-16 py-2"
                 style={{ color: "var(--red)", borderColor: "var(--red)" }}
                 onClick={() => handleDiscard()}
               >
                 Discard
-              </button>
-              <button
-                className="btn-active w-1/3 px-16 py-2"
-                onClick={() => handleApproveVol()}
-              >
-                Confirm
               </button>
             </div>
           </div>

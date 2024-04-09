@@ -138,7 +138,7 @@ model Guest {
     phoneNumber String
     age         Int
 
-    activityCalls  ActivityCall? @relation(fields: [activityCallId], references: [id])
+    activityCalls  ActivityCall?
     activityCallId String?       @unique
 }
 
@@ -253,8 +253,8 @@ model ActivityCall {
     volunteer   Volunteer? @relation(fields: [volunteerId], references: [id])
     volunteerId String?
 
-    guest   Guest?
-    guestId String?
+    guest   Guest?  @relation(fields: [guestId], references: [id])
+    guestId String? @unique
 
     status String
     label  String

@@ -28,20 +28,24 @@ const Participants = () => {
 
   const organization = user.data?.organization;
 
-  const getPendingOrgOrVol = api.activityCall.getOrgOrVol.useQuery({
-    activityId: id as string,
-    label: "participant",
-    // orgId: organization?.id,
-    status: "PENDING",
-  });
+  const { data: getPendingOrgOrVol, refetch } =
+    api.activityCall.getOrgOrVol.useQuery({
+      activityId: id as string,
+      label: "participant",
+      // orgId: organization?.id,
+      status: "PENDING",
+    });
 
   const updateStatus = api.activityCall.updateActivityCall.useMutation();
 
-  const handleAccept = (guestId: string) => {
+  const handleAccept = async (guestId: string) => {
     updateStatus.mutate({
       activityId: id as string,
       guestId: guestId,
     });
+
+    await refetch();
+    await refetch();
   };
 
   return (
@@ -67,7 +71,7 @@ const Participants = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {getPendingOrgOrVol?.data?.map((data, index) => {
+              {getPendingOrgOrVol?.map((data, index) => {
                 // Declare a constant to simplify access to nested properties
                 const guest = data.guest;
 
