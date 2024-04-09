@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../../components/navbar";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -20,10 +20,15 @@ const OrgManageVolunteerRequests = () => {
 
   const org = user.data?.organization;
 
-  const getOrganizations = api.volJoinOrg.getOrgOrVol.useQuery({
-    orgId: org?.id,
-    status: "PENDING",
-  });
+  const { data: getOrganizations, refetch } =
+    api.volJoinOrg.getOrgOrVol.useQuery({
+      orgId: org?.id,
+      status: "PENDING",
+    });
+
+  const handleUpdate = async () => {
+    await refetch();
+  };
 
   return (
     <div className="flex flex-col">
@@ -38,12 +43,13 @@ const OrgManageVolunteerRequests = () => {
         <OrgNav />
 
         <div>
-          {getOrganizations?.data?.map((data, index) => (
+          {getOrganizations?.map((data, index) => (
             <VolunteerList
               key={index}
               data={data}
               volunteer={data.volunteer}
               organization={org}
+              refetch={refetch}
             />
           ))}
         </div>

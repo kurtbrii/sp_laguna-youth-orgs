@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -9,8 +10,12 @@ import { $Enums, User } from "@prisma/client";
 import Image from "next/image";
 import { api } from "~/utils/api";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const SponsorsList = ({ body, orgRequesting, orgAcceptingId }: any) => {
+const SponsorsList = ({
+  body,
+  orgRequesting,
+  orgAcceptingId,
+  refetch,
+}: any) => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
   const [expanded, setExpanded] = useState(false);
@@ -23,21 +28,27 @@ const SponsorsList = ({ body, orgRequesting, orgAcceptingId }: any) => {
 
   const discardOrg = api.orgSponsorOrg.deleteOrgSpon.useMutation();
 
-  const handleApproveVol = () => {
+  const handleApproveVol = async () => {
     approveStatus.mutate({
       orgRequesting: orgRequesting.id,
       orgAccepting: orgAcceptingId,
     });
 
     alert("Request Approved");
+
+    await refetch();
+    await refetch();
   };
 
-  const handleDiscard = () => {
+  const handleDiscard = async () => {
     discardOrg.mutate({
       orgRequesting: orgRequesting.id,
       orgAccepting: orgAcceptingId,
     });
     alert("Request Discarded");
+
+    await refetch();
+    await refetch();
   };
 
   return (

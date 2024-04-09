@@ -20,10 +20,11 @@ const SponsorshipRequest = () => {
 
   const org = user.data?.organization;
 
-  const getOrganizations = api.orgSponsorOrg.getBothOrganizations.useQuery({
-    orgAccepting: org?.id,
-    status: "PENDING",
-  });
+  const { data: getOrganizations, refetch } =
+    api.orgSponsorOrg.getBothOrganizations.useQuery({
+      orgAccepting: org?.id,
+      status: "PENDING",
+    });
 
   return (
     <div className="flex flex-col">
@@ -38,19 +39,14 @@ const SponsorshipRequest = () => {
         <OrgNav />
 
         <div>
-          {getOrganizations?.data?.map((data, index) => (
+          {getOrganizations?.map((data, index) => (
             <SponsorsList
+              refetch={refetch}
               key={index}
               body={data.body}
               orgRequesting={data.organizationRequesting}
               orgAcceptingId={org?.id}
             />
-
-            // <VolunteerList
-            //   key={index}
-            //   volunteer={data.volunteer}
-            //   organization={org}
-            // />
           ))}
         </div>
       </div>
