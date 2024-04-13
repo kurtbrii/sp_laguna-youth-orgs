@@ -73,17 +73,16 @@ export default function Home() {
                 objectPosition: "100% 0%",
               }}
             />
-            <section className="absolute left-14 top-16  mb-2 h-full w-5/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white phone:left-5 phone:text-[28px] tablet:text-[28px]">
+            <section className="absolute left-20 top-16  mb-2 h-full w-5/6 items-center font-custom-epilogue text-6xl font-extrabold leading-normal text-white phone:left-5 phone:text-[28px] tablet:text-[28px]">
               <h1 className=" mb-5">
-                The largest network of <br className="phone:hidden" />
+                The largest online network of <br className="phone:hidden" />
                 <span className="btn-active py-font-extrabold self-center px-4 text-6xl phone:text-[28px] tablet:text-[28px]">
-                  youth volunteers
+                  youth organizations
                 </span>{" "}
                 in Laguna
               </h1>
               <p className="custom-lexend text-2xl italic phone:text-sm tablet:text-sm">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-                eget placerat nulla.{" "}
+                Connect. Collaborate. Contribute.
               </p>
             </section>
           </section>

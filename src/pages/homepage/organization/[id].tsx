@@ -169,7 +169,7 @@ const OrganizationPage = () => {
 
                         // onClick={() => handleOrgSpon()}
                       >
-                        Request Sponsorship
+                        Collaborate With Us!
                       </button>
                     )
                   ) : (
@@ -300,20 +300,12 @@ const OrganizationPage = () => {
           </div>
         </div>
 
-        {/* POOL OF SPEAKERS */}
-        {/* <div className="mb-20 flex flex-col gap-6">
-          <h1 className="text-gradient flex  font-custom-epilogue text-4xl font-semibold">
-            Pool of Speakers
-          </h1>
-          <div className="flex gap-4"></div>
-        </div> */}
-
         {toggleJoinOrg || toggleSponOrg ? (
           <>
             {toggleSponOrg && (
               <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
                 <p className="font-custom-epilogue text-xl font-extrabold text-white">
-                  Request Sponsorship
+                  Request for Collaboration
                 </p>
               </section>
             )}

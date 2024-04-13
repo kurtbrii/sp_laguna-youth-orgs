@@ -53,7 +53,8 @@ const Providers = () => {
         </button>
       </div>
       <p className="mx-24 text-center text-sm text-customBlack-100">
-        Sign in or register your account using your{" "}
+        Sign in or register using your
+        <br />
         <span className="font-bold text-primary">Google</span> or{" "}
         <span className="font-bold text-secondary">Discord</span> account.
       </p>
