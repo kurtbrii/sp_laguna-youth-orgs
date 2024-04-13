@@ -147,7 +147,7 @@ const EmailActivityCall = ({
 
     alert("Request Successul");
 
-    // router.reload();
+    router.reload();
   };
 
   useEffect(() => {

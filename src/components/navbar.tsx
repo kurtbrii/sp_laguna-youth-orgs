@@ -78,22 +78,13 @@ const Navbar = () => {
       <div className="tablet:hidden laptop:hidden desktop:hidden">
         <div className=" z-10 m-4 flex items-center justify-between">
           <div className="font-custom-pilogue flex text-xs font-bold">
-            <p className="text-gradient">Laguna Youth Organizations Hub</p>
+            <Link href="/homepage">
+              <p className="text-gradient">Laguna Youth Organizations Hub</p>
+            </Link>
           </div>
-          {sessionData ? (
-            <IconButton onClick={() => setIsNavOpen(!isNavOpen)}>
-              <MenuIcon />
-            </IconButton>
-          ) : (
-            <div className="flex gap-2">
-              <button
-                className="btn-active px-3 py-1 text-xs"
-                onClick={handleSignIn}
-              >
-                Get Started
-              </button>
-            </div>
-          )}
+          <IconButton onClick={() => setIsNavOpen(!isNavOpen)}>
+            <MenuIcon />
+          </IconButton>
         </div>
         {isNavOpen && (
           <>
@@ -105,57 +96,67 @@ const Navbar = () => {
               >
                 <CloseIcon />
               </IconButton>
-              <Image
-                className={`cursor-pointer self-center rounded-lg `}
-                src={sessionData?.user.image ?? ""}
-                alt="user profile image"
-                height={80}
-                width={80}
-              />
 
-              <div className="mx-2 mt-6 flex flex-col items-center">
-                {/* <img className="object-cover w-24 h-24 mx-2 rounded-full" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="avatar"> */}
-                <h4 className="mx-2 font-medium text-gray-800 dark:text-gray-200">
-                  {sessionData?.user.role === "VOLUNTEER"
-                    ? `${volunteer.data?.firstName} ${volunteer.data?.middleInitial} ${volunteer.data?.lastName} ${volunteer.data?.suffix}`
-                    : organization.data?.orgName}
-                </h4>
-                <p className="mx-2 mt-1 text-sm font-medium text-gray-600 dark:text-gray-400">
-                  {sessionData?.user.email}
-                </p>
-              </div>
+              {sessionStatus === "authenticated" && (
+                <>
+                  <Image
+                    className={`cursor-pointer self-center rounded-lg `}
+                    src={sessionData?.user.image ?? ""}
+                    alt="user profile image"
+                    height={80}
+                    width={80}
+                  />
+                  <div className="mx-2 mt-6 flex flex-col items-center">
+                    {/* <img className="object-cover w-24 h-24 mx-2 rounded-full" src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="avatar"> */}
+                    <h4 className="mx-2 font-medium text-gray-800 dark:text-gray-200">
+                      {sessionData?.user.role === "VOLUNTEER"
+                        ? `${volunteer.data?.firstName} ${volunteer.data?.middleInitial} ${volunteer.data?.lastName} ${volunteer.data?.suffix}`
+                        : organization.data?.orgName}
+                    </h4>
+                    <p className="mx-2 mt-1 text-sm font-medium text-gray-600 dark:text-gray-400">
+                      {sessionData?.user.email}
+                    </p>
+                  </div>
+                </>
+              )}
 
               <div className="mt-6 flex flex-1 flex-col justify-between">
                 <nav>
-                  <Link
-                    href={
-                      sessionData?.user.role === "VOLUNTEER"
-                        ? "/profile/volunteer"
-                        : "/profile/organization"
-                    }
-                    className="mt-5 flex transform items-center rounded-lg px-4 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                  >
-                    <PersonIcon />
+                  {sessionStatus === "authenticated" && (
+                    <>
+                      <Link
+                        href={
+                          sessionData?.user.role === "VOLUNTEER"
+                            ? "/profile/volunteer"
+                            : "/profile/organization"
+                        }
+                        className="mt-5 flex transform items-center rounded-lg px-4 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                      >
+                        <PersonIcon />
 
-                    <span className="mx-4 font-medium">Profile</span>
-                  </Link>
+                        <span className="mx-4 font-medium">Profile</span>
+                      </Link>
 
-                  <a
-                    onClick={() =>
-                      sessionData?.user.role === "VOLUNTEER"
-                        ? router.push(
-                            "/manage-activities/volunteer/org-requests",
-                          )
-                        : router.push(
-                            "/manage-activities/organization/volunteer-requests",
-                          )
-                    }
-                    className="mt-5 flex transform items-center rounded-lg px-4 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                  >
-                    <ManageAccountsIcon />
+                      <a
+                        onClick={() =>
+                          sessionData?.user.role === "VOLUNTEER"
+                            ? router.push(
+                                "/manage-activities/volunteer/org-requests",
+                              )
+                            : router.push(
+                                "/manage-activities/organization/volunteer-requests",
+                              )
+                        }
+                        className="mt-5 flex transform items-center rounded-lg px-4 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                      >
+                        <ManageAccountsIcon />
 
-                    <span className="mx-4 font-medium">Manage Activities</span>
-                  </a>
+                        <span className="mx-4 font-medium">
+                          Manage Activities
+                        </span>
+                      </a>
+                    </>
+                  )}
 
                   <Link
                     href="/homepage/find-organizations"
@@ -165,15 +166,6 @@ const Navbar = () => {
 
                     <span className="mx-4 font-medium">Find Organizations</span>
                   </Link>
-
-                  {/* <Link
-                    href="/homepage/find-organizations"
-                    className="mt-5 flex transform items-center rounded-lg px-4 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                  >
-                    <Diversity3Icon />
-
-                    <span className="mx-4 font-medium">Get Involved</span>
-                  </Link> */}
 
                   <div className="relative flex flex-col ">
                     {/* Main Link/Button */}
@@ -210,14 +202,25 @@ const Navbar = () => {
                     )}
                   </div>
 
-                  <a
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="mt-5 flex transform items-center rounded-lg px-4 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                  >
-                    <LogoutIcon />
+                  {sessionStatus === "authenticated" ? (
+                    <a
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="mt-5 flex transform items-center rounded-lg px-4 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                    >
+                      <LogoutIcon />
 
-                    <span className="mx-4 font-medium">Logout</span>
-                  </a>
+                      <span className="mx-4 font-medium">Logout</span>
+                    </a>
+                  ) : (
+                    <div className="mx-4 mt-6 flex gap-2 self-center">
+                      <button
+                        className="btn-active self-center px-3 py-1 text-sm"
+                        onClick={handleSignIn}
+                      >
+                        Get Started
+                      </button>
+                    </div>
+                  )}
                 </nav>
               </div>
             </aside>

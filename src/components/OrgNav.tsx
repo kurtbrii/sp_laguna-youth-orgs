@@ -34,9 +34,9 @@ const OrgNav = () => {
     ) {
       setActiveLink("Partnership Requests");
     } else if (
-      currentRoute === "/manage-activities/organization/sponsorship-requests"
+      currentRoute === "/manage-activities/organization/collaboration-requests"
     ) {
-      setActiveLink("Sponsorship Requests");
+      setActiveLink("Requests for Collaboration");
     }
   }, [router.asPath]);
 
@@ -46,12 +46,12 @@ const OrgNav = () => {
 
   const links = [
     "Join Organization Requests",
-    "Sponsorship Requests",
+    "Requests for Collaboration",
     "Ongoing Activities",
   ];
   const linksNav = [
     "volunteer-requests",
-    "sponsorship-requests",
+    "collaboration-requests",
     "ongoing-activities",
   ];
 

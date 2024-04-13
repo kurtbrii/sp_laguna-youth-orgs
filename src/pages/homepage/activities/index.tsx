@@ -25,11 +25,18 @@ const filterSchema = z.object({
 type FilterSchemaFields = z.infer<typeof filterSchema>;
 
 const Index = () => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status: sessionStatus } = useSession();
 
-  const volunteer = api.volunteer.getOne.useQuery({
-    userId: sessionData?.user?.id ?? "",
-  });
+  let volunteer = null;
+
+  if (
+    sessionStatus === "authenticated" &&
+    sessionData?.user.role === "VOLUNTEER"
+  ) {
+    volunteer = api.volunteer.getOne.useQuery({
+      userId: sessionData?.user?.id ?? "",
+    });
+  }
 
   const router = useRouter();
   const { id, name } = router.query;
@@ -65,33 +72,37 @@ const Index = () => {
 
   const formData = watch();
 
-  const activity = api.activity.getActivities.useQuery({
-    search: searchText,
-    orgId: initialSearch ? (id as string) : undefined,
-    centersTags:
-      sessionData?.user?.role === "VOLUNTEER"
-        ? volunteer?.data?.setTags
-          ? volunteer?.data?.centersTags
-          : centersOfParticipation
-        : centersOfParticipation,
-    customTags:
-      sessionData?.user?.role === "VOLUNTEER"
-        ? volunteer?.data?.setTags
-          ? volunteer?.data?.customTags
-          : []
-        : [],
-    filterCenterTags: formData.centersTags ?? [],
-    filterCustomTags: formData.customTags ?? [],
-    filterHasVolunteers: formData.hasVolunteers
-      ? formData.hasVolunteers
-      : undefined,
-    filterHasOrganizations: formData.hasOrganizations
-      ? formData.hasOrganizations
-      : undefined,
-    filterHasParticipants: formData.hasParticipants
-      ? formData.hasParticipants
-      : undefined,
-  });
+  let activity = null;
+
+  try {
+    activity = api.activity.getActivities.useQuery({
+      search: searchText,
+      orgId: initialSearch ? (id as string) : undefined,
+      centersTags:
+        sessionData?.user?.role === "VOLUNTEER"
+          ? volunteer?.data?.setTags
+            ? volunteer?.data?.centersTags
+            : centersOfParticipation
+          : centersOfParticipation,
+      customTags:
+        sessionData?.user?.role === "VOLUNTEER"
+          ? volunteer?.data?.setTags
+            ? volunteer?.data?.customTags
+            : []
+          : [],
+      filterCenterTags: formData.centersTags ?? [],
+      filterCustomTags: formData.customTags ?? [],
+      filterHasVolunteers: formData.hasVolunteers
+        ? formData.hasVolunteers
+        : undefined,
+      filterHasOrganizations: formData.hasOrganizations
+        ? formData.hasOrganizations
+        : undefined,
+      filterHasParticipants: formData.hasParticipants
+        ? formData.hasParticipants
+        : undefined,
+    });
+  } catch (error) {}
 
   type data = "hasOrganizations" | "hasVolunteers" | "hasParticipants";
 

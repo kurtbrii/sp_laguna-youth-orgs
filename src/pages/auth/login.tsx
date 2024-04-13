@@ -34,11 +34,7 @@ const Login = () => {
           <h1 className="mb-3 font-custom-epilogue text-4xl font-bold">
             Laguna Youth Organizations Hub
           </h1>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam
-            eget placerat nulla. Duis eget lacinia lacus. Duis volutpat metus a
-            felis volutpat elementum. Integer hendrerit sit
-          </p>
+          <p className="italic">Connect. Collaborate. Contribute.</p>
         </div>
       </section>
 
