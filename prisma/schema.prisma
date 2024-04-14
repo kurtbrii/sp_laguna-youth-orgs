@@ -91,7 +91,7 @@ model Organization {
     centersOfParticipation CentersOfParticipation?
     speakers               Speakers[]
 
-    user   User   @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
 
     // ! Many to Many Relations
@@ -117,7 +117,7 @@ model Volunteer {
     sex String?
     age Int?
 
-    user   User?   @relation(fields: [userId], references: [id])
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String? @unique
 
     email String @unique
