@@ -17,9 +17,6 @@ import { centersOfParticipation } from "~/utils/obj";
 export default function Home() {
   const { data: sessionData } = useSession();
 
-  const current = sessionData?.user.id;
-  const get = api.user.getUser.useQuery({ userId: current ?? "" });
-
   // ! Recent Events
   const event = api.event.getEvents.useQuery({ search: "", take: 3 });
 
