@@ -1,17 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Navbar from "~/components/navbar";
 import OrgCard from "~/components/orgcard";
 import { api } from "~/utils/api";
-import { NextPage } from "next";
-import { IconButton } from "@mui/material";
-import TuneIcon from "@mui/icons-material/Tune";
-import { useState } from "react";
+import { type NextPage } from "next";
+import { useState, useEffect } from "react";
 
 const FindOrganizations: NextPage = () => {
   const [searchText, setSearchText] = useState("");
 
+  const [take, setTake] = useState(12);
+
   const organizations = api.organization.getOrganizations.useQuery({
     search: searchText,
+    take: take,
   });
+
+  const [allOrganizations, setAllOrganizations] = useState<any[]>([]);
+
+  const handleLoadMore = () => {
+    setTake(take + 12);
+    // setCursor(activityId);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -21,6 +30,12 @@ const FindOrganizations: NextPage = () => {
   const handleToggleFilter = () => {
     setToggleFilter(!toggleFilter);
   };
+
+  useEffect(() => {
+    if (organizations?.data) {
+      setAllOrganizations([...organizations?.data]);
+    }
+  }, [organizations?.data]);
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -68,7 +83,7 @@ const FindOrganizations: NextPage = () => {
       )} */}
 
       <div className="mx-4 mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {organizations?.data?.map((organization) => (
+        {allOrganizations?.map((organization) => (
           <OrgCard
             key={organization.id}
             searchText={searchText}
@@ -76,6 +91,17 @@ const FindOrganizations: NextPage = () => {
           />
         ))}
       </div>
+
+      {organizations &&
+        organizations?.data &&
+        organizations?.data?.length == take && (
+          <button
+            className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
+            onClick={() => handleLoadMore()}
+          >
+            Load More
+          </button>
+        )}
 
       {/* <button onClick={() => handleFetchOrganizations()}>button</button> */}
     </div>

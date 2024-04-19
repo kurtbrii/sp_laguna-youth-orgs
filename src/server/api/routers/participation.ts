@@ -85,8 +85,8 @@ export const participationRouter = createTRPCRouter({
       // globalMobility: z.boolean().optional(),
       // agriculture: z.boolean().optional(),
       orgId: z.string().optional(),
-      search: z.string().optional()
-
+      search: z.string().optional(),
+      take: z.number().optional(),
 
     }))
     .query(async ({ ctx, input }) => {
@@ -112,6 +112,7 @@ export const participationRouter = createTRPCRouter({
             }
           },
         },
+        take: input.take,
       });
     }),
 

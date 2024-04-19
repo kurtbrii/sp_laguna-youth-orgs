@@ -23,10 +23,10 @@ const Index = () => {
 
   const [initialSearch, setInitialSearch] = useState<boolean>(true);
 
-  const [take, setTake] = useState(8);
+  const [take, setTake] = useState(12);
 
   const handleLoadMore = () => {
-    setTake(take + 8);
+    setTake(take + 12);
   };
 
   const event = api.event.getEvents.useQuery({

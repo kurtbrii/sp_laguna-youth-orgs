@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from "react";
 import Navbar from "../../../components/navbar";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -18,8 +19,15 @@ const Speakers = () => {
 
   const [searchText, setSearchText] = useState("");
 
+  const [take, setTake] = useState(12);
+
+  const handleLoadMore = () => {
+    setTake(take + 12);
+  };
+
   const speakers = api.speaker.getSpeakers.useQuery({
     search: searchText,
+    take: take,
   });
 
   const router = useRouter();
@@ -30,6 +38,8 @@ const Speakers = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
+
+  const [allSpeakers, setAllSpeakers] = useState<any[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleToggleEmailSpeaker = (speaker: any) => {
@@ -42,6 +52,12 @@ const Speakers = () => {
 
     setSpeaker(speaker);
   };
+
+  useEffect(() => {
+    if (speakers?.data) {
+      setAllSpeakers([...speakers?.data]);
+    }
+  }, [speakers?.data]);
 
   return (
     <div className=" flex flex-col font-custom-lexend text-customBlack-100">
@@ -79,7 +95,7 @@ const Speakers = () => {
       </div>
       {/* SPEAKERS CARD */}
       <div className="mx-10 mb-5 mt-10 flex flex-wrap justify-center gap-3">
-        {speakers?.data?.map((querySpeaker) => (
+        {allSpeakers?.map((querySpeaker) => (
           <SpeakersCard
             key={querySpeaker.id}
             speaker={querySpeaker}
@@ -87,6 +103,15 @@ const Speakers = () => {
           />
         ))}
       </div>
+
+      {speakers && speakers?.data && speakers?.data?.length == take && (
+        <button
+          className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
+          onClick={() => handleLoadMore()}
+        >
+          Load More
+        </button>
+      )}
 
       {/* EMAIL SPEAKER */}
       {toggleEmailSpeaker && (

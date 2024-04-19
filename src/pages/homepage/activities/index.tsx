@@ -76,14 +76,14 @@ const Index = () => {
 
   let activity = null;
 
-  const [take, setTake] = useState(8);
+  const [take, setTake] = useState(12);
 
   const [allActivities, setAllActivities] = useState<
     ActivityProps["activity"][]
   >([]);
 
   const handleLoadMore = () => {
-    setTake(take + 8);
+    setTake(take + 12);
     // setCursor(activityId);
   };
 
