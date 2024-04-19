@@ -8,18 +8,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
-interface ActivityProps {
-  name: string;
-  details: string;
-  date: string;
-  createdAt: string;
-  location: string;
-
-  hasOrganizations: boolean;
-  hasVolunteers: boolean;
-  hasParticipants: boolean;
-  organizationId: string;
-}
 
 type SpeakerFields = z.infer<typeof createSpeakerSchema>;
 

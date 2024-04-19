@@ -56,7 +56,7 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getActivities: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional(), filterCenterTags: z.array(z.string()).optional(), filterCustomTags: z.array(z.string()).optional(), filterHasVolunteers: z.boolean().optional(), filterHasOrganizations: z.boolean().optional(), filterHasParticipants: z.boolean().optional() }))
+    .input(z.object({ take: z.number().optional(), cursor: z.string().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional(), filterCenterTags: z.array(z.string()).optional(), filterCustomTags: z.array(z.string()).optional(), filterHasVolunteers: z.boolean().optional(), filterHasOrganizations: z.boolean().optional(), filterHasParticipants: z.boolean().optional() }))
     .query(async ({ ctx, input }) => {
 
       const whereCondition: Prisma.ActivityWhereInput = {
@@ -144,7 +144,9 @@ export const activityRouter = createTRPCRouter({
           hasParticipants: true,
           organizationId: true,
         },
-        take: input.take
+        take: input.take,
+        // skip: 1,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
       });
     }),
 

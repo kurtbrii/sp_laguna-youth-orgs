@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/navbar";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -13,6 +14,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
+import { type ActivityProps } from "~/utils/props";
 
 const filterSchema = z.object({
   centersTags: z.array(z.string()).optional(),
@@ -74,8 +76,20 @@ const Index = () => {
 
   let activity = null;
 
+  const [take, setTake] = useState(8);
+
+  const [allActivities, setAllActivities] = useState<
+    ActivityProps["activity"][]
+  >([]);
+
+  const handleLoadMore = () => {
+    setTake(take + 8);
+    // setCursor(activityId);
+  };
+
   try {
     activity = api.activity.getActivities.useQuery({
+      take: take,
       search: searchText,
       orgId: initialSearch ? (id as string) : undefined,
       centersTags:
@@ -156,6 +170,12 @@ const Index = () => {
     getValues("centersTags");
   }, [initialSearch, searchText, getValues]);
 
+  useEffect(() => {
+    if (activity?.data) {
+      setAllActivities([...activity?.data]);
+    }
+  }, [activity?.data]);
+
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       {/* <button onClick={handleClick}>click</button>
@@ -215,7 +235,7 @@ const Index = () => {
             </div>
           </section>
 
-          {/* ADD EVENT */}
+          {/* ADD ACTIVITY */}
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
               className="btn-active w-1/5 px-4 py-2 phone:mt-5 phone:w-full"
@@ -319,15 +339,24 @@ const Index = () => {
 
       {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5 ">
-        {activity?.data?.map((queryActivity) => (
+        {allActivities.map((queryActivity, index) => (
           <ActivitiesCard
             callOrParticipation={callOrParticipation}
-            key={queryActivity.id}
+            key={index}
             searchText={searchText}
             activity={queryActivity}
           />
         ))}
       </div>
+
+      {activity && activity?.data && activity?.data?.length == take && (
+        <button
+          className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
+          onClick={() => handleLoadMore()}
+        >
+          Load More
+        </button>
+      )}
     </div>
   );
 };
