@@ -74,8 +74,6 @@ const Index = () => {
 
   const formData = watch();
 
-  let activity = null;
-
   const [take, setTake] = useState(12);
 
   const [allActivities, setAllActivities] = useState<
@@ -87,36 +85,34 @@ const Index = () => {
     // setCursor(activityId);
   };
 
-  try {
-    activity = api.activity.getActivities.useQuery({
-      take: take,
-      search: searchText,
-      orgId: initialSearch ? (id as string) : undefined,
-      centersTags:
-        sessionData?.user?.role === "VOLUNTEER"
-          ? volunteer?.data?.setTags
-            ? volunteer?.data?.centersTags
-            : centersOfParticipation
-          : centersOfParticipation,
-      customTags:
-        sessionData?.user?.role === "VOLUNTEER"
-          ? volunteer?.data?.setTags
-            ? volunteer?.data?.customTags
-            : []
-          : [],
-      filterCenterTags: formData.centersTags ?? [],
-      filterCustomTags: formData.customTags ?? [],
-      filterHasVolunteers: formData.hasVolunteers
-        ? formData.hasVolunteers
-        : undefined,
-      filterHasOrganizations: formData.hasOrganizations
-        ? formData.hasOrganizations
-        : undefined,
-      filterHasParticipants: formData.hasParticipants
-        ? formData.hasParticipants
-        : undefined,
-    });
-  } catch (error) {}
+  const activity = api.activity.getActivities.useQuery({
+    take: take,
+    search: searchText,
+    orgId: initialSearch ? (id as string) : undefined,
+    centersTags:
+      sessionData?.user?.role === "VOLUNTEER"
+        ? volunteer?.data?.setTags
+          ? volunteer?.data?.centersTags
+          : centersOfParticipation
+        : centersOfParticipation,
+    customTags:
+      sessionData?.user?.role === "VOLUNTEER"
+        ? volunteer?.data?.setTags
+          ? volunteer?.data?.customTags
+          : []
+        : [],
+    filterCenterTags: formData.centersTags ?? [],
+    filterCustomTags: formData.customTags ?? [],
+    filterHasVolunteers: formData.hasVolunteers
+      ? formData.hasVolunteers
+      : undefined,
+    filterHasOrganizations: formData.hasOrganizations
+      ? formData.hasOrganizations
+      : undefined,
+    filterHasParticipants: formData.hasParticipants
+      ? formData.hasParticipants
+      : undefined,
+  });
 
   type data = "hasOrganizations" | "hasVolunteers" | "hasParticipants";
 
