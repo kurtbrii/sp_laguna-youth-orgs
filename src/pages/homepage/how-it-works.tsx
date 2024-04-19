@@ -94,7 +94,7 @@ const HowItWorks = () => {
               <h1 className="font-custom-epilogue font-bold text-primary">
                 Recent Events
               </h1>
-              <p>Organizations can view and edit past events.</p>
+              <p>Organizations can add, edit, and view past events.</p>
             </section>
 
             <section>

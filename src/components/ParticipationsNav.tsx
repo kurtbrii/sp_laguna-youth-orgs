@@ -30,10 +30,19 @@ const ParticipationNav = ({ orgId, tag, searchText }: any) => {
     setActiveLink(links[index]!);
   };
 
+  const [take, setTake] = useState(12);
+
+  const handleLoadMore = () => {
+    setTake(take + 12);
+  };
+
   const participationQuery = api.particpation.getParticipations.useQuery({
     orgId: initialSearch ? (orgId as string) : undefined,
     search: searchText,
+    take: take,
   });
+
+  const [allParticipations, setAllParticipations] = useState<any[]>([]);
 
   useEffect(() => {
     if (initialSearch && searchText !== "") {
@@ -41,7 +50,13 @@ const ParticipationNav = ({ orgId, tag, searchText }: any) => {
       setLinkData(linkData);
       setActiveLink(linkData);
     }
-  }, [initialSearch, searchText]);
+  }, [initialSearch, linkData, searchText]);
+
+  useEffect(() => {
+    if (participationQuery?.data) {
+      setAllParticipations([...participationQuery?.data]);
+    }
+  }, [participationQuery?.data]);
 
   return (
     // navbar
@@ -63,8 +78,8 @@ const ParticipationNav = ({ orgId, tag, searchText }: any) => {
 
       <hr className="flex  w-full border-t-2 border-customBlack-25" />
 
-      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {participationQuery.data?.map((data, index) => (
+      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-3">
+        {allParticipations?.map((data, index) => (
           <ParticipationsCard
             key={index}
             data={data}
@@ -73,6 +88,17 @@ const ParticipationNav = ({ orgId, tag, searchText }: any) => {
           />
         ))}
       </div>
+
+      {participationQuery &&
+        participationQuery?.data &&
+        participationQuery?.data?.length == take && (
+          <button
+            className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
+            onClick={() => handleLoadMore()}
+          >
+            Load More
+          </button>
+        )}
     </div>
   );
 };

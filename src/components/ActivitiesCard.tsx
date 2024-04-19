@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
 import { useRouter } from "next/router";
+import { type ActivityProps } from "~/utils/props";
 
 // id: true,
 // name: true,
@@ -33,34 +34,6 @@ import { useRouter } from "next/router";
 // }
 // },
 // take: input.take
-
-type ActivityProps = {
-  activity: {
-    id: string;
-    name: string;
-    details: string;
-    date: Date;
-    location: string;
-    images: string[];
-
-    organization: {
-      id: string;
-      orgName: string;
-      phoneNumber: string;
-      bio: string;
-      user: {
-        id: string;
-        image: string | null;
-      };
-    };
-    centersTags: string[] | null;
-    customTags: string[] | null;
-    hasOrganizations: boolean;
-    hasVolunteers: boolean;
-    hasParticipants: boolean;
-    organizationId: string;
-  };
-};
 
 type ActivitiesCardProps = {
   activity: ActivityProps["activity"];

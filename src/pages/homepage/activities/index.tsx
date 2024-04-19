@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/navbar";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -13,6 +14,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
+import { type ActivityProps } from "~/utils/props";
 
 const filterSchema = z.object({
   centersTags: z.array(z.string()).optional(),
@@ -72,37 +74,45 @@ const Index = () => {
 
   const formData = watch();
 
-  let activity = null;
+  const [take, setTake] = useState(12);
 
-  try {
-    activity = api.activity.getActivities.useQuery({
-      search: searchText,
-      orgId: initialSearch ? (id as string) : undefined,
-      centersTags:
-        sessionData?.user?.role === "VOLUNTEER"
-          ? volunteer?.data?.setTags
-            ? volunteer?.data?.centersTags
-            : centersOfParticipation
-          : centersOfParticipation,
-      customTags:
-        sessionData?.user?.role === "VOLUNTEER"
-          ? volunteer?.data?.setTags
-            ? volunteer?.data?.customTags
-            : []
-          : [],
-      filterCenterTags: formData.centersTags ?? [],
-      filterCustomTags: formData.customTags ?? [],
-      filterHasVolunteers: formData.hasVolunteers
-        ? formData.hasVolunteers
-        : undefined,
-      filterHasOrganizations: formData.hasOrganizations
-        ? formData.hasOrganizations
-        : undefined,
-      filterHasParticipants: formData.hasParticipants
-        ? formData.hasParticipants
-        : undefined,
-    });
-  } catch (error) {}
+  const [allActivities, setAllActivities] = useState<
+    ActivityProps["activity"][]
+  >([]);
+
+  const handleLoadMore = () => {
+    setTake(take + 12);
+    // setCursor(activityId);
+  };
+
+  const activity = api.activity.getActivities.useQuery({
+    take: take,
+    search: searchText,
+    orgId: initialSearch ? (id as string) : undefined,
+    centersTags:
+      sessionData?.user?.role === "VOLUNTEER"
+        ? volunteer?.data?.setTags
+          ? volunteer?.data?.centersTags
+          : centersOfParticipation
+        : centersOfParticipation,
+    customTags:
+      sessionData?.user?.role === "VOLUNTEER"
+        ? volunteer?.data?.setTags
+          ? volunteer?.data?.customTags
+          : []
+        : [],
+    filterCenterTags: formData.centersTags ?? [],
+    filterCustomTags: formData.customTags ?? [],
+    filterHasVolunteers: formData.hasVolunteers
+      ? formData.hasVolunteers
+      : undefined,
+    filterHasOrganizations: formData.hasOrganizations
+      ? formData.hasOrganizations
+      : undefined,
+    filterHasParticipants: formData.hasParticipants
+      ? formData.hasParticipants
+      : undefined,
+  });
 
   type data = "hasOrganizations" | "hasVolunteers" | "hasParticipants";
 
@@ -155,6 +165,12 @@ const Index = () => {
     }
     getValues("centersTags");
   }, [initialSearch, searchText, getValues]);
+
+  useEffect(() => {
+    if (activity?.data) {
+      setAllActivities([...activity?.data]);
+    }
+  }, [activity?.data]);
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -215,7 +231,7 @@ const Index = () => {
             </div>
           </section>
 
-          {/* ADD EVENT */}
+          {/* ADD ACTIVITY */}
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
               className="btn-active w-1/5 px-4 py-2 phone:mt-5 phone:w-full"
@@ -319,15 +335,24 @@ const Index = () => {
 
       {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5 ">
-        {activity?.data?.map((queryActivity) => (
+        {allActivities.map((queryActivity, index) => (
           <ActivitiesCard
             callOrParticipation={callOrParticipation}
-            key={queryActivity.id}
+            key={index}
             searchText={searchText}
             activity={queryActivity}
           />
         ))}
       </div>
+
+      {activity && activity?.data && activity?.data?.length == take && (
+        <button
+          className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
+          onClick={() => handleLoadMore()}
+        >
+          Load More
+        </button>
+      )}
     </div>
   );
 };

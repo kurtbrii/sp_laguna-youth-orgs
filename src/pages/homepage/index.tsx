@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import Navbar from "~/components/navbar";
 import TextField from "@mui/material/TextField";
@@ -22,7 +23,14 @@ const Index = () => {
 
   const [initialSearch, setInitialSearch] = useState<boolean>(true);
 
+  const [take, setTake] = useState(12);
+
+  const handleLoadMore = () => {
+    setTake(take + 12);
+  };
+
   const event = api.event.getEvents.useQuery({
+    take: take,
     search: searchText,
     orgId: initialSearch ? (id as string) : undefined,
   });
@@ -36,11 +44,19 @@ const Index = () => {
     setToggleFilter(!toggleFilter);
   };
 
+  const [allEvents, setAllEvents] = useState<any[]>([]);
+
   useEffect(() => {
     if (initialSearch && searchText !== "") {
       setInitialSearch(false);
     }
   }, [initialSearch, searchText]);
+
+  useEffect(() => {
+    if (event?.data) {
+      setAllEvents([...event?.data]);
+    }
+  }, [event?.data]);
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100 ">
@@ -110,7 +126,7 @@ const Index = () => {
       {/* EVENT CARD */}
       {/* TODO: FIX PREVIOUS: when added */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {event?.data?.map((eventQuery) => (
+        {allEvents?.map((eventQuery) => (
           <EventCard
             key={eventQuery.id}
             event={eventQuery}
@@ -118,6 +134,15 @@ const Index = () => {
           />
         ))}
       </div>
+
+      {event && event?.data && event?.data?.length == take && (
+        <button
+          className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
+          onClick={() => handleLoadMore()}
+        >
+          Load More
+        </button>
+      )}
     </div>
   );
 };
