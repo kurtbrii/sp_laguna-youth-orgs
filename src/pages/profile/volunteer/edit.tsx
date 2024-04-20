@@ -227,6 +227,9 @@ const EditVolunteer = () => {
             </div>
           ))}
         </div>
+        {errors.centersTags && (
+          <p className="text-customRed">{errors.centersTags.message}</p>
+        )}
         <section className="mt-6 flex flex-row items-center justify-center bg-secondary p-2">
           <p className="font-custom-epilogue text-xl font-extrabold text-white">
             Custom Tags
