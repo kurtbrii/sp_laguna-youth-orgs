@@ -68,9 +68,9 @@ export const speakerRouter = createTRPCRouter({
             },
           ]
         },
-        orderBy: {
-          createdAt: "desc",
-        },
+        // orderBy: {
+        //   createdAt: "desc",
+        // },
         include: {
           organization: {
             select: {

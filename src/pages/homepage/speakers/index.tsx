@@ -25,10 +25,16 @@ const Speakers = () => {
     setTake(take + 12);
   };
 
-  const speakers = api.speaker.getSpeakers.useQuery({
-    search: searchText,
-    take: take,
-  });
+  const speakers = api.speaker.getSpeakers.useQuery(
+    {
+      search: searchText,
+      take: take,
+    },
+    {
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+    },
+  );
 
   const router = useRouter();
 
@@ -86,7 +92,7 @@ const Speakers = () => {
           {sessionData && sessionData?.user.role !== "VOLUNTEER" && (
             <button
               className="btn-active w-1/4 px-2 py-2"
-              onClick={() => router.push("/homepage/speakers/add")}
+              onClick={() => void router.push("/homepage/speakers/add")}
             >
               Add Speaker
             </button>
