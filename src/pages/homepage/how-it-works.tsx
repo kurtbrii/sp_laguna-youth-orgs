@@ -1,8 +1,9 @@
+import Link from "next/link";
 import React, { useState } from "react";
 import Navbar from "~/components/navbar";
 
 const HowItWorks = () => {
-  const [view, setView] = useState<string>("overview");
+  const [view, setView] = useState<string>("instructions");
 
   return (
     <>
@@ -17,11 +18,42 @@ const HowItWorks = () => {
             setView(e.target.value);
           }}
         >
+          <option value="instructions">Instructions</option>
           <option value="overview">Overview</option>
           <option value="auth">Sign Up/Login</option>
           <option value="org">For Organizations</option>
           <option value="vol">For Volunteer</option>
         </select>
+
+        {view === "instructions" && (
+          <>
+            <p>
+              <span className="font-bold">Step 1.</span> Click the{" "}
+              <span className="btn-active px-4 py-1">Get Started</span> button
+              on the upper right part of the navigation bar and sign up as an
+              organization.
+            </p>
+
+            <p>
+              <span className="font-bold">Step 2.</span> Navigate the website.
+              Try to add your past events and upcoming activities.
+            </p>
+
+            <p>
+              <span className="font-bold">Step 3. </span>
+              After navigating the website, kindly answer this 10-item{" "}
+              <span>
+                <Link
+                  className="underline"
+                  href="https://forms.gle/NNTJAomrsj1XQNG16"
+                >
+                  SUS questionnaire
+                </Link>
+              </span>
+              . This questionnaire will only take 10 minutes to accomplish.
+            </p>
+          </>
+        )}
 
         {view === "overview" && (
           <>
