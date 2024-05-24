@@ -18,7 +18,7 @@ const HowItWorks = () => {
             setView(e.target.value);
           }}
         >
-          {/* <option value="instructions">Instructions</option> */}
+          {/* <opt  ion value="instructions">Instructions</option> */}
           <option value="overview">Overview</option>
           <option value="auth">Sign Up/Login</option>
           <option value="org">For Organizations</option>

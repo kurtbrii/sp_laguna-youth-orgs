@@ -27,6 +27,7 @@ const ActivitiesPage = () => {
   });
 
   const activity = activityQuery.data;
+  const isLoading = activityQuery.isLoading;
 
   const deleteActivity = api.activity.deleteActivity.useMutation();
 
@@ -66,9 +67,9 @@ const ActivitiesPage = () => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  // if (!id) {
-  //   return <div>No organization ID provided</div>;
-  // }
+  if (!id) {
+    return <div>No organization ID provided</div>;
+  }
 
   // if (activityQuery.isLoading) {
   //   return <div>Loading...</div>;
@@ -148,7 +149,18 @@ const ActivitiesPage = () => {
       <Navbar />
       <div className="mx-16 my-10 mb-0 flex  justify-center gap-8 font-custom-lexend   text-customBlack-100">
         {/* IMAGES OF EVENTS*/}
-        <Carousel images={activity?.images ?? [""]} />
+
+        {isLoading ? (
+          <div
+            className="isLoading rounded-box border"
+            style={{
+              width: "40%",
+              height: "248px",
+            }}
+          ></div>
+        ) : (
+          <Carousel images={activity?.images ?? [""]} />
+        )}
 
         <div
           className="flex w-4/5 flex-col"
@@ -160,20 +172,26 @@ const ActivitiesPage = () => {
         >
           <div>
             {/* EVENT NAME */}
-            <section className="flex items-center justify-between">
-              <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
-                {activity?.name}
-              </h1>
-              {sessionData?.user.id === activity?.organization.user.id && (
-                <div className="flex gap-4">
-                  <IconButton onClick={handleEditButton}>
-                    <EditTwoToneIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleToggleButton()}>
-                    <DeleteIcon />
-                  </IconButton>
-                </div>
+            <section className="flex  items-center justify-between">
+              {!isLoading ? (
+                <h1 className="text-gradient font-custom-epilogue text-4xl  font-extrabold ">
+                  {activity?.name}
+                </h1>
+              ) : (
+                <div className="isLoading h-10"></div>
               )}
+
+              {!isLoading &&
+                sessionData?.user.id === activity?.organization.user.id && (
+                  <div className="flex gap-4">
+                    <IconButton onClick={handleEditButton}>
+                      <EditTwoToneIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleToggleButton()}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                )}
             </section>
 
             <div>
@@ -183,9 +201,13 @@ const ActivitiesPage = () => {
                   style={{ color: "var(--black100)" }}
                 />
 
-                <p className="text-md italic text-customBlack-50">
-                  {activity?.date.toLocaleString()}
-                </p>
+                {isLoading ? (
+                  <div className="isLoading h-5 w-full"></div>
+                ) : (
+                  <p className="text-md italic text-customBlack-50">
+                    {activity?.date.toLocaleString()}
+                  </p>
+                )}
               </div>
 
               <div className="flex gap-1">
@@ -194,12 +216,16 @@ const ActivitiesPage = () => {
                   style={{ color: "var(--black100)" }}
                 />
 
-                <p
-                  onClick={showMap}
-                  className="text-md hover:text-gradient mb-6 cursor-pointer italic text-customBlack-50 phone:text-sm"
-                >
-                  {activity?.location}
-                </p>
+                {isLoading ? (
+                  <div className="isLoading h-5 w-full"></div>
+                ) : (
+                  <p
+                    onClick={showMap}
+                    className="text-md hover:text-gradient mb-6 cursor-pointer italic text-customBlack-50 phone:text-sm"
+                  >
+                    {activity?.location}
+                  </p>
+                )}
 
                 <Modal
                   isOpen={modalIsOpen}
@@ -230,18 +256,31 @@ const ActivitiesPage = () => {
             >
               Organized By:
             </p>
-            <button
-              className="text-gradient text-sm"
-              onClick={() =>
-                router.push(
-                  `/homepage/organization/${activity?.organization?.id}`,
-                )
-              }
-            >
-              {activity?.organization?.orgName}
-            </button>
 
-            <p className=" mt-8 whitespace-pre-wrap">{activity?.details}</p>
+            {isLoading ? (
+              <div className="isLoading h-5 w-full"></div>
+            ) : (
+              <button
+                className="text-gradient text-sm"
+                onClick={() =>
+                  router.push(
+                    `/homepage/organization/${activity?.organization?.id}`,
+                  )
+                }
+              >
+                {activity?.organization?.orgName}
+              </button>
+            )}
+
+            {isLoading ? (
+              <div className="mt-8 flex flex-col gap-2">
+                <div className=" isLoading h-5"></div>
+                <div className=" isLoading h-5"></div>
+                <div className=" isLoading h-5"></div>
+              </div>
+            ) : (
+              <p className=" mt-8 whitespace-pre-wrap">{activity?.details}</p>
+            )}
           </div>
         </div>
 
