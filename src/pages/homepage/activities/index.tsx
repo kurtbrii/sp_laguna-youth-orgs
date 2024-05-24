@@ -15,6 +15,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
 import { type ActivityProps } from "~/utils/props";
+import ActivitiesLoading from "~/components/loading/ActivitiesLoading";
 
 const filterSchema = z.object({
   centersTags: z.array(z.string()).optional(),
@@ -85,34 +86,35 @@ const Index = () => {
     // setCursor(activityId);
   };
 
-  const activity = api.activity.getActivities.useQuery({
-    take: take,
-    search: searchText,
-    orgId: initialSearch ? (id as string) : undefined,
-    centersTags:
-      sessionData?.user?.role === "VOLUNTEER"
-        ? volunteer?.data?.setTags
-          ? volunteer?.data?.centersTags
-          : centersOfParticipation
-        : centersOfParticipation,
-    customTags:
-      sessionData?.user?.role === "VOLUNTEER"
-        ? volunteer?.data?.setTags
-          ? volunteer?.data?.customTags
-          : []
-        : [],
-    filterCenterTags: formData.centersTags ?? [],
-    filterCustomTags: formData.customTags ?? [],
-    filterHasVolunteers: formData.hasVolunteers
-      ? formData.hasVolunteers
-      : undefined,
-    filterHasOrganizations: formData.hasOrganizations
-      ? formData.hasOrganizations
-      : undefined,
-    filterHasParticipants: formData.hasParticipants
-      ? formData.hasParticipants
-      : undefined,
-  });
+  const { isLoading: cardsLoading, data: activity } =
+    api.activity.getActivities.useQuery({
+      take: take,
+      search: searchText,
+      orgId: initialSearch ? (id as string) : undefined,
+      centersTags:
+        sessionData?.user?.role === "VOLUNTEER"
+          ? volunteer?.data?.setTags
+            ? volunteer?.data?.centersTags
+            : centersOfParticipation
+          : centersOfParticipation,
+      customTags:
+        sessionData?.user?.role === "VOLUNTEER"
+          ? volunteer?.data?.setTags
+            ? volunteer?.data?.customTags
+            : []
+          : [],
+      filterCenterTags: formData.centersTags ?? [],
+      filterCustomTags: formData.customTags ?? [],
+      filterHasVolunteers: formData.hasVolunteers
+        ? formData.hasVolunteers
+        : undefined,
+      filterHasOrganizations: formData.hasOrganizations
+        ? formData.hasOrganizations
+        : undefined,
+      filterHasParticipants: formData.hasParticipants
+        ? formData.hasParticipants
+        : undefined,
+    });
 
   type data = "hasOrganizations" | "hasVolunteers" | "hasParticipants";
 
@@ -167,10 +169,14 @@ const Index = () => {
   }, [initialSearch, searchText, getValues]);
 
   useEffect(() => {
-    if (activity?.data) {
-      setAllActivities([...activity?.data]);
+    if (activity) {
+      setAllActivities([...activity]);
     }
-  }, [activity?.data]);
+  }, [activity]);
+
+  // if (activity?.length === 0) {
+  //   return <div>No data</div>;
+  // }
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -335,17 +341,21 @@ const Index = () => {
 
       {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5 ">
-        {allActivities.map((queryActivity, index) => (
-          <ActivitiesCard
-            callOrParticipation={callOrParticipation}
-            key={index}
-            searchText={searchText}
-            activity={queryActivity}
-          />
-        ))}
+        {cardsLoading ? (
+          <ActivitiesLoading />
+        ) : (
+          allActivities.map((queryActivity, index) => (
+            <ActivitiesCard
+              callOrParticipation={callOrParticipation}
+              key={index}
+              searchText={searchText}
+              activity={queryActivity}
+            />
+          ))
+        )}
       </div>
 
-      {activity && activity?.data && activity?.data?.length == take && (
+      {activity && activity.length == take && (
         <button
           className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
           onClick={() => handleLoadMore()}

@@ -75,6 +75,10 @@
     transform: scale(1.01);
     /* transition-duration: 1000ms; */
   }
+
+  .isLoading {
+    @apply h-5 w-full animate-pulse rounded-box  border bg-customBlack-25;
+  }
 }
 @tailwind base;
 @tailwind components;
