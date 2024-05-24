@@ -38,8 +38,6 @@ const ActivitiesPage = () => {
   const volunteer = user.data?.volunteer;
   const organization = user.data?.organization;
 
-  const addOrgOrVol = api.activityCall.createJoinActivity.useMutation();
-
   const deleteOrgOrVol = api.activityCall.deleteVolJoinOrg.useMutation();
 
   // ! LOGIC FOR GETTING ORGANIZATIONS
@@ -68,17 +66,17 @@ const ActivitiesPage = () => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  if (!id) {
-    return <div>No organization ID provided</div>;
-  }
+  // if (!id) {
+  //   return <div>No organization ID provided</div>;
+  // }
 
-  if (activityQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (activityQuery.isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (activityQuery.error ?? !activityQuery.data) {
-    return <div>Error loading organization data</div>;
-  }
+  // if (activityQuery.error ?? !activityQuery.data) {
+  //   return <div>Error loading organization data</div>;
+  // }
 
   // ! LOGIC FOR TOGGLE HANDLING
   const handleToggleVolunteer = () => {
@@ -277,10 +275,7 @@ const ActivitiesPage = () => {
       {/* CUSTOM TAGS */}
       <div className="mx-20 mb-20 flex justify-center gap-2">
         {activity?.customTags?.map((data, index) => (
-          <div
-            key={index}
-            className="flex items-center gap-5"
-          >
+          <div key={index} className="flex items-center gap-5">
             <p
               className=" btn-outline border border-customBlack-100 px-3 py-2 text-customBlack-100 "
               style={{ fontSize: "12px" }}

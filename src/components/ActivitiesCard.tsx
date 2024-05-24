@@ -46,8 +46,6 @@ const ActivitiesCard: React.FC<ActivitiesCardProps> = ({
   searchText,
   callOrParticipation,
 }) => {
-  const { data: sessionData, status: sessionStatus } = useSession();
-
   const router = useRouter();
 
   const handleClick = () => {

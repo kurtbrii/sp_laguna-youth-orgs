@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Navbar from "~/components/navbar";
 
 const HowItWorks = () => {
-  const [view, setView] = useState<string>("instructions");
+  const [view, setView] = useState<string>("overview");
 
   return (
     <>
@@ -18,7 +18,7 @@ const HowItWorks = () => {
             setView(e.target.value);
           }}
         >
-          <option value="instructions">Instructions</option>
+          {/* <option value="instructions">Instructions</option> */}
           <option value="overview">Overview</option>
           <option value="auth">Sign Up/Login</option>
           <option value="org">For Organizations</option>
