@@ -11,6 +11,7 @@ const config = {
       "lh3.googleusercontent.com",
       "cdn.discordapp.com",
       "res.cloudinary.com",
+      "upload.wikimedia.org",
     ],
   },
   reactStrictMode: true,

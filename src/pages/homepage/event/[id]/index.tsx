@@ -27,6 +27,7 @@ const EventPage = () => {
   });
 
   const event = eventQuery.data;
+  const isLoading = eventQuery.isLoading;
 
   const deleteEvent = api.event.deleteEvent.useMutation();
 
@@ -36,17 +37,17 @@ const EventPage = () => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  if (!id) {
-    return <div>No organization ID provided</div>;
-  }
+  // if (!id) {
+  //   return <div>No organization ID provided</div>;
+  // }
 
-  if (eventQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (eventQuery.isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (eventQuery.error ?? !eventQuery.data) {
-    return <div>Error loading organization data</div>;
-  }
+  // if (eventQuery.error ?? !eventQuery.data) {
+  //   return <div>Error loading organization data</div>;
+  // }
 
   const handleToggleButton = () => {
     setToggleModal(!toggleModal);
@@ -74,7 +75,17 @@ const EventPage = () => {
       <Navbar />
 
       <div className="relative mx-16 my-10  flex justify-center  gap-12  font-custom-lexend text-customBlack-100 phone:m-5 phone:flex-col   phone:gap-10">
-        <Carousel images={event?.images ?? [""]} />
+        {isLoading ? (
+          <div
+            className="isLoading rounded-box border"
+            style={{
+              width: "40%",
+              height: "248px",
+            }}
+          ></div>
+        ) : (
+          <Carousel images={event?.images ?? [""]} />
+        )}
 
         <div
           className="flex w-4/5 flex-col"
@@ -86,19 +97,25 @@ const EventPage = () => {
         >
           {/* EVENT NAME */}
           <section className="flex items-center justify-between">
-            <h1 className="text-gradient font-custom-epilogue  text-4xl font-extrabold  phone:text-3xl ">
-              {event?.name}
-            </h1>
-            {sessionData?.user.id === event?.organization.user.id && (
-              <div className="flex gap-4">
-                <IconButton onClick={handleEditButton}>
-                  <EditTwoToneIcon />
-                </IconButton>
-                <IconButton onClick={() => handleToggleButton()}>
-                  <DeleteIcon />
-                </IconButton>
-              </div>
+            {!isLoading ? (
+              <h1 className="text-gradient font-custom-epilogue  text-4xl font-extrabold  phone:text-3xl ">
+                {event?.name}
+              </h1>
+            ) : (
+              <div className="isLoading h-10"></div>
             )}
+
+            {!isLoading &&
+              sessionData?.user.id === event?.organization.user.id && (
+                <div className="flex gap-4">
+                  <IconButton onClick={handleEditButton}>
+                    <EditTwoToneIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleToggleButton()}>
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
+              )}
           </section>
 
           <div className=" my-2 flex items-center gap-1">
@@ -107,9 +124,13 @@ const EventPage = () => {
               style={{ color: "var(--black100)" }}
             />
 
-            <p className="text-md italic text-customBlack-50 phone:text-sm">
-              {event?.date.toLocaleString()}
-            </p>
+            {isLoading ? (
+              <div className="isLoading h-5 w-full"></div>
+            ) : (
+              <p className="text-md italic text-customBlack-50">
+                {event?.date.toLocaleString()}
+              </p>
+            )}
           </div>
 
           <div className="flex items-stretch gap-1">
@@ -118,12 +139,16 @@ const EventPage = () => {
               style={{ color: "var(--black100)" }}
             />
 
-            <p
-              onClick={showMap}
-              className="text-md hover:text-gradient mb-6 cursor-pointer italic text-customBlack-50 phone:text-sm"
-            >
-              {event?.location}
-            </p>
+            {isLoading ? (
+              <div className="isLoading mb-6 h-5 w-full"></div>
+            ) : (
+              <p
+                onClick={showMap}
+                className="text-md hover:text-gradient mb-6 cursor-pointer italic text-customBlack-50 phone:text-sm"
+              >
+                {event?.location}
+              </p>
+            )}
 
             <Modal
               isOpen={modalIsOpen}
@@ -153,7 +178,13 @@ const EventPage = () => {
           >
             Organized By:
           </p>
-          <p className="text-gradient text-sm">{event?.organizedBy}</p>
+
+          {isLoading ? (
+            <div className="isLoading h-5 w-full"></div>
+          ) : (
+            <p className="text-gradient text-sm">{event?.organizedBy}</p>
+          )}
+
           {event && event?.partners?.length > 0 && (
             <>
               <p
@@ -162,17 +193,30 @@ const EventPage = () => {
               >
                 In partnership with:
               </p>
-              {event?.partners?.map((partner: string, index: number) => (
-                <p key={index} className="text-gradient text-sm">
-                  {partner}
-                </p>
-              ))}
+
+              {isLoading ? (
+                <div className="isLoading h-5 w-full"></div>
+              ) : (
+                event?.partners?.map((partner: string, index: number) => (
+                  <p key={index} className="text-gradient text-sm">
+                    {partner}
+                  </p>
+                ))
+              )}
             </>
           )}
 
-          <p className="overflow-wrap break-word mt-16 whitespace-pre-wrap">
-            {event?.details}
-          </p>
+          {isLoading ? (
+            <div className="mt-8 flex flex-col gap-2">
+              <div className="isLoading h-5 w-full"></div>
+              <div className="isLoading h-5 w-full"></div>
+              <div className="isLoading h-5 w-full"></div>
+            </div>
+          ) : (
+            <p className="overflow-wrap break-word mt-8 whitespace-pre-wrap">
+              {event?.details}
+            </p>
+          )}
         </div>
       </div>
 

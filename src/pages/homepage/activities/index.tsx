@@ -15,7 +15,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
 import { type ActivityProps } from "~/utils/props";
-import ActivitiesLoading from "~/components/loading/ActivitiesLoading";
+import LoadingBar from "~/components/LoadingBar";
 
 const filterSchema = z.object({
   centersTags: z.array(z.string()).optional(),
@@ -342,7 +342,7 @@ const Index = () => {
       {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5 ">
         {cardsLoading ? (
-          <ActivitiesLoading />
+          <LoadingBar />
         ) : (
           allActivities.map((queryActivity, index) => (
             <ActivitiesCard

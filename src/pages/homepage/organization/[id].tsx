@@ -31,6 +31,8 @@ const OrganizationPage = () => {
 
   const organization = organizationsQuery.data;
 
+  const isLoading = organizationsQuery.isLoading;
+
   // ! EVENTS
   const event = api.event.getEvents.useQuery({
     search: "",
@@ -70,13 +72,13 @@ const OrganizationPage = () => {
     return <div>No organization ID provided</div>;
   }
 
-  if (organizationsQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (organizationsQuery.isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (organizationsQuery.error ?? !organizationsQuery.data) {
-    return <div>Error loading organization data</div>;
-  }
+  // if (organizationsQuery.error ?? !organizationsQuery.data) {
+  //   return <div>Error loading organization data</div>;
+  // }
 
   // ! VOLUNTEERS JOINING ORGANIZATIONS
   const handleToggleJoinOrg = () => {
@@ -121,35 +123,71 @@ const OrganizationPage = () => {
       <Navbar />
       <div className="mx-16  my-10 flex  flex-col justify-evenly font-custom-lexend  text-customBlack-100">
         {/* CONTACT INFO AND DETAILS */}
-        <div className="mb-16 grid grid-flow-col">
-          <div className="flex-flex-col">
-            <Image
-              src={organization?.user.image ?? ""}
-              alt="Organization Image"
-              height={300}
-              width={300}
-            />
-            <p className="text-xs">
+        <div className="mb-16 flex">
+          {/* IMAGE, EMAIL, NUMBER */}
+          <div className="flex min-w-96 flex-col">
+            {isLoading ? (
+              <div
+                className="isLoading rounded-box border"
+                style={{
+                  width: "400px",
+                  height: "400px",
+                }}
+              ></div>
+            ) : (
+              <Image
+                src={organization?.user.image?.replace("s96-c", "s520-c") ?? ""}
+                alt="Organization Image"
+                height={400}
+                width={400}
+              />
+            )}
+
+            <p className="mt-2 flex items-center justify-between text-xs">
               <span className="font-bold">Email Address:</span>{" "}
-              {organization?.user?.email}
+              {isLoading ? (
+                <span className="isLoading flex w-2/3"></span>
+              ) : (
+                <span className="flex w-2/3">{organization?.user?.email}</span>
+              )}
             </p>
 
-            <p className=" text-xs">
+            <p className="mt-2 flex items-center justify-between text-xs">
               <span className="font-bold">Contact Number:</span>{" "}
-              {organization?.phoneNumber}
+              {isLoading ? (
+                <span className="isLoading flex w-2/3"></span>
+              ) : (
+                <span className="flex w-2/3">{organization?.phoneNumber}</span>
+              )}
             </p>
           </div>
 
-          <div className="flex-start  ml-16 flex flex-col">
-            <div className="flex">
-              <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
-                {organization?.orgName}
-              </h1>
-            </div>
+          {/* BIO, NAME */}
+          <div className="ml-16  flex w-full flex-col items-start justify-start">
+            {isLoading ? (
+              <div className="isLoading mb-3 flex h-10"></div>
+            ) : (
+              <div className="flex">
+                <h1 className="text-gradient mb-3  font-custom-epilogue text-4xl font-extrabold">
+                  {organization?.orgName}
+                </h1>
+              </div>
+            )}
 
-            <p className="mb-6 mr-32 text-sm">{organization?.bio}</p>
+            {isLoading ? (
+              <div className="mb-6 flex w-full flex-col gap-2">
+                <div className="isLoading mr-32 h-5"></div>
+                <div className="isLoading mr-32 h-5"></div>
+                <div className="isLoading mr-32 h-5"></div>
+              </div>
+            ) : (
+              <p className="mb-6 mr-32 text-sm">{organization?.bio}</p>
+            )}
 
-            {sessionStatus === "authenticated" &&
+            {/* <p className="mb-6 mr-32 text-sm">{organization?.bio}</p> */}
+
+            {!isLoading &&
+              sessionStatus === "authenticated" &&
               user.data &&
               sessionData.user.id !== organization?.user.id && (
                 // ! LOGIC IF ORGANIZATION

@@ -68,7 +68,7 @@ const OrganizationPage = () => {
         <div className="mb-16 grid grid-flow-col">
           <div className="flex-flex-col">
             <Image
-              src={organization?.user.image ?? ""}
+              src={organization?.user.image?.replace("s96-c", "s520-c") ?? ""}
               alt="Organization Image"
               height={300}
               width={300}
