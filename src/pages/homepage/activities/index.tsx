@@ -30,16 +30,14 @@ type FilterSchemaFields = z.infer<typeof filterSchema>;
 const Index = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
 
-  let volunteer = null;
-
-  if (
-    sessionStatus === "authenticated" &&
-    sessionData?.user.role === "VOLUNTEER"
-  ) {
-    volunteer = api.volunteer.getOne.useQuery({
-      userId: sessionData?.user?.id ?? "",
-    });
-  }
+  const volunteer = api.volunteer.getOne.useQuery({
+    userId: sessionData?.user?.id ?? "",
+  });
+  // if (
+  //   sessionStatus === "authenticated" &&
+  //   sessionData?.user.role === "VOLUNTEER"
+  // ) {
+  // }
 
   const router = useRouter();
   const { id, name } = router.query;
@@ -341,7 +339,7 @@ const Index = () => {
 
       {/* ACTIVITIES CARD */}
       <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5 ">
-        {cardsLoading ? (
+        {cardsLoading && allActivities.length === 0 ? (
           <LoadingBar />
         ) : (
           allActivities.map((queryActivity, index) => (

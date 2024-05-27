@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import Navbar from "~/components/navbar";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EmailJoinOrSpon from "~/components/EmailJoinOrSpon";
 import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import EventCard from "~/components/eventCard";
@@ -32,6 +32,9 @@ const OrganizationPage = () => {
   const organization = organizationsQuery.data;
 
   const isLoading = organizationsQuery.isLoading;
+
+  const joinOrgScrollerRef = useRef<null | HTMLElement>(null);
+  const sponOrgScrollerRef = useRef<null | HTMLElement>(null);
 
   // ! EVENTS
   const event = api.event.getEvents.useQuery({
@@ -67,36 +70,13 @@ const OrganizationPage = () => {
 
   const deleteOrgSponOrg = api.orgSponsorOrg.deleteOrgSpon.useMutation();
 
-  // ! AUTHENTICATED OR NOT
-  if (!id) {
-    return <div>No organization ID provided</div>;
-  }
-
-  // if (organizationsQuery.isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (organizationsQuery.error ?? !organizationsQuery.data) {
-  //   return <div>Error loading organization data</div>;
-  // }
-
   // ! VOLUNTEERS JOINING ORGANIZATIONS
   const handleToggleJoinOrg = () => {
     setToggleJoinOrg(!toggleJoinOrg);
-
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth", // Add smooth scrolling effect
-    });
   };
 
   const handleToggleSponOrg = () => {
     setToggleSponOrg(!toggleSponOrg);
-
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth", // Add smooth scrolling effect
-    });
   };
 
   const handleDeleteVolJoinOrg = () => {
@@ -117,6 +97,18 @@ const OrganizationPage = () => {
 
     alert("Delete Successful");
   };
+
+  useEffect(() => {
+    if (toggleJoinOrg && joinOrgScrollerRef.current) {
+      joinOrgScrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [toggleJoinOrg]);
+
+  useEffect(() => {
+    if (toggleSponOrg && sponOrgScrollerRef.current) {
+      sponOrgScrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [toggleSponOrg]);
 
   return (
     <>
@@ -204,8 +196,6 @@ const OrganizationPage = () => {
                       <button
                         className="btn-active px-8 py-3"
                         onClick={() => handleToggleSponOrg()}
-
-                        // onClick={() => handleOrgSpon()}
                       >
                         Collaborate With Us!
                       </button>
@@ -341,7 +331,10 @@ const OrganizationPage = () => {
         {toggleJoinOrg || toggleSponOrg ? (
           <>
             {toggleSponOrg && (
-              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+              <section
+                ref={sponOrgScrollerRef}
+                className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 "
+              >
                 <p className="font-custom-epilogue text-xl font-extrabold text-white">
                   Request for Collaboration
                 </p>
@@ -349,7 +342,10 @@ const OrganizationPage = () => {
             )}
 
             {toggleJoinOrg && (
-              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+              <section
+                className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 "
+                ref={joinOrgScrollerRef}
+              >
                 <p className="font-custom-epilogue text-xl font-extrabold text-white">
                   Join Organization
                 </p>

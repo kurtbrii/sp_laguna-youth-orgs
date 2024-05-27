@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../../../components/navbar";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import SpeakersCard from "~/components/SpeakersCard";
 import EmailSpeakers from "~/components/EmailSpeakers";
+import LoadingBar from "~/components/LoadingBar";
 
 const Speakers = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -16,6 +17,8 @@ const Speakers = () => {
   const user = api.user.getUser.useQuery({
     userId: sessionData?.user.id ?? "",
   });
+
+  const scrollerRef = useRef<null | HTMLDivElement>(null);
 
   const [searchText, setSearchText] = useState("");
 
@@ -25,16 +28,17 @@ const Speakers = () => {
     setTake(take + 12);
   };
 
-  const speakers = api.speaker.getSpeakers.useQuery(
-    {
-      search: searchText,
-      take: take,
-    },
-    {
-      refetchOnMount: true,
-      refetchOnWindowFocus: true,
-    },
-  );
+  const { data: speakers, isLoading: speakersLoading } =
+    api.speaker.getSpeakers.useQuery(
+      {
+        search: searchText,
+        take: take,
+      },
+      {
+        refetchOnMount: true,
+        refetchOnWindowFocus: true,
+      },
+    );
 
   const router = useRouter();
 
@@ -51,19 +55,20 @@ const Speakers = () => {
   const handleToggleEmailSpeaker = (speaker: any) => {
     setToggleEmailSpeaker(!toggleEmailSpeaker);
 
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth", // Add smooth scrolling effect
-    });
-
     setSpeaker(speaker);
   };
 
   useEffect(() => {
-    if (speakers?.data) {
-      setAllSpeakers([...speakers?.data]);
+    if (speakers) {
+      setAllSpeakers([...speakers]);
     }
-  }, [speakers?.data]);
+  }, [speakers]);
+
+  useEffect(() => {
+    if (toggleEmailSpeaker && scrollerRef.current) {
+      scrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [toggleEmailSpeaker]);
 
   return (
     <div className=" flex flex-col font-custom-lexend text-customBlack-100">
@@ -100,17 +105,21 @@ const Speakers = () => {
         </div>
       </div>
       {/* SPEAKERS CARD */}
-      <div className="mx-10 mb-5 mt-10 flex flex-wrap justify-center gap-3">
-        {allSpeakers?.map((querySpeaker) => (
-          <SpeakersCard
-            key={querySpeaker.id}
-            speaker={querySpeaker}
-            handleToggleEmailSpeaker={handleToggleEmailSpeaker}
-          />
-        ))}
-      </div>
+      {speakersLoading && allSpeakers.length === 0 ? (
+        <LoadingBar />
+      ) : (
+        <div className="mx-10 mb-5 mt-10 flex flex-wrap justify-center gap-3">
+          {allSpeakers?.map((querySpeaker) => (
+            <SpeakersCard
+              key={querySpeaker.id}
+              speaker={querySpeaker}
+              handleToggleEmailSpeaker={handleToggleEmailSpeaker}
+            />
+          ))}
+        </div>
+      )}
 
-      {speakers && speakers?.data && speakers?.data?.length == take && (
+      {speakers && speakers?.length == take && (
         <button
           className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
           onClick={() => handleLoadMore()}
@@ -127,11 +136,13 @@ const Speakers = () => {
               INVITE SPEAKER
             </p>
           </section>
-          <EmailSpeakers
-            sessionEmail={sessionData?.user.email}
-            orgName={user.data?.organization?.orgName}
-            speakerEmail={speakerEmail}
-          />
+          <div ref={scrollerRef}>
+            <EmailSpeakers
+              sessionEmail={sessionData?.user.email}
+              orgName={user.data?.organization?.orgName}
+              speakerEmail={speakerEmail}
+            />
+          </div>
         </>
       )}
     </div>

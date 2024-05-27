@@ -7,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteModal from "~/components/DeleteModal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EventIcon from "@mui/icons-material/Event";
 import PlaceIcon from "@mui/icons-material/Place";
 import EmailActivityCall from "~/components/EmailActivityCall";
@@ -30,6 +30,10 @@ const ActivitiesPage = () => {
   const isLoading = activityQuery.isLoading;
 
   const deleteActivity = api.activity.deleteActivity.useMutation();
+
+  const volunteerScrollerRef = useRef<null | HTMLElement>(null);
+  const partnerScrollerRef = useRef<null | HTMLElement>(null);
+  const guestScrollerRef = useRef<null | HTMLElement>(null);
 
   // ! USER IS AN ORGANIZATION OR VOLUNTEER
   const user = api.user.getUser.useQuery({
@@ -67,35 +71,13 @@ const ActivitiesPage = () => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  // if (!id) {
-  //   return <div>No organization ID provided</div>;
-  // }
-
-  // if (activityQuery.isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (activityQuery.error ?? !activityQuery.data) {
-  //   return <div>Error loading organization data</div>;
-  // }
-
   // ! LOGIC FOR TOGGLE HANDLING
   const handleToggleVolunteer = () => {
     setToggleVolunteerNow(!toggleVolunteerNow);
-
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth", // Add smooth scrolling effect
-    });
   };
 
   const handleToggleOrganization = () => {
     setTogglePartnership(!togglePartnership);
-
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth", // Add smooth scrolling effect
-    });
   };
 
   const handleToggleGuest = () => {
@@ -143,6 +125,30 @@ const ActivitiesPage = () => {
   const handleRouterPush = (link: string) => {
     void router.push(`${id as string}/${link}`);
   };
+
+  useEffect(() => {
+    if (toggleVolunteerNow && volunteerScrollerRef.current) {
+      volunteerScrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [toggleVolunteerNow]);
+
+  useEffect(() => {
+    if (togglePartnership && partnerScrollerRef.current) {
+      partnerScrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [togglePartnership]);
+
+  useEffect(() => {
+    if (togglePartnership && partnerScrollerRef.current) {
+      partnerScrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [togglePartnership]);
+
+  useEffect(() => {
+    if (toggleJoinActivity && guestScrollerRef.current) {
+      guestScrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [toggleJoinActivity]);
 
   return (
     <div className="mb-10 flex flex-col">
@@ -399,7 +405,10 @@ const ActivitiesPage = () => {
         {toggleVolunteerNow || togglePartnership ? (
           <>
             {toggleVolunteerNow && (
-              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+              <section
+                className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4"
+                ref={volunteerScrollerRef}
+              >
                 <p className="font-custom-epilogue text-xl font-extrabold text-white">
                   Volunteer Now
                 </p>
@@ -407,7 +416,10 @@ const ActivitiesPage = () => {
             )}
 
             {togglePartnership && (
-              <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+              <section
+                className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4"
+                ref={partnerScrollerRef}
+              >
                 <p className="font-custom-epilogue text-xl font-extrabold text-white">
                   Partner With Us
                 </p>
@@ -426,7 +438,10 @@ const ActivitiesPage = () => {
 
         {toggleJoinActivity && (
           <>
-            <section className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4 ">
+            <section
+              className="mx-40 mt-6 flex flex-row items-center justify-center bg-secondary p-4"
+              ref={guestScrollerRef}
+            >
               <p className="font-custom-epilogue text-xl font-extrabold text-white">
                 Join Activity
               </p>

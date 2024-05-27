@@ -7,11 +7,10 @@ import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import ViewLocationModal from "~/components/ViewLocationModal";
 import LoadingBar from "~/components/LoadingBar";
 
 const Index = () => {
@@ -128,7 +127,7 @@ const Index = () => {
 
       {/* EVENT CARD */}
 
-      {cardsLoading ? (
+      {cardsLoading && allEvents.length === 0 ? (
         <LoadingBar />
       ) : (
         <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
