@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import SpeakersCard from "~/components/SpeakersCard";
 import EmailSpeakers from "~/components/EmailSpeakers";
+import LoadingBar from "~/components/LoadingBar";
 
 const Speakers = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -25,16 +26,17 @@ const Speakers = () => {
     setTake(take + 12);
   };
 
-  const speakers = api.speaker.getSpeakers.useQuery(
-    {
-      search: searchText,
-      take: take,
-    },
-    {
-      refetchOnMount: true,
-      refetchOnWindowFocus: true,
-    },
-  );
+  const { data: speakers, isLoading: speakersLoading } =
+    api.speaker.getSpeakers.useQuery(
+      {
+        search: searchText,
+        take: take,
+      },
+      {
+        refetchOnMount: true,
+        refetchOnWindowFocus: true,
+      },
+    );
 
   const router = useRouter();
 
@@ -60,10 +62,10 @@ const Speakers = () => {
   };
 
   useEffect(() => {
-    if (speakers?.data) {
-      setAllSpeakers([...speakers?.data]);
+    if (speakers) {
+      setAllSpeakers([...speakers]);
     }
-  }, [speakers?.data]);
+  }, [speakers]);
 
   return (
     <div className=" flex flex-col font-custom-lexend text-customBlack-100">
@@ -100,17 +102,21 @@ const Speakers = () => {
         </div>
       </div>
       {/* SPEAKERS CARD */}
-      <div className="mx-10 mb-5 mt-10 flex flex-wrap justify-center gap-3">
-        {allSpeakers?.map((querySpeaker) => (
-          <SpeakersCard
-            key={querySpeaker.id}
-            speaker={querySpeaker}
-            handleToggleEmailSpeaker={handleToggleEmailSpeaker}
-          />
-        ))}
-      </div>
+      {speakersLoading ? (
+        <LoadingBar />
+      ) : (
+        <div className="mx-10 mb-5 mt-10 flex flex-wrap justify-center gap-3">
+          {allSpeakers?.map((querySpeaker) => (
+            <SpeakersCard
+              key={querySpeaker.id}
+              speaker={querySpeaker}
+              handleToggleEmailSpeaker={handleToggleEmailSpeaker}
+            />
+          ))}
+        </div>
+      )}
 
-      {speakers && speakers?.data && speakers?.data?.length == take && (
+      {speakers && speakers?.length == take && (
         <button
           className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
           onClick={() => handleLoadMore()}

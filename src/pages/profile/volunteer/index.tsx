@@ -27,8 +27,6 @@ const VolunteerPage = () => {
     userId: sessionData?.user.id,
   });
 
-  const isLoading = volunteerQuery.isLoading;
-
   const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
     volId: volunteerQuery?.data?.id ?? "",
     status: "APPROVED",
@@ -42,14 +40,6 @@ const VolunteerPage = () => {
   });
 
   const volunteer = volunteerQuery.data;
-
-  // if (volunteerQuery.isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (volunteerQuery.error ?? !volunteerQuery.data) {
-  //   return <div>Error loading organization data</div>;
-  // }
 
   return (
     <>
