@@ -84,7 +84,7 @@ const FindOrganizations: NextPage = () => {
         </div>
       )} */}
 
-      {cardsLoading ? (
+      {cardsLoading && allOrganizations.length === 0 ? (
         <LoadingBar />
       ) : (
         <div className="mx-4 mb-5 mt-10 flex flex-wrap justify-center gap-5">

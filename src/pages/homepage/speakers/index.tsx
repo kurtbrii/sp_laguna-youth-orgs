@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../../../components/navbar";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -17,6 +17,8 @@ const Speakers = () => {
   const user = api.user.getUser.useQuery({
     userId: sessionData?.user.id ?? "",
   });
+
+  const scrollerRef = useRef<null | HTMLDivElement>(null);
 
   const [searchText, setSearchText] = useState("");
 
@@ -53,11 +55,6 @@ const Speakers = () => {
   const handleToggleEmailSpeaker = (speaker: any) => {
     setToggleEmailSpeaker(!toggleEmailSpeaker);
 
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth", // Add smooth scrolling effect
-    });
-
     setSpeaker(speaker);
   };
 
@@ -66,6 +63,12 @@ const Speakers = () => {
       setAllSpeakers([...speakers]);
     }
   }, [speakers]);
+
+  useEffect(() => {
+    if (toggleEmailSpeaker && scrollerRef.current) {
+      scrollerRef?.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [toggleEmailSpeaker]);
 
   return (
     <div className=" flex flex-col font-custom-lexend text-customBlack-100">
@@ -102,7 +105,7 @@ const Speakers = () => {
         </div>
       </div>
       {/* SPEAKERS CARD */}
-      {speakersLoading ? (
+      {speakersLoading && allSpeakers.length === 0 ? (
         <LoadingBar />
       ) : (
         <div className="mx-10 mb-5 mt-10 flex flex-wrap justify-center gap-3">
@@ -133,11 +136,13 @@ const Speakers = () => {
               INVITE SPEAKER
             </p>
           </section>
-          <EmailSpeakers
-            sessionEmail={sessionData?.user.email}
-            orgName={user.data?.organization?.orgName}
-            speakerEmail={speakerEmail}
-          />
+          <div ref={scrollerRef}>
+            <EmailSpeakers
+              sessionEmail={sessionData?.user.email}
+              orgName={user.data?.organization?.orgName}
+              speakerEmail={speakerEmail}
+            />
+          </div>
         </>
       )}
     </div>

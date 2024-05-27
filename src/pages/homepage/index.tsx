@@ -127,7 +127,7 @@ const Index = () => {
 
       {/* EVENT CARD */}
 
-      {cardsLoading ? (
+      {cardsLoading && allEvents.length === 0 ? (
         <LoadingBar />
       ) : (
         <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
