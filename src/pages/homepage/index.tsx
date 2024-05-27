@@ -12,6 +12,7 @@ import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import ViewLocationModal from "~/components/ViewLocationModal";
+import LoadingBar from "~/components/LoadingBar";
 
 const Index = () => {
   const { data: sessionData } = useSession();
@@ -29,11 +30,13 @@ const Index = () => {
     setTake(take + 12);
   };
 
-  const event = api.event.getEvents.useQuery({
-    take: take,
-    search: searchText,
-    orgId: initialSearch ? (id as string) : undefined,
-  });
+  const { data: event, isLoading: cardsLoading } = api.event.getEvents.useQuery(
+    {
+      take: take,
+      search: searchText,
+      orgId: initialSearch ? (id as string) : undefined,
+    },
+  );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -53,10 +56,10 @@ const Index = () => {
   }, [initialSearch, searchText]);
 
   useEffect(() => {
-    if (event?.data) {
-      setAllEvents([...event?.data]);
+    if (event) {
+      setAllEvents([...event]);
     }
-  }, [event?.data]);
+  }, [event]);
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100 ">
@@ -111,7 +114,7 @@ const Index = () => {
         {/* <button onClick={() }>button</button> */}
       </div>
 
-      {toggleFilter && (
+      {/* {toggleFilter && (
         <div className="bg-gradient mx-10 rounded-md  px-10 py-5 ">
           <p className="text-white">ihg</p>
           <p>ihg</p>
@@ -121,21 +124,25 @@ const Index = () => {
           <p>ih</p>
           <p>ih</p>
         </div>
-      )}
+      )} */}
 
       {/* EVENT CARD */}
-      {/* TODO: FIX PREVIOUS: when added */}
-      <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {allEvents?.map((eventQuery) => (
-          <EventCard
-            key={eventQuery.id}
-            event={eventQuery}
-            searchText={searchText}
-          />
-        ))}
-      </div>
 
-      {event && event?.data && event?.data?.length == take && (
+      {cardsLoading ? (
+        <LoadingBar />
+      ) : (
+        <div className="mb-5 mt-10 flex flex-wrap justify-center gap-5">
+          {allEvents?.map((eventQuery) => (
+            <EventCard
+              key={eventQuery.id}
+              event={eventQuery}
+              searchText={searchText}
+            />
+          ))}
+        </div>
+      )}
+
+      {event && event?.length == take && (
         <button
           className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
           onClick={() => handleLoadMore()}

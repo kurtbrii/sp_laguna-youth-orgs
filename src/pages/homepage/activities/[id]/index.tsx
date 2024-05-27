@@ -67,9 +67,9 @@ const ActivitiesPage = () => {
     setModalIsOpen(!modalIsOpen);
   };
 
-  if (!id) {
-    return <div>No organization ID provided</div>;
-  }
+  // if (!id) {
+  //   return <div>No organization ID provided</div>;
+  // }
 
   // if (activityQuery.isLoading) {
   //   return <div>Loading...</div>;

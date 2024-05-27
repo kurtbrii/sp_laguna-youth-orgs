@@ -1,7 +1,7 @@
 import React from "react";
 
 import PulseLoader from "react-spinners/PulseLoader";
-const ActivitiesLoading = () => {
+const LoadingBar = () => {
   return (
     <div className="flex h-72 items-center justify-center gap-4">
       <PulseLoader
@@ -17,4 +17,4 @@ const ActivitiesLoading = () => {
   );
 };
 
-export default ActivitiesLoading;
+export default LoadingBar;

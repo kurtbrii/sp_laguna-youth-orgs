@@ -27,6 +27,8 @@ const VolunteerPage = () => {
     userId: sessionData?.user.id,
   });
 
+  const isLoading = volunteerQuery.isLoading;
+
   const orgCheckJoin = api.volJoinOrg.getOrgOrVol.useQuery({
     volId: volunteerQuery?.data?.id ?? "",
     status: "APPROVED",
@@ -41,13 +43,13 @@ const VolunteerPage = () => {
 
   const volunteer = volunteerQuery.data;
 
-  if (volunteerQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (volunteerQuery.isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (volunteerQuery.error ?? !volunteerQuery.data) {
-    return <div>Error loading organization data</div>;
-  }
+  // if (volunteerQuery.error ?? !volunteerQuery.data) {
+  //   return <div>Error loading organization data</div>;
+  // }
 
   return (
     <>
@@ -57,7 +59,7 @@ const VolunteerPage = () => {
         <div className="mb-16 grid grid-flow-col">
           <div className="flex flex-col">
             <Image
-              src={volunteer?.user?.image ?? ""}
+              src={volunteer?.user?.image?.replace("s96-c", "s520-c") ?? ""}
               alt="Volunteer Image"
               height={300}
               width={300}

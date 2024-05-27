@@ -4,16 +4,18 @@ import OrgCard from "~/components/orgcard";
 import { api } from "~/utils/api";
 import { type NextPage } from "next";
 import { useState, useEffect } from "react";
+import LoadingBar from "~/components/LoadingBar";
 
 const FindOrganizations: NextPage = () => {
   const [searchText, setSearchText] = useState("");
 
   const [take, setTake] = useState(12);
 
-  const organizations = api.organization.getOrganizations.useQuery({
-    search: searchText,
-    take: take,
-  });
+  const { data: organizations, isLoading: cardsLoading } =
+    api.organization.getOrganizations.useQuery({
+      search: searchText,
+      take: take,
+    });
 
   const [allOrganizations, setAllOrganizations] = useState<any[]>([]);
 
@@ -32,10 +34,10 @@ const FindOrganizations: NextPage = () => {
   };
 
   useEffect(() => {
-    if (organizations?.data) {
-      setAllOrganizations([...organizations?.data]);
+    if (organizations) {
+      setAllOrganizations([...organizations]);
     }
-  }, [organizations?.data]);
+  }, [organizations]);
 
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
@@ -82,26 +84,28 @@ const FindOrganizations: NextPage = () => {
         </div>
       )} */}
 
-      <div className="mx-4 mb-5 mt-10 flex flex-wrap justify-center gap-5">
-        {allOrganizations?.map((organization) => (
-          <OrgCard
-            key={organization.id}
-            searchText={searchText}
-            organization={organization}
-          />
-        ))}
-      </div>
+      {cardsLoading ? (
+        <LoadingBar />
+      ) : (
+        <div className="mx-4 mb-5 mt-10 flex flex-wrap justify-center gap-5">
+          {allOrganizations.map((organization) => (
+            <OrgCard
+              key={organization.id}
+              searchText={searchText}
+              organization={organization}
+            />
+          ))}
+        </div>
+      )}
 
-      {organizations &&
-        organizations?.data &&
-        organizations?.data?.length == take && (
-          <button
-            className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
-            onClick={() => handleLoadMore()}
-          >
-            Load More
-          </button>
-        )}
+      {organizations && organizations?.length == take && (
+        <button
+          className="btn-active mb-10 mt-10 w-1/5 self-center px-4 py-2 phone:mt-5 phone:w-full"
+          onClick={() => handleLoadMore()}
+        >
+          Load More
+        </button>
+      )}
 
       {/* <button onClick={() => handleFetchOrganizations()}>button</button> */}
     </div>
