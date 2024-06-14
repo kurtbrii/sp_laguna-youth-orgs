@@ -82,11 +82,6 @@ const ActivitiesPage = () => {
 
   const handleToggleGuest = () => {
     setToggleJoinActivity(!toggleJoinActivity);
-
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth", // Add smooth scrolling effect
-    });
   };
 
   const handleToggleButton = () => {
@@ -289,10 +284,6 @@ const ActivitiesPage = () => {
             )}
           </div>
         </div>
-
-        {/* <button onClick={() => alert(getOrgOrVol.data?.[0]?.volunteerId)}>
-          button
-        </button> */}
       </div>
 
       {/* CENTERS OF PARTICIPATION TAGS */}

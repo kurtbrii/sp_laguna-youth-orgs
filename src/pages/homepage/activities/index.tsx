@@ -33,6 +33,7 @@ const Index = () => {
   const volunteer = api.volunteer.getOne.useQuery({
     userId: sessionData?.user?.id ?? "",
   });
+
   // if (
   //   sessionStatus === "authenticated" &&
   //   sessionData?.user.role === "VOLUNTEER"
