@@ -13,6 +13,8 @@ import PlaceIcon from "@mui/icons-material/Place";
 import EmailActivityCall from "~/components/EmailActivityCall";
 import Carousel from "~/components/Carousel";
 import ViewLocationModal from "~/components/ViewLocationModal";
+import ArchiveIcon from "@mui/icons-material/Archive";
+import UnarchiveIcon from "@mui/icons-material/Unarchive";
 
 const ActivitiesPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -28,6 +30,12 @@ const ActivitiesPage = () => {
 
   const activity = activityQuery.data;
   const isLoading = activityQuery.isLoading;
+
+  const archiveActivity = api.activity.archiveActivity.useMutation({
+    onSuccess: async () => {
+      await activityQuery.refetch();
+    },
+  });
 
   const deleteActivity = api.activity.deleteActivity.useMutation();
 
@@ -46,12 +54,6 @@ const ActivitiesPage = () => {
   const deleteOrgOrVol = api.activityCall.deleteVolJoinOrg.useMutation();
 
   // ! LOGIC FOR GETTING ORGANIZATIONS
-  // const getOrganization = api.activityCall.getOrgOrVol.useQuery({
-  //   activityId: id as string,
-  //   orgId: organization?.id ?? "",
-  //   status: "PENDING",
-  // });
-
   const getOrgOrVol = api.activityCall.getOrgOrVol.useQuery({
     activityId: id as string,
     volId: volunteer?.id,
@@ -88,13 +90,20 @@ const ActivitiesPage = () => {
     setToggleModal(!toggleModal);
   };
 
-  // ! ADD/EDIT ACTIVITY
+  // ! EDIT/ARCHIVE/DELETE ACTIVITY
   const handleEditButton = () => {
     void router.push({
       pathname: `/homepage/activities/[id]/edit`,
       query: {
         id: activity?.id,
       },
+    });
+  };
+
+  const handleArchiveButton = () => {
+    archiveActivity.mutate({
+      id: activity?.id ?? "",
+      archived: !activity?.archived ?? true,
     });
   };
 
@@ -185,10 +194,24 @@ const ActivitiesPage = () => {
               {!isLoading &&
                 sessionData?.user.id === activity?.organization.user.id && (
                   <div className="flex gap-4">
-                    <IconButton onClick={handleEditButton}>
+                    <IconButton
+                      onClick={() => handleArchiveButton()}
+                      title={`${activity?.archived ? "Unarchive Activity" : "Archive Activity"}`}
+                    >
+                      {activity?.archived ? <UnarchiveIcon /> : <ArchiveIcon />}
+                    </IconButton>
+
+                    <IconButton
+                      onClick={handleEditButton}
+                      title="Edit Activity"
+                    >
                       <EditTwoToneIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleToggleButton()}>
+
+                    <IconButton
+                      onClick={() => handleToggleButton()}
+                      title="Delete Activity"
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </div>

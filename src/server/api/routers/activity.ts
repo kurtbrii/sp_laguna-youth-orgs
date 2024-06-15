@@ -28,6 +28,7 @@ export const activityRouter = createTRPCRouter({
           organizationId: input.organizationId,
           centersTags: input.centersTags,
           customTags: input.customTags,
+          archived: false,
         }
       });
     }),
@@ -55,14 +56,23 @@ export const activityRouter = createTRPCRouter({
       });
     }),
 
+  archiveActivity: protectedProcedure
+    .input(z.object({ id: z.string(), archived: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.activity.update({
+        where: { id: input.id },
+        data: { archived: input.archived }
+      })
+    }),
+
   getActivities: publicProcedure
-    .input(z.object({ take: z.number().optional(), cursor: z.string().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional(), filterCenterTags: z.array(z.string()).optional(), filterCustomTags: z.array(z.string()).optional(), filterHasVolunteers: z.boolean().optional(), filterHasOrganizations: z.boolean().optional(), filterHasParticipants: z.boolean().optional() }))
+    .input(z.object({ take: z.number().optional(), cursor: z.string().optional(), orgId: z.string().optional(), search: z.string().optional(), customTags: z.array(z.string()).optional(), centersTags: z.array(z.string()).optional(), filterCenterTags: z.array(z.string()).optional(), filterCustomTags: z.array(z.string()).optional(), filterHasVolunteers: z.boolean().optional(), filterHasOrganizations: z.boolean().optional(), filterHasParticipants: z.boolean().optional(), archived: z.boolean().optional() }))
     .query(async ({ ctx, input }) => {
 
       const whereCondition: Prisma.ActivityWhereInput = {
         AND: [
           // Search conditions
-          { organizationId: input.orgId },
+          { organizationId: input.orgId, archived: input.archived },
           {
             OR: [
               { name: { contains: input.search, mode: 'insensitive' } },
@@ -143,6 +153,7 @@ export const activityRouter = createTRPCRouter({
           hasVolunteers: true,
           hasParticipants: true,
           organizationId: true,
+          archived: true,
         },
         take: input.take,
         // skip: 1,
@@ -151,7 +162,7 @@ export const activityRouter = createTRPCRouter({
     }),
 
   getOne: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ id: z.string(), archived: z.boolean().optional() }))
     .query(async ({ input: { id }, ctx }) => {
       const data = await ctx.db.activity.findUnique({
         where: { id },
@@ -183,6 +194,7 @@ export const activityRouter = createTRPCRouter({
           organizationId: true,
           centersTags: true,
           customTags: true,
+          archived: true,
         },
 
       });

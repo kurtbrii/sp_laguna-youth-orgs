@@ -61,11 +61,9 @@ const Index = () => {
   // ! REACT USEFORM
   const {
     register,
-    handleSubmit,
     setValue,
     getValues,
     watch,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<FilterSchemaFields>({
     defaultValues: {},
@@ -113,6 +111,7 @@ const Index = () => {
       filterHasParticipants: formData.hasParticipants
         ? formData.hasParticipants
         : undefined,
+      archived: false,
     });
 
   type data = "hasOrganizations" | "hasVolunteers" | "hasParticipants";

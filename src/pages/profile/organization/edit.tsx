@@ -106,13 +106,16 @@ const EditOrganization = () => {
       setValue("vision", org.vision ?? "");
       setValue("objectives", org.objectives ?? "");
 
-      setValue("socialInclusion", participation?.socialInclusion ?? ""),
-        setValue("peaceBuilding", participation?.peaceBuilding ?? ""),
-        setValue("governance", participation?.governance ?? ""),
-        setValue("activeCitizenship", participation?.activeCitizenship ?? ""),
-        setValue("environment", participation?.environment ?? ""),
-        setValue("globalMobility", participation?.globalMobility ?? ""),
-        setValue("agriculture", participation?.agriculture ?? "");
+      setValue("health", participation?.health ?? "");
+      setValue("education", participation?.education ?? "");
+      setValue("economicEmpowerment", participation?.economicEmpowerment ?? "");
+      setValue("socialInclusion", participation?.socialInclusion ?? "");
+      setValue("peaceBuilding", participation?.peaceBuilding ?? "");
+      setValue("governance", participation?.governance ?? "");
+      setValue("activeCitizenship", participation?.activeCitizenship ?? "");
+      setValue("environment", participation?.environment ?? "");
+      setValue("globalMobility", participation?.globalMobility ?? "");
+      setValue("agriculture", participation?.agriculture ?? "");
     }
   }, [org, setValue]);
 
