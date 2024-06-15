@@ -341,14 +341,13 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <div className="flex gap-2">
-                <button
-                  className="btn-active px-10 py-1"
-                  onClick={handleSignIn}
-                >
-                  Get Started
-                </button>
-              </div>
+              <button
+                className={`btn-active px-10 py-1`}
+                onClick={handleSignIn}
+                disabled={sessionStatus === "loading"}
+              >
+                Get Started
+              </button>
             )}
 
             {toggleGetInvolved && (
