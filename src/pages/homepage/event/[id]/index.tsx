@@ -13,6 +13,8 @@ import PlaceIcon from "@mui/icons-material/Place";
 import Carousel from "~/components/Carousel";
 import Modal from "react-modal";
 import ViewLocationModal from "~/components/ViewLocationModal";
+import ArchiveIcon from "@mui/icons-material/Archive";
+import UnarchiveIcon from "@mui/icons-material/Unarchive";
 
 const EventPage = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
@@ -31,23 +33,17 @@ const EventPage = () => {
 
   const deleteEvent = api.event.deleteEvent.useMutation();
 
+  const archiveEvent = api.event.archiveEvent.useMutation({
+    onSuccess: async () => {
+      await eventQuery.refetch();
+    },
+  });
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const showMap = () => {
     setModalIsOpen(!modalIsOpen);
   };
-
-  // if (!id) {
-  //   return <div>No organization ID provided</div>;
-  // }
-
-  // if (eventQuery.isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (eventQuery.error ?? !eventQuery.data) {
-  //   return <div>Error loading organization data</div>;
-  // }
 
   const handleToggleButton = () => {
     setToggleModal(!toggleModal);
@@ -59,6 +55,13 @@ const EventPage = () => {
       query: {
         id: event?.id,
       },
+    });
+  };
+
+  const handleArchiveButton = () => {
+    archiveEvent.mutate({
+      id: event?.id ?? "",
+      archived: !event?.archived ?? true,
     });
   };
 
@@ -108,10 +111,24 @@ const EventPage = () => {
             {!isLoading &&
               sessionData?.user.id === event?.organization.user.id && (
                 <div className="flex gap-4">
-                  <IconButton onClick={handleEditButton}>
+                  <IconButton
+                    onClick={() => handleArchiveButton()}
+                    title={`${event?.archived ? "Unarchive Event" : "Archive Event"}`}
+                  >
+                    {event?.archived ? <UnarchiveIcon /> : <ArchiveIcon />}
+                  </IconButton>
+
+                  <IconButton
+                    onClick={() => handleEditButton()}
+                    title="Edit Event"
+                  >
                     <EditTwoToneIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleToggleButton()}>
+
+                  <IconButton
+                    onClick={() => handleToggleButton()}
+                    title="Delete Event"
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </div>

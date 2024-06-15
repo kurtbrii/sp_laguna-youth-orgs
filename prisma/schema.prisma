@@ -151,6 +151,7 @@ model Event {
     details     String
     location    String
     date        DateTime
+    archived    Boolean?
 
     organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     organizationId String
@@ -177,6 +178,8 @@ model Activity {
     activityCalls ActivityCall[]
     centersTags   String[]
     customTags    String[]
+
+    archived Boolean?
 }
 
 model CentersOfParticipation {

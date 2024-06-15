@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import Navbar from "~/components/navbar";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import SearchIcon from "@mui/icons-material/Search";
-import TuneIcon from "@mui/icons-material/Tune";
 import { useRouter } from "next/router";
 import EventCard from "~/components/eventCard";
 import { useSession } from "next-auth/react";
@@ -34,6 +28,7 @@ const Index = () => {
       take: take,
       search: searchText,
       orgId: initialSearch ? (id as string) : undefined,
+      archived: false,
     },
   );
 

@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from "zod";
-import { useSession } from "next-auth/react";
-import vol2 from '~/../public/images/vol2.png'
 import { createEventSchema, updateEventSchema } from "~/utils/schemaValidation";
 
 import {
@@ -25,18 +23,20 @@ export const eventRouter = createTRPCRouter({
           organizationId: input.organizationId,
           date: new Date(input.date),
           partners: input.partners,
-          images: input.images
+          images: input.images,
+          archived: false
         },
       })
     }),
 
   getEvents: publicProcedure
-    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional() }))
+    .input(z.object({ take: z.number().optional(), orgId: z.string().optional(), search: z.string().optional(), archived: z.boolean().optional() }))
     .query(async ({ ctx, input }) => {
       // const whereCondition = input.id ? { id: input.id } : {};
       return ctx.db.event.findMany({
         where: {
           organizationId: input.orgId,
+          archived: input.archived,
           OR: [
             {
               name: {
@@ -72,6 +72,7 @@ export const eventRouter = createTRPCRouter({
           date: true,
           partners: true,
           images: true,
+          archived: true,
           organization: {
             select: {
               orgName: true,
@@ -109,6 +110,7 @@ export const eventRouter = createTRPCRouter({
           date: true,
           partners: true,
           createdAt: true,
+          archived: true,
         }
       });
       return data;
@@ -132,6 +134,18 @@ export const eventRouter = createTRPCRouter({
         },
       });
     }),
+
+  archiveEvent: protectedProcedure
+    .input(z.object({ id: z.string(), archived: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.event.update({
+        where: { id: input.id },
+        data: {
+          archived: input.archived
+        },
+      });
+    }),
+
 
   deleteEvent: protectedProcedure
     .input(z.object({ id: z.string() }))
