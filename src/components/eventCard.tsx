@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import Image from "next/image";
 import vol1 from "public/images/vol2.png";
@@ -77,7 +78,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, searchText }) => {
         <div className=" flex items-center gap-1">
           <EventIcon className="h-4 w-4" />
           <p className=" italic" style={{ fontSize: "10px" }}>
-            {event.date.toLocaleString()}
+            {getDate(event.date).toLocaleString()}
           </p>
         </div>
         <div className=" flex items-center gap-1 overflow-hidden  overflow-ellipsis  whitespace-nowrap text-sm ">
@@ -106,5 +107,12 @@ const EventCard: React.FC<EventCardProps> = ({ event, searchText }) => {
     </Link>
   );
 };
+
+function getDate(date: any) {
+  const adjustedDate = date; // Create a new Date object
+  adjustedDate.setHours(adjustedDate.getHours() + 8);
+  console.log(adjustedDate);
+  return adjustedDate;
+}
 
 export default EventCard;
