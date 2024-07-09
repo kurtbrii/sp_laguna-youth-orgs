@@ -104,6 +104,9 @@ const Add = () => {
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
+      <button onClick={() => alert(new Date().toISOString().slice(0, 16))}>
+        hi
+      </button>
       <section className=" mt-6 flex flex-row items-center justify-center bg-primary p-4 ">
         <p className="font-custom-epilogue text-xl font-extrabold text-white">
           ADD AN EVENT
@@ -147,7 +150,7 @@ const Add = () => {
               {...register("date")}
               type="datetime-local"
               name="date"
-              max={new Date().toISOString().slice(0, 16)}
+              // max={new Date()}
               className="h-12 w-full rounded border p-2 shadow"
               placeholder="Input Date"
             />

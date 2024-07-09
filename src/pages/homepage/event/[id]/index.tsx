@@ -145,7 +145,7 @@ const EventPage = () => {
               <div className="isLoading h-5 w-full"></div>
             ) : (
               <p className="text-md italic text-customBlack-50">
-                {event?.date.toLocaleString()}
+                {event?.date.toString()}
               </p>
             )}
           </div>
