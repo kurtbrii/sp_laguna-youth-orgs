@@ -104,9 +104,6 @@ const Add = () => {
   return (
     <div className="flex flex-col font-custom-lexend text-customBlack-100">
       <Navbar />
-      <button onClick={() => alert(new Date().toISOString().slice(0, 16))}>
-        hi
-      </button>
       <section className=" mt-6 flex flex-row items-center justify-center bg-primary p-4 ">
         <p className="font-custom-epilogue text-xl font-extrabold text-white">
           ADD AN EVENT
@@ -229,7 +226,6 @@ const Add = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              // onClick={() => alert("hi")}
               className="btn-active px-20 py-3"
             >
               {isSubmitting ? "Loading..." : "Add Event"}
@@ -245,11 +241,7 @@ const Add = () => {
             </button>
           </div>
         </div>
-
-        {/* <LocationForm /> */}
       </form>
-
-      {/* <button onClick={() }>dsd</button> */}
     </div>
   );
 };

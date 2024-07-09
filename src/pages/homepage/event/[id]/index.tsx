@@ -145,7 +145,7 @@ const EventPage = () => {
               <div className="isLoading h-5 w-full"></div>
             ) : (
               <p className="text-md italic text-customBlack-50">
-                {event?.date.toString()}
+                {getDate(event?.date).toLocaleString()}
               </p>
             )}
           </div>
@@ -246,5 +246,13 @@ const EventPage = () => {
     </div>
   );
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getDate(date: any) {
+  const adjustedDate = date; // Create a new Date object
+  adjustedDate.setHours(adjustedDate.getHours() + 8);
+  console.log(adjustedDate);
+  return adjustedDate;
+}
 
 export default EventPage;
